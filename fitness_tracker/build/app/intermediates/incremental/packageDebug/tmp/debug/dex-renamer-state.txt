@@ -1,4 +1,4 @@
-#Thu Mar 19 16:54:52 EDT 2020
+#Mon Mar 23 03:00:51 EDT 2020
 base.0=C\:\\Users\\camv7\\source\\MobileAppDev\\FitnessTracker\\fitness_tracker\\build\\app\\intermediates\\dex\\debug\\mergeDexDebug\\out\\classes.dex
 path.0=classes.dex
 renamed.0=classes.dex

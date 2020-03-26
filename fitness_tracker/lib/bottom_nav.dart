@@ -21,11 +21,13 @@ class BottomNavigation extends StatelessWidget {
 
   final TabItem currentTab;
   final ValueChanged<TabItem> onSelectTab;
+  final Color _profileAccentColour = Colors.deepOrange;
 
   @override
   Widget build(BuildContext context) {
     return BottomNavigationBar (
       type: BottomNavigationBarType.shifting,
+      backgroundColor: Colors.deepOrange,// to be decided by user?
       items: [
         _buildItem(tabItem: TabItem.today),
         _buildItem(tabItem: TabItem.exercises),
@@ -41,12 +43,9 @@ class BottomNavigation extends StatelessWidget {
     IconData icon = tabIcons[tabItem];
 
     return BottomNavigationBarItem (
-      icon: Icon(icon, color: _currentTabColor(item: tabItem)),
-      title: Text(text, style: TextStyle(color: Colors.black)),
+      backgroundColor: Colors.deepOrange,
+      icon: Icon(icon),
+      title: Text(text),
     );
-  }
-
-  Color _currentTabColor ({TabItem item}) {
-    return (currentTab == item) ? Colors.black : Colors.grey;
   }
 }
