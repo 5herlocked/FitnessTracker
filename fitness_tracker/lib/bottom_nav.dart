@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 
 enum TabItem { today, exercises, history, profile}
 
@@ -17,7 +18,8 @@ Map<TabItem, IconData> tabIcons = {
 };
 
 class BottomNavigation extends StatelessWidget {
-  BottomNavigation({this.currentTab, this.onSelectTab});
+  BottomNavigation({Key key, this.currentTab, @required this.onSelectTab})
+      : super(key: key);
 
   final TabItem currentTab;
   final ValueChanged<TabItem> onSelectTab;
@@ -26,8 +28,8 @@ class BottomNavigation extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BottomNavigationBar (
-      type: BottomNavigationBarType.shifting,
-      backgroundColor: Colors.deepOrange,// to be decided by user?
+      type: BottomNavigationBarType.fixed,
+      backgroundColor: _profileAccentColour,// to be decided by user?
       items: [
         _buildItem(tabItem: TabItem.today),
         _buildItem(tabItem: TabItem.exercises),

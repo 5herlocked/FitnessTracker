@@ -10,7 +10,6 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Fitness Tracker',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
       ),
       home: App(),
     );

@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'bottom_nav.dart';
-import 'home_page.dart' as homePage;
-import 'assigned_exercises.dart' as assignedExercises;
-import 'exercise_history.dart' as exerciseHistory;
+import 'tab_navigator.dart';
 
 class App extends StatefulWidget {
   App ({Key key, this.title}) : super(key: key);
@@ -22,32 +20,53 @@ class _AppState extends State<App> {
   };
 
   void _selectTab(TabItem selectedItem) {
-    setState(() {
-      _currentTab = selectedItem;
-    });
+    if (selectedItem == _currentTab) {
+      // pop to first route
+      _navigatorKeys[selectedItem].currentState.popUntil((route) => route.isFirst);
+    } else {
+      setState(() => _currentTab = selectedItem);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
-    return Scaffold (
-      body: _buildBody(),
-      bottomNavigationBar: BottomNavigation(
-        currentTab: _currentTab,
-        onSelectTab: _selectTab,
+    return WillPopScope(
+      onWillPop: () async {
+        final isFirstRouteInCurrentTab =
+            !await _navigatorKeys[_currentTab].currentState.maybePop();
+
+        if (isFirstRouteInCurrentTab) {
+          // if not on the 'main' tab
+          if (_currentTab != TabItem.today) {
+            _selectTab(TabItem.today);
+
+            return false;
+          }
+        }
+        return isFirstRouteInCurrentTab;
+      },
+
+      child: Scaffold(
+        body: Stack(children: <Widget>[
+          _buildOffstageNavigator(TabItem.today),
+          _buildOffstageNavigator(TabItem.history),
+          _buildOffstageNavigator(TabItem.exercises),
+          _buildOffstageNavigator(TabItem.profile),
+        ]),
+        bottomNavigationBar: BottomNavigation(
+          currentTab: _currentTab,
+          onSelectTab: _selectTab,
+        ),
       ),
     );
   }
 
-  Widget _buildBody() {
-    return Container(
-      color: Colors.deepPurple,
-      alignment: Alignment.center,
-      child: FlatButton(
-        child: Text(
-          'Home',
-          style: TextStyle(fontSize: 32.0, color: Colors.white),
-        ),
+  Widget _buildOffstageNavigator(TabItem tabItem) {
+    return Offstage(
+      offstage: _currentTab != tabItem,
+      child: TabNavigator(
+        navigatorKey: _navigatorKeys[tabItem],
+        tabItem: tabItem,
       ),
     );
   }
