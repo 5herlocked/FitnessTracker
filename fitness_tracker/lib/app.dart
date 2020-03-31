@@ -1,73 +1,44 @@
 import 'package:flutter/material.dart';
-import 'bottom_nav.dart';
-import 'tab_navigator.dart';
+import 'destinations.dart';
+import 'profile.dart';
 
+// actual entry point into the app
 class App extends StatefulWidget {
-  App ({Key key, this.title}) : super(key: key);
-
-  final String title;
-
+  @override
   _AppState createState() => _AppState();
 }
 
-class _AppState extends State<App> {
+class _AppState extends State<App> with TickerProviderStateMixin<App> {
+  Profile _currentProfile = Profile()
   TabItem _currentTab = TabItem.today;
-  Map <TabItem, GlobalKey<NavigatorState>> _navigatorKeys = {
-    TabItem.today : GlobalKey<NavigatorState>(),
-    TabItem.exercises : GlobalKey<NavigatorState>(),
-    TabItem.history : GlobalKey<NavigatorState>(),
-    TabItem.profile : GlobalKey<NavigatorState> (),
-  };
-
-  void _selectTab(TabItem selectedItem) {
-    if (selectedItem == _currentTab) {
-      // pop to first route
-      _navigatorKeys[selectedItem].currentState.popUntil((route) => route.isFirst);
-    } else {
-      setState(() => _currentTab = selectedItem);
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async {
-        final isFirstRouteInCurrentTab =
-            !await _navigatorKeys[_currentTab].currentState.maybePop();
-
-        if (isFirstRouteInCurrentTab) {
-          // if not on the 'main' tab
-          if (_currentTab != TabItem.today) {
-            _selectTab(TabItem.today);
-
-            return false;
-          }
-        }
-        return isFirstRouteInCurrentTab;
-      },
-
-      child: Scaffold(
-        body: Stack(children: <Widget>[
-          _buildOffstageNavigator(TabItem.today),
-          _buildOffstageNavigator(TabItem.history),
-          _buildOffstageNavigator(TabItem.exercises),
-          _buildOffstageNavigator(TabItem.profile),
-        ]),
-        bottomNavigationBar: BottomNavigation(
-          currentTab: _currentTab,
-          onSelectTab: _selectTab,
-        ),
+    return Scaffold(
+      body: SafeArea(
+          top: false,
+          child: IndexedStack(
+            index: TabItem.values.indexOf(_currentTab),
+            children: allDestinationsList.map((Destination destination) {
+              return DestinationView(destination: destination,);
+            }).toList(),
+          )
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: TabItem.values.indexOf(_currentTab),
+        onTap: (int index) {
+          setState(() {
+            _currentTab = TabItem.values[index];
+          });
+        },
+        items: allDestinationsList.map((Destination destination) {
+          return BottomNavigationBarItem(
+            icon: Icon(destination.icon),
+            backgroundColor: destination.color,
+            title: Text(destination.title),
+          );
+        }).toList(),
       ),
     );
   }
 
-  Widget _buildOffstageNavigator(TabItem tabItem) {
-    return Offstage(
-      offstage: _currentTab != tabItem,
-      child: TabNavigator(
-        navigatorKey: _navigatorKeys[tabItem],
-        tabItem: tabItem,
-      ),
-    );
-  }
 }

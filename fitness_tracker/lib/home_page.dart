@@ -1,31 +1,15 @@
 import 'package:flutter/material.dart';
+import 'destinations.dart';
 
-class HomePage extends StatelessWidget {
-  HomePage({Key key, this.profile}) : super (key: key);
+class HomePage extends StatefulWidget {
+  @override
+  _HomePageState createState() => _HomePageState();
+}
 
-  final String profile;
-
+class _HomePageState extends State<HomePage> {
+  Profile _currentProfile =
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(profile),
-      ),
-      body: Center(
-          child: FlatButton.icon(
-            onPressed: () => _buttonPressed(context),
-            icon: Icon(Icons.home),
-            label: Text("Home Page"),
-          )
-      ),
-    );
-  }
-
-  _buttonPressed(BuildContext context) {
-    return Scaffold.of(context).
-    showSnackBar(SnackBar(
-        content: Text("In $profile\'s Home Page")
-    )
-    );
+    return Scaffold();
   }
 }
