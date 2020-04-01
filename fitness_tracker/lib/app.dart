@@ -1,6 +1,9 @@
+import 'dart:ui';
+
+import 'package:fitnesstracker/homePage/home_page.dart';
 import 'package:flutter/material.dart';
 import 'destinations.dart';
-import 'profile.dart';
+import 'profilePage/profile.dart';
 
 // actual entry point into the app
 class App extends StatefulWidget {
@@ -9,20 +12,21 @@ class App extends StatefulWidget {
 }
 
 class _AppState extends State<App> with TickerProviderStateMixin<App> {
-  Profile _currentProfile = Profile()
+  Profile _currentProfile = Profile(
+    id: 1,
+    firstName: "Shardul",
+    lastName: "Vaidya",
+    emailID: "cam.v737@gmail.com",
+    emergencyPhone: "9999999999",
+    profilePicture: "https://picsum.photos/id/237/200/300",
+    phoneNumber: "7703300826",
+    trainerId: 0
+  );
   TabItem _currentTab = TabItem.today;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-          top: false,
-          child: IndexedStack(
-            index: TabItem.values.indexOf(_currentTab),
-            children: allDestinationsList.map((Destination destination) {
-              return DestinationView(destination: destination,);
-            }).toList(),
-          )
-      ),
+      body: HomePage(profile: _currentProfile,),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: TabItem.values.indexOf(_currentTab),
         onTap: (int index) {
