@@ -20,9 +20,12 @@ class HomePageHeader extends StatelessWidget {
   HomePageHeader(this.profile);
 
   Widget _buildAvatar() {
-    return new CircleAvatar(
-      backgroundImage: new NetworkImage("https://picsum.photos/id/237/200/300"),
-      radius: 90.0,
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: new CircleAvatar(
+        backgroundImage: new NetworkImage("https://picsum.photos/id/237/200/300"),
+        radius: 90.0,
+      ),
     );
   }
 
@@ -55,7 +58,7 @@ class HomePageHeader extends StatelessWidget {
 
     return Container(
       constraints: BoxConstraints(
-        maxHeight: 250,
+        maxHeight: 265,
       ),
       decoration: BoxDecoration(
         gradient: backgroundGradient

@@ -1,8 +1,9 @@
+import 'dart:math';
+
 import 'package:fitnesstracker/exerciseDetailPage/exercise_detail.dart';
 import 'package:fitnesstracker/homePage/header/home_page_header.dart';
 import 'package:fitnesstracker/entities/client_profile.dart';
 import 'package:flutter/material.dart';
-import '../app.dart';
 
 class HomePage extends StatefulWidget {
   final ClientProfile profile;
@@ -56,10 +57,13 @@ class _HomePageState extends State<HomePage> {
   Widget _buildTodayExerciseList (BuildContext context, int index) {
     var exercise = _todayExercises[index];
 
-    return new ListTile(
-      onTap: () => _navigateToExerciseDetails(exercise, index),
-      title: new Text(exercise),
-      subtitle: new Text("duration"),
+    return new Card(
+      child: CheckboxListTile(
+        title: Text(_todayExercises[index]),
+        subtitle: Text("duration"),
+        value: (Random().nextInt(100) % 2 == 0) ? true : false, // to be changed when exercise class is completed
+        checkColor: Colors.white,
+      ),
     );
   }
 
