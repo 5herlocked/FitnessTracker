@@ -3,7 +3,7 @@ import 'dart:ui';
 import 'package:fitnesstracker/homePage/home_page.dart';
 import 'package:flutter/material.dart';
 import 'destinations.dart';
-import 'profilePage/profile.dart';
+import 'entities/client_profile.dart';
 
 // actual entry point into the app
 class App extends StatefulWidget {
@@ -12,7 +12,7 @@ class App extends StatefulWidget {
 }
 
 class _AppState extends State<App> with TickerProviderStateMixin<App> {
-  Profile _currentProfile = Profile(
+  ClientProfile _currentProfile = ClientProfile(
     id: 1,
     firstName: "Shardul",
     lastName: "Vaidya",
@@ -28,6 +28,7 @@ class _AppState extends State<App> with TickerProviderStateMixin<App> {
     return Scaffold(
       body: HomePage(profile: _currentProfile,),
       bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.shifting,
         currentIndex: TabItem.values.indexOf(_currentTab),
         onTap: (int index) {
           setState(() {
@@ -36,9 +37,8 @@ class _AppState extends State<App> with TickerProviderStateMixin<App> {
         },
         items: allDestinationsList.map((Destination destination) {
           return BottomNavigationBarItem(
-            icon: Icon(destination.icon),
-            backgroundColor: destination.color,
-            title: Text(destination.title),
+            icon: Icon(destination.icon, color: Colors.black,),
+            title: Text(destination.title, style: TextStyle(color: Colors.black),),
           );
         }).toList(),
       ),

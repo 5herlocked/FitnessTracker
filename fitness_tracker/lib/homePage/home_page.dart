@@ -1,11 +1,11 @@
 import 'package:fitnesstracker/exerciseDetailPage/exercise_detail.dart';
 import 'package:fitnesstracker/homePage/header/home_page_header.dart';
-import 'package:fitnesstracker/profilePage/profile.dart';
+import 'package:fitnesstracker/entities/client_profile.dart';
 import 'package:flutter/material.dart';
 import '../app.dart';
 
 class HomePage extends StatefulWidget {
-  final Profile profile;
+  final ClientProfile profile;
   @override
   _HomePageState createState() => _HomePageState();
   HomePage ({Key key, this.profile}) : super(key: key);
@@ -36,15 +36,20 @@ class _HomePageState extends State<HomePage> {
     } else {
       content = ListView.builder(
           itemCount: _todayExercises.length,
-          itemBuilder: _buildTodayExerciseList
+          itemBuilder: _buildTodayExerciseList,
+          padding: EdgeInsets.all(30),
       );
     }
-    return Stack(
-      alignment: Alignment.center,
-      children: <Widget>[
-        HomePageHeader(widget.profile),
-        content,
-      ],
+    return SafeArea(
+        child: Stack(
+          children: <Widget>[
+            HomePageHeader(widget.profile),
+            new Padding(
+              padding: const EdgeInsets.only(top: 250),
+              child: content,
+            ),
+          ],
+        )
     );
   }
 

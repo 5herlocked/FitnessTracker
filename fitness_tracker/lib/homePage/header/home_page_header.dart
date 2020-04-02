@@ -1,37 +1,51 @@
-import 'package:fitnesstracker/profilePage/profile.dart';
+import 'package:fitnesstracker/entities/client_profile.dart';
 import 'package:flutter/material.dart';
 
 class HomePageHeader extends StatelessWidget {
   final LinearGradient backgroundGradient = LinearGradient(
     colors: [
-      Color.fromARGB(86, 250, 90, 90),
-      Color.fromARGB(55, 255, 146, 62)
+      Color.fromARGB(200, 250, 90, 90),
+      Color.fromARGB(200, 255, 146, 62)
     ],
-    begin: Alignment.center,
-    end: Alignment.center,
+    begin: Alignment.topCenter,
+    end: Alignment.bottomCenter,
+    stops: [
+      0.25,
+      0.75,
+    ]
   );
 
-  final Profile profile;
+  final ClientProfile profile;
 
-  HomePageHeader(@required this.profile);
+  HomePageHeader(this.profile);
 
   Widget _buildAvatar() {
-    return new Hero(
-      tag: profile.id,
-      child: new CircleAvatar(
-        backgroundImage: new NetworkImage("https://picsum.photos/id/237/200/300"),
-        radius: 54.0,
-      ),
+    return new CircleAvatar(
+      backgroundImage: new NetworkImage("https://picsum.photos/id/237/200/300"),
+      radius: 90.0,
     );
   }
 
   Widget _buildWelcomeMessage() {
+    TextStyle welcomeStyle = TextStyle(
+      fontFamily: "Roboto",
+      fontWeight: FontWeight.w500,
+      fontSize: 24,
+      color: Colors.white.withOpacity(0.87),
+    );
+    
+    TextStyle subHeadingStyle = TextStyle(
+      fontSize: 18,
+      fontWeight: FontWeight.w500,
+      fontFamily: "Roboto",
+      color: Colors.white.withOpacity(0.87),
+    );
     return Column(
       children: <Widget>[
-        Text("Hi ${profile.firstName},"),
-        Text("You've completed 1 of 3 exercies today. Keep at it!"),
+        Text("Hi ${profile.firstName},", style: welcomeStyle,),
+        Text("You've completed 1 of 3 exercies today. Keep at it!", style: subHeadingStyle,),
       ],
-      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.start,
     );
   }
 
@@ -39,17 +53,26 @@ class HomePageHeader extends StatelessWidget {
     var theme = Theme.of(context);
     var textTheme = theme.textTheme;
 
-    return new Container(
+    return Container(
+      constraints: BoxConstraints(
+        maxHeight: 250,
+      ),
       decoration: BoxDecoration(
-        gradient: backgroundGradient,
+        gradient: backgroundGradient
       ),
       child: Stack(
         children: <Widget>[
-          _buildAvatar(),
-          _buildWelcomeMessage(),
+          new Align(
+            alignment: FractionalOffset.bottomCenter,
+            child: new Column(
+              children: <Widget>[
+                _buildAvatar(),
+                _buildWelcomeMessage(),
+              ],
+            ),
+          )
         ],
       ),
-      alignment: Alignment.center,
     );
   }
 }
