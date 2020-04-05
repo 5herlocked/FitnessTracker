@@ -1,15 +1,16 @@
+import 'package:fitnesstracker/entities/client_profile.dart';
 import 'package:flutter/material.dart';
 
 class ExerciseHistoryPage extends StatelessWidget {
   ExerciseHistoryPage({Key key, this.profile}) : super (key: key);
 
-  final String profile;
+  final ClientProfile profile;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(profile),
+        title: Text(profile.firstName),
       ),
       body: Center(
         child: FlatButton.icon(

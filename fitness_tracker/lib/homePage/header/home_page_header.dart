@@ -29,36 +29,32 @@ class HomePageHeader extends StatelessWidget {
     );
   }
 
-  Widget _buildWelcomeMessage() {
-    TextStyle welcomeStyle = TextStyle(
-      fontFamily: "Roboto",
-      fontWeight: FontWeight.w500,
-      fontSize: 24,
-      color: Colors.white.withOpacity(0.87),
-    );
-    
-    TextStyle subHeadingStyle = TextStyle(
-      fontSize: 18,
-      fontWeight: FontWeight.w500,
-      fontFamily: "Roboto",
-      color: Colors.white.withOpacity(0.87),
-    );
+  Widget _buildWelcomeMessage(BuildContext context) {
     return Column(
       children: <Widget>[
-        Text("Hi ${profile.firstName},", style: welcomeStyle,),
-        Text("You've completed 1 of 3 exercies today. Keep at it!", style: subHeadingStyle,),
+        Padding(
+          padding: EdgeInsets.only(left: 30, right: 30,),
+          child: Text(
+            "Hi ${profile.firstName},",
+            style: Theme.of(context).textTheme.headline,
+          ),
+        ),
+        Padding(
+          padding: EdgeInsets.only(left: 30, right: 30),
+          child: Text(
+            "You've completed 1 of 3 exercies today. Keep at it!",
+            style: Theme.of(context).textTheme.subtitle,
+          ),
+        ),
       ],
       crossAxisAlignment: CrossAxisAlignment.start,
     );
   }
 
   Widget build(BuildContext context) {
-    var theme = Theme.of(context);
-    var textTheme = theme.textTheme;
-
     return Container(
       constraints: BoxConstraints(
-        maxHeight: 265,
+        maxHeight: 275,
       ),
       decoration: BoxDecoration(
         gradient: backgroundGradient
@@ -70,7 +66,7 @@ class HomePageHeader extends StatelessWidget {
             child: new Column(
               children: <Widget>[
                 _buildAvatar(),
-                _buildWelcomeMessage(),
+                _buildWelcomeMessage(context),
               ],
             ),
           )
