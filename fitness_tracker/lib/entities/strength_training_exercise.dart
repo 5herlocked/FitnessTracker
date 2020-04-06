@@ -11,12 +11,14 @@ class StrengthTrainingExercise extends Exercise {
         this.reps,
         this.sets,
         trainerID,
+        name,
         notes,
         completed
       }
       ) : super (
       clientID: clientID,
       trainerID: trainerID,
+      name: name,
       notes: notes,
       completed: completed
   );
@@ -28,6 +30,7 @@ class StrengthTrainingExercise extends Exercise {
       reps: json["reps"],
       sets: json["sets"],
       trainerID: json["trainer_id"],
+      name: json["name"],
       notes: json["notes"],
       completed: json["completed"],
     );

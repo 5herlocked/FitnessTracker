@@ -7,12 +7,13 @@ class CardioExercise extends Exercise {
   DateTime timeStarted;
   DateTime timeEnded;
 
-  CardioExercise({clientID, trainerID, this.distance, this.duration,
+  CardioExercise({clientID, trainerID, name, this.distance, this.duration,
     this.caloriesBurnt, completed, notes, this.timeStarted, this.timeEnded})
   : super(
       clientID: clientID,
       trainerID: trainerID,
       notes: notes,
+      name: name,
       completed: completed
   );
 
@@ -20,6 +21,7 @@ class CardioExercise extends Exercise {
     return CardioExercise(
       clientID: json["client_id"],
       trainerID: json["trainer_id"],
+      name: json["name"],
       distance: json["distance"],
       duration: json["duration"],
       caloriesBurnt: json["calories_burnt"],

@@ -13,9 +13,7 @@ class MyApp extends StatelessWidget {
         brightness: Brightness.light,
         primaryColor: Colors.deepOrangeAccent[800],
         accentColor: Colors.amber[1200],
-
         fontFamily: "Roboto",
-
         textTheme: TextTheme(
           headline: TextStyle(
             fontFamily: "Roboto",
