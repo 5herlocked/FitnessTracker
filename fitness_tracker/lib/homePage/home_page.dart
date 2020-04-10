@@ -2,6 +2,7 @@ import 'package:fitnesstracker/exerciseDetailPage/exercise_detail.dart';
 import 'package:fitnesstracker/homePage/header/home_page_header.dart';
 import 'package:fitnesstracker/entities/client_profile.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 
 class HomePage extends StatefulWidget {
   final ClientProfile profile;
@@ -56,13 +57,26 @@ class _HomePageState extends State<HomePage> {
   Widget _buildTodayExerciseList (BuildContext context, int index) {
     var exercises = _todayExercises.keys;
     return new Card(
-      child: CheckboxListTile(
-        title: Text(exercises.elementAt(index)),
-        subtitle: Text("duration"),
-        value: _todayExercises.values.elementAt(index), // to be changed when exercise class is completed
-        checkColor: Colors.white,
-        activeColor: Color.fromARGB(200, 250, 90, 90),
-        onChanged: (bool value) => _exercisesToggled(value, index),
+      child: Slidable(
+        actionPane: SlidableDrawerActionPane(),
+        actionExtentRatio: 0.33,
+        actions: <Widget>[
+          IconSlideAction(
+            caption: _todayExercises.values.elementAt(index)
+                ? "Completed" : "Not Completed",
+            color: _todayExercises.values.elementAt(index)
+                ? Colors.green : Colors.red,
+            icon: _todayExercises.values.elementAt(index)
+                ? Icons.check : Icons.not_interested,
+            onTap: () => _exercisesToggled(
+                _todayExercises.values.elementAt(index), index
+            ),
+          )
+        ],
+        child: ListTile(
+          title: Text(exercises.elementAt(index)),
+          subtitle: Text("duration"),
+        ),
       ),
     );
   }
