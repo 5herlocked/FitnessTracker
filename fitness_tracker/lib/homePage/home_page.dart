@@ -69,6 +69,7 @@ class _HomePageState extends State<HomePage> {
         actionPane: SlidableScrollActionPane(),
         actionExtentRatio: 0.33,
         child: ListTile(
+          onTap: () async => _navigateToExerciseDetails(exercises.elementAt(index)),
           title: Text(exercises.elementAt(index)),
           subtitle: Text("duration"),
         ),
@@ -116,7 +117,7 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  void _navigateToExerciseDetails(String exercise, int index) {
+  void _navigateToExerciseDetails(String exercise) {
     Navigator.of(context).push(
       new MaterialPageRoute(
         builder: (c) {

@@ -1,5 +1,6 @@
 import 'package:fitnesstracker/entities/client_profile.dart';
 import 'package:fitnesstracker/entities/exercise.dart';
+import 'package:fitnesstracker/exerciseDetailPage/exercise_detail.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
@@ -47,9 +48,20 @@ class _AssignedExercisesPageState extends State<AssignedExercisesPage> {
           )
         ],
         child: ListTile(
+          onTap: () => _navigateToExerciseDetails(_assignedExercises.keys.elementAt(index)),
           title: Text(_assignedExercises.keys.elementAt(index)),
           subtitle: Text("duration"),
         ),
+      ),
+    );
+  }
+
+  void _navigateToExerciseDetails(String exercise) {
+    Navigator.of(context).push(
+      new MaterialPageRoute(
+        builder: (c) {
+          return new ExerciseDetailPage(exercise: exercise);
+        },
       ),
     );
   }
