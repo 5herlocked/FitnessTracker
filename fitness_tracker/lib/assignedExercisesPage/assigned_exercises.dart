@@ -31,16 +31,16 @@ class _AssignedExercisesPageState extends State<AssignedExercisesPage> {
 
     return new Card(
       child: Slidable(
-        actionPane: SlidableDrawerActionPane(),
+        actionPane: SlidableScrollActionPane(),
         actionExtentRatio: 0.33,
         actions: <Widget>[
           IconSlideAction(
           caption: _assignedExercises.values.elementAt(index)
-              ? "Completed" : "Not Completed",
+              ? "Mark as Incomplete" : "Mark as Complete",
             color: _assignedExercises.values.elementAt(index)
-                ? Colors.green : Colors.red,
+                ? Colors.red : Colors.green,
             icon: _assignedExercises.values.elementAt(index)
-                ? Icons.check : Icons.not_interested,
+                ? Icons.not_interested : Icons.check,
             onTap: () => _exercisesToggled(
                 _assignedExercises.values.elementAt(index), index
             ),
@@ -63,7 +63,7 @@ class _AssignedExercisesPageState extends State<AssignedExercisesPage> {
                 (bool value) => !value)
     );
     switch(value){
-      case true:
+      case false:
       // API call
         return Scaffold.of(context).showSnackBar(
             SnackBar(
@@ -71,7 +71,7 @@ class _AssignedExercisesPageState extends State<AssignedExercisesPage> {
             )
         );
         break;
-      case false:
+      case true:
         return Scaffold.of(context).showSnackBar(
             SnackBar(
               content: Text("${_assignedExercises.keys.elementAt(index)} not complete"),
@@ -93,7 +93,6 @@ class _AssignedExercisesPageState extends State<AssignedExercisesPage> {
       content = ListView.builder(
         itemCount: _assignedExercises.length,
         itemBuilder: _buildExercises,
-        padding: EdgeInsets.all(30),
       );
     }
     return Scaffold(

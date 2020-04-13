@@ -1,5 +1,6 @@
 import 'package:fitnesstracker/entities/client_profile.dart';
 import 'package:flutter/material.dart';
+import 'package:fitnesstracker/homePage/home_page.dart';
 
 class HomePageHeader extends StatelessWidget {
   final LinearGradient backgroundGradient = LinearGradient(
@@ -16,8 +17,9 @@ class HomePageHeader extends StatelessWidget {
   );
 
   final ClientProfile profile;
+  final List exercisesState;
 
-  HomePageHeader(this.profile);
+  HomePageHeader(this.profile, this.exercisesState);
 
   Widget _buildAvatar() {
     return Padding(
@@ -42,7 +44,7 @@ class HomePageHeader extends StatelessWidget {
         Padding(
           padding: EdgeInsets.only(left: 30, right: 30),
           child: Text(
-            "You've completed 1 of 3 exercies today. Keep at it!",
+            "You've completed ${exercisesState[0]} of ${exercisesState[1]} exercies today. Keep at it!",
             style: Theme.of(context).textTheme.subtitle,
           ),
         ),

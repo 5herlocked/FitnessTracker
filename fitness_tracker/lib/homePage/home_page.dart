@@ -38,13 +38,12 @@ class _HomePageState extends State<HomePage> {
       content = ListView.builder(
           itemCount: _todayExercises.length,
           itemBuilder: _buildTodayExerciseList,
-          padding: EdgeInsets.only(right: 30, left: 30),
       );
     }
     return SafeArea(
         child: Stack(
           children: <Widget>[
-            HomePageHeader(widget.profile),
+            HomePageHeader(widget.profile, [_getCompletedExercises(), _todayExercises.length]),
             new Padding(
               padding: const EdgeInsets.only(top: 275),
               child: content,
@@ -54,29 +53,38 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  int _getCompletedExercises() {
+    int completedExercises = 0;
+    for(dynamic d in _todayExercises.values) {
+      completedExercises += (d) ? 1 : 0;
+    }
+    return completedExercises;
+  }
+
   Widget _buildTodayExerciseList (BuildContext context, int index) {
     var exercises = _todayExercises.keys;
-    return new Card(
+    return Card(
+
       child: Slidable(
-        actionPane: SlidableDrawerActionPane(),
+        actionPane: SlidableScrollActionPane(),
         actionExtentRatio: 0.33,
+        child: ListTile(
+          title: Text(exercises.elementAt(index)),
+          subtitle: Text("duration"),
+        ),
         actions: <Widget>[
           IconSlideAction(
             caption: _todayExercises.values.elementAt(index)
-                ? "Completed" : "Not Completed",
+                ? "Mark as Incomplete" : "Mark as Complete",
             color: _todayExercises.values.elementAt(index)
-                ? Colors.green : Colors.red,
+                ? Colors.red : Colors.green,
             icon: _todayExercises.values.elementAt(index)
-                ? Icons.check : Icons.not_interested,
+                ? Icons.not_interested : Icons.check,
             onTap: () => _exercisesToggled(
                 _todayExercises.values.elementAt(index), index
             ),
           )
         ],
-        child: ListTile(
-          title: Text(exercises.elementAt(index)),
-          subtitle: Text("duration"),
-        ),
       ),
     );
   }
@@ -90,7 +98,7 @@ class _HomePageState extends State<HomePage> {
                     (bool value) => !value)
     );
     switch(value){
-      case true:
+      case false:
         // API call
         return Scaffold.of(context).showSnackBar(
           SnackBar(
@@ -98,7 +106,7 @@ class _HomePageState extends State<HomePage> {
           )
         );
         break;
-      case false:
+      case true:
         return Scaffold.of(context).showSnackBar(
           SnackBar(
             content: Text("${_todayExercises.keys.elementAt(index)} not complete"),
