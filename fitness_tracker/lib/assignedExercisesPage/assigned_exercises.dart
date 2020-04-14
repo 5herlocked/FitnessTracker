@@ -2,6 +2,8 @@ import 'package:fitnesstracker/entities/client_profile.dart';
 import 'package:fitnesstracker/entities/exercise.dart';
 import 'package:flutter/material.dart';
 
+import '../decorations.dart';
+
 class AssignedExercisesPage extends StatefulWidget {
   final ClientProfile profile;
 
@@ -55,14 +57,9 @@ class _AssignedExercisesPageState extends State<AssignedExercisesPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Assigned Exercises",
-          style: TextStyle(
-            fontFamily: "Roboto",
-            fontWeight: FontWeight.w500,
-            fontSize: 24,
-            color: Colors.white.withOpacity(0.87),
-          ),
+          style: Decorations.headline,
         ),
-        backgroundColor: Color.fromARGB(200, 250, 90, 90),
+        backgroundColor: Decorations.accentColour,
       ),
       body: SafeArea(
         child: Stack(
