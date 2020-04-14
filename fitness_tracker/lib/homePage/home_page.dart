@@ -1,6 +1,7 @@
 import 'package:fitnesstracker/exerciseDetailPage/exercise_detail.dart';
 import 'package:fitnesstracker/homePage/header/home_page_header.dart';
 import 'package:fitnesstracker/entities/client_profile.dart';
+import 'package:fitnesstracker/decorations.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
@@ -61,7 +62,7 @@ class _HomePageState extends State<HomePage> {
         subtitle: Text("duration"),
         value: _todayExercises.values.elementAt(index), // to be changed when exercise class is completed
         checkColor: Colors.white,
-        activeColor: Color.fromARGB(200, 250, 90, 90),
+        activeColor: Decorations.accentColour,
         onChanged: (bool value) => _exercisesToggled(value, index),
       ),
     );

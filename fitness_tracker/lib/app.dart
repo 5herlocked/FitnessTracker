@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:fitnesstracker/assignedExercisesPage/assigned_exercises.dart';
 import 'package:fitnesstracker/exerciseHistoryPage/exercise_history.dart';
 import 'package:fitnesstracker/homePage/home_page.dart';
