@@ -1,6 +1,7 @@
 import 'package:fitnesstracker/entities/client_profile.dart';
+import 'package:fitnesstracker/entities/exercise.dart';
+import 'package:fitnesstracker/profilePage/profilePage.dart';
 import 'package:flutter/material.dart';
-import 'package:fitnesstracker/homePage/home_page.dart';
 
 class HomePageHeader extends StatelessWidget {
   final LinearGradient backgroundGradient = LinearGradient(
@@ -21,15 +22,24 @@ class HomePageHeader extends StatelessWidget {
 
   HomePageHeader(this.profile, this.exercisesState);
 
-  Widget _buildAvatar() {
+  Widget _buildAvatar(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
-      child: new CircleAvatar(
-        backgroundImage: new NetworkImage("https://picsum.photos/id/237/200/300"),
-        radius: 90.0,
+      child: GestureDetector(
+        onTap: () => _navigateToProfilePage(context),
+        child: new CircleAvatar(
+          backgroundImage: new NetworkImage("https://picsum.photos/id/237/200/300"),
+          radius: 90.0,
+        ),
       ),
     );
   }
+
+  _navigateToProfilePage(BuildContext context) => Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (c) => ProfilePage(profile: profile.firstName,)
+      )
+  );
 
   Widget _buildWelcomeMessage(BuildContext context) {
     return Column(
@@ -67,7 +77,7 @@ class HomePageHeader extends StatelessWidget {
             alignment: FractionalOffset.bottomCenter,
             child: new Column(
               children: <Widget>[
-                _buildAvatar(),
+                _buildAvatar(context),
                 _buildWelcomeMessage(context),
               ],
             ),
