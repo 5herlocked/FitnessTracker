@@ -44,7 +44,7 @@ class HomePageHeader extends StatelessWidget {
           padding: EdgeInsets.only(left: 30, right: 30),
           child: Text(
             "You've completed ${exercisesState[0]} of ${exercisesState[1]} exercies today. Keep at it!",
-            style: Theme.of(context).textTheme.subtitle,
+            style: Decorations.subtitle,
           ),
         ),
       ],
