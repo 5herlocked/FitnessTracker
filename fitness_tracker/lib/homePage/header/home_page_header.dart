@@ -1,22 +1,34 @@
 import 'package:fitnesstracker/entities/client_profile.dart';
+import 'package:fitnesstracker/entities/exercise.dart';
+import 'package:fitnesstracker/profilePage/profilePage.dart';
 import 'package:flutter/material.dart';
 
 import '../../decorations.dart';
 
 class HomePageHeader extends StatelessWidget {
   final ClientProfile profile;
+  final List exercisesState;
 
-  HomePageHeader(this.profile);
+  HomePageHeader(this.profile, this.exercisesState);
 
-  Widget _buildAvatar() {
+  Widget _buildAvatar(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
-      child: new CircleAvatar(
-        backgroundImage: new NetworkImage("https://picsum.photos/id/237/200/300"),
-        radius: 90.0,
+      child: GestureDetector(
+        onTap: () => _navigateToProfilePage(context),
+        child: new CircleAvatar(
+          backgroundImage: new NetworkImage("https://picsum.photos/id/237/200/300"),
+          radius: 90.0,
+        ),
       ),
     );
   }
+
+  _navigateToProfilePage(BuildContext context) => Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (c) => ProfilePage(profile: profile.firstName,)
+      )
+  );
 
   Widget _buildWelcomeMessage(BuildContext context) {
     return Column(
@@ -31,8 +43,8 @@ class HomePageHeader extends StatelessWidget {
         Padding(
           padding: EdgeInsets.only(left: 30, right: 30),
           child: Text(
-            "You've completed 1 of 3 exercies today. Keep at it!",
-            style: Decorations.subtitle,
+            "You've completed ${exercisesState[0]} of ${exercisesState[1]} exercies today. Keep at it!",
+            style: Theme.of(context).textTheme.subtitle,
           ),
         ),
       ],
@@ -54,7 +66,7 @@ class HomePageHeader extends StatelessWidget {
             alignment: FractionalOffset.bottomCenter,
             child: new Column(
               children: <Widget>[
-                _buildAvatar(),
+                _buildAvatar(context),
                 _buildWelcomeMessage(context),
               ],
             ),

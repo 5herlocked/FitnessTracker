@@ -1,6 +1,8 @@
 import 'package:fitnesstracker/entities/client_profile.dart';
 import 'package:fitnesstracker/entities/exercise.dart';
+import 'package:fitnesstracker/exerciseDetailPage/exercise_detail.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 
 import '../decorations.dart';
 
@@ -31,13 +33,67 @@ class _AssignedExercisesPageState extends State<AssignedExercisesPage> {
     var exercise = _assignedExercises.values;
 
     return new Card(
-      child: ListTile(
-        title: Text(_assignedExercises.keys.elementAt(index)),
-        subtitle: Text("duration"),
+      child: Slidable(
+        actionPane: SlidableScrollActionPane(),
+        actionExtentRatio: 0.33,
+        actions: <Widget>[
+          IconSlideAction(
+          caption: _assignedExercises.values.elementAt(index)
+              ? "Mark as Incomplete" : "Mark as Complete",
+            color: _assignedExercises.values.elementAt(index)
+                ? Colors.red : Colors.green,
+            icon: _assignedExercises.values.elementAt(index)
+                ? Icons.not_interested : Icons.check,
+            onTap: () => _exercisesToggled(
+                _assignedExercises.values.elementAt(index), index
+            ),
+          )
+        ],
+        child: ListTile(
+          onTap: () => _navigateToExerciseDetails(_assignedExercises.keys.elementAt(index)),
+          title: Text(_assignedExercises.keys.elementAt(index)),
+          subtitle: Text("duration"),
+        ),
       ),
     );
   }
 
+  void _navigateToExerciseDetails(String exercise) {
+    Navigator.of(context).push(
+      new MaterialPageRoute(
+        builder: (c) {
+          return new ExerciseDetailPage(exercise: exercise);
+        },
+      ),
+    );
+  }
+
+  _exercisesToggled(bool value, int index) {
+    // To-do: Implement API to use the exercises classes so that whenever
+    // the exercise is marked complete, it's actually marked complete
+    setState(
+            () => _assignedExercises.update(
+            _assignedExercises.keys.elementAt(index),
+                (bool value) => !value)
+    );
+    switch(value){
+      case false:
+      // API call
+        return Scaffold.of(context).showSnackBar(
+            SnackBar(
+              content: Text("${_assignedExercises.keys.elementAt(index)} completed"),
+            )
+        );
+        break;
+      case true:
+        return Scaffold.of(context).showSnackBar(
+            SnackBar(
+              content: Text("${_assignedExercises.keys.elementAt(index)} not complete"),
+            )
+        );
+        break;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -51,7 +107,6 @@ class _AssignedExercisesPageState extends State<AssignedExercisesPage> {
       content = ListView.builder(
         itemCount: _assignedExercises.length,
         itemBuilder: _buildExercises,
-        padding: EdgeInsets.all(30),
       );
     }
     return Scaffold(
