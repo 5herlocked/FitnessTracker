@@ -11,13 +11,18 @@ class ExerciseDetailPage extends StatelessWidget {
       appBar: AppBar(
         title: Text("Exercise Details"),
       ),
-      body: Center(
+      body: Container (
+        decoration: BoxDecoration(
+          color: Colors.white,
+        ),
+        child: Center(
           child: FlatButton.icon(
             onPressed: () => _buttonPressed(context),
             icon: Icon(Icons.details),
             label: Text("$exercise"),
           )
-      ),
+        ),
+      )
     );
   }
 
