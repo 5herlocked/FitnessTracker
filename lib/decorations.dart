@@ -2,23 +2,28 @@ import 'package:flutter/material.dart';
 
 class Decorations {
   static var headline = TextStyle(
-      fontFamily: "Roboto",
-      fontWeight: FontWeight.w500,
-      fontSize: 24,
-      color: Colors.white.withOpacity(0.87),
+    fontFamily: "Raleway",
+    fontWeight: FontWeight.w900,
+    fontSize: 20,
+    color: Colors.white.withOpacity(0.87),
   );
 
-  static var subtitle = TextStyle (
+  static var subtitle = TextStyle(
     fontSize: 18,
     fontWeight: FontWeight.w500,
-    fontFamily: "Roboto",
+    fontFamily: "Raleway",
     color: Colors.white.withOpacity(0.87),
+  );
+
+  static var snackBar = TextStyle(
+      fontFamily: 'Raleway',
+      fontSize: 15,
   );
 
   static var backgroundGradient = LinearGradient(
       colors: [
-        Color.fromARGB(200, 250, 90, 90),
-        Color.fromARGB(200, 255, 146, 62)
+        Color(0xFFFA716F),
+        Color(0xFFFEA969)
       ],
       begin: Alignment.topCenter,
       end: Alignment.bottomCenter,

@@ -1,15 +1,15 @@
+import 'package:fitnesstracker/entities/client.dart';
 import 'package:fitnesstracker/exerciseDetailPage/exercise_detail.dart';
 import 'package:fitnesstracker/homePage/header/home_page_header.dart';
-import 'package:fitnesstracker/entities/client_profile.dart';
 import 'package:fitnesstracker/decorations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
 class HomePage extends StatefulWidget {
-  final ClientProfile profile;
+  final Client client;
   @override
   _HomePageState createState() => _HomePageState();
-  HomePage ({Key key, this.profile}) : super(key: key);
+  HomePage ({Key key, this.client}) : super(key: key);
 }
 
 class _HomePageState extends State<HomePage> {
@@ -42,15 +42,20 @@ class _HomePageState extends State<HomePage> {
       );
     }
     return SafeArea(
-        child: Stack(
-          children: <Widget>[
-            HomePageHeader(widget.profile, [_getCompletedExercises(), _todayExercises.length]),
-            new Padding(
-              padding: const EdgeInsets.only(top: 275),
-              child: content,
-            ),
-          ],
-        )
+        child: Container(
+          decoration: BoxDecoration(
+          color: Colors.white,
+          ),
+          child: Stack(
+            children: <Widget>[
+              HomePageHeader(widget.client, [_getCompletedExercises(), _todayExercises.length]),
+              new Padding(
+                padding: const EdgeInsets.only(top: 275),
+                child: content,
+              ),
+            ],
+          )
+      )
     );
   }
 

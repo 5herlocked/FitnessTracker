@@ -1,3 +1,4 @@
+import 'package:fitnesstracker/entities/client.dart';
 import 'package:fitnesstracker/entities/client_profile.dart';
 import 'package:fitnesstracker/entities/exercise.dart';
 import 'package:fitnesstracker/exerciseDetailPage/exercise_detail.dart';
@@ -7,11 +8,11 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import '../decorations.dart';
 
 class AssignedExercisesPage extends StatefulWidget {
-  final ClientProfile profile;
+  final Client client;
 
   @override
   _AssignedExercisesPageState createState() => _AssignedExercisesPageState();
-  AssignedExercisesPage({Key key, this.profile}) : super (key: key);
+  AssignedExercisesPage({Key key, this.client}) : super (key: key);
 }
 
 class _AssignedExercisesPageState extends State<AssignedExercisesPage> {
@@ -81,14 +82,18 @@ class _AssignedExercisesPageState extends State<AssignedExercisesPage> {
       // API call
         return Scaffold.of(context).showSnackBar(
             SnackBar(
-              content: Text("${_assignedExercises.keys.elementAt(index)} completed"),
-            )
+              content: Text("${_assignedExercises.keys.elementAt(index)} completed",
+                  style: Decorations.snackBar
+              )
+            ),
         );
         break;
       case true:
         return Scaffold.of(context).showSnackBar(
             SnackBar(
-              content: Text("${_assignedExercises.keys.elementAt(index)} not complete"),
+              content: Text("${_assignedExercises.keys.elementAt(index)} not complete",
+                  style: Decorations.snackBar
+              ),
             )
         );
         break;
@@ -111,18 +116,20 @@ class _AssignedExercisesPageState extends State<AssignedExercisesPage> {
     }
     return Scaffold(
       appBar: AppBar(
-        title: Text("Assigned Exercises",
-          style: Decorations.headline,
-        ),
-        backgroundColor: Decorations.accentColour,
+        title: Text("Assigned Exercises"),
       ),
-      body: SafeArea(
-        child: Stack(
-          children: <Widget>[
-            content,
-          ],
-        ),
-      ),
+        body: SafeArea(
+          child: Container (
+            decoration: BoxDecoration(
+              color: Colors.white,
+            ),
+            child: Stack(
+              children: <Widget>[
+                content,
+              ],
+            ),
+          ),
+        )
     );
   }
 }

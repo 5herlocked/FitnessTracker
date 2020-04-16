@@ -1,15 +1,14 @@
-import 'package:fitnesstracker/entities/client_profile.dart';
+import 'package:fitnesstracker/clientProfilePage/clientProfilePage.dart';
+import 'package:fitnesstracker/entities/client.dart';
 import 'package:fitnesstracker/entities/exercise.dart';
-import 'package:fitnesstracker/profilePage/profilePage.dart';
 import 'package:flutter/material.dart';
-
 import '../../decorations.dart';
 
 class HomePageHeader extends StatelessWidget {
-  final ClientProfile profile;
+  final Client client;
   final List exercisesState;
 
-  HomePageHeader(this.profile, this.exercisesState);
+  HomePageHeader(this.client, this.exercisesState);
 
   Widget _buildAvatar(BuildContext context) {
     return Padding(
@@ -17,8 +16,8 @@ class HomePageHeader extends StatelessWidget {
       child: GestureDetector(
         onTap: () => _navigateToProfilePage(context),
         child: new CircleAvatar(
-          backgroundImage: new NetworkImage("https://picsum.photos/id/237/200/300"),
-          radius: 90.0,
+          backgroundImage: new NetworkImage("https://19yw4b240vb03ws8qm25h366-wpengine.netdna-ssl.com/wp-content/uploads/Profile-Pic-Circle-Grey-Large.png"),
+          radius: 80.0,
         ),
       ),
     );
@@ -26,7 +25,7 @@ class HomePageHeader extends StatelessWidget {
 
   _navigateToProfilePage(BuildContext context) => Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (c) => ProfilePage(profile: profile.firstName,)
+        builder: (c) => ClientProfilePage(client: client,)
       )
   );
 
@@ -36,7 +35,7 @@ class HomePageHeader extends StatelessWidget {
         Padding(
           padding: EdgeInsets.only(left: 30, right: 30,),
           child: Text(
-            "Hi ${profile.firstName},",
+            "Hi ${client.firstName},",
             style: Decorations.headline,
           ),
         ),
@@ -55,7 +54,7 @@ class HomePageHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       constraints: BoxConstraints(
-        maxHeight: 275,
+        maxHeight: 260,
       ),
       decoration: BoxDecoration(
         gradient: Decorations.backgroundGradient,
