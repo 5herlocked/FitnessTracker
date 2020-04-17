@@ -1,6 +1,8 @@
 import 'dart:convert';
+import 'package:fitnesstracker/entities/profile.dart';
 import 'package:http/http.dart' as http;
-class Trainer {
+
+class Trainer extends Profile {
   // account
   String firstName, lastName, fullName, phoneNumber, email, password;
   String trainerMembershipID;
@@ -8,20 +10,23 @@ class Trainer {
   //profile
   String description, birthday, weight, height, fitnessGoal;
 
-  Trainer({
-    this.firstName,
-    this.lastName,
-    this.fullName,
-    this.email,
-    this.trainerID,
-    this.trainerMembershipID,
-    this.phoneNumber,
-    this.password,
-    this.description,
-    this.birthday,
-    this.weight,
-    this.height,
-    this.fitnessGoal});
+  Trainer(
+      {
+        this.firstName,
+        this.lastName,
+        this.fullName,
+        this.email,
+        this.trainerID,
+        this.trainerMembershipID,
+        this.phoneNumber,
+        this.password,
+        this.description,
+        this.birthday,
+        this.weight,
+        this.height,
+        this.fitnessGoal,
+      }
+  );
 
   factory Trainer.fromJson(Map<String, dynamic> json) {
     return Trainer(
@@ -29,8 +34,7 @@ class Trainer {
         lastName: json['last_name'],
         email: json['email'],
         phoneNumber: json['phone_number'],
-        trainerID: json['trainer_id']
-    );
+        trainerID: json['trainer_id']);
   }
 
   // Send a POST request to the API to create a new client

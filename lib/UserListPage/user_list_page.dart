@@ -1,37 +1,36 @@
 import 'package:fitnesstracker/entities/client.dart';
-import 'package:fitnesstracker/entities/client_profile.dart';
+import 'package:fitnesstracker/entities/trainer.dart';
 import 'package:fitnesstracker/entities/exercise.dart';
+import 'package:fitnesstracker/entities/profile.dart';
 import 'package:fitnesstracker/exerciseDetailPage/exercise_detail.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
 import '../decorations.dart';
 
-class AssignedExercisesPage extends StatefulWidget {
-  final Client client;
+class UserListPage<T extends Profile> extends StatefulWidget {
+  final T user;
 
   @override
-  _AssignedExercisesPageState createState() => _AssignedExercisesPageState();
-  AssignedExercisesPage({Key key, this.client}) : super (key: key);
+  _UserListPageState createState() => _UserListPageState();
+  UserListPage({Key key, this.user}) : super (key: key);
 }
 
-class _AssignedExercisesPageState extends State<AssignedExercisesPage> {
-  Map<String, bool> _assignedExercises = {};
+class _UserListPageState extends State<UserListPage> {
+  dynamic _list = {};
 
   @override
   void initState() {
     super.initState();
-    _loadExercises();
+    _loadList();
   }
 
-  void _loadExercises() {
-    //To-Do: Implement API Access
-    _assignedExercises = {"Elliptical": false, "Chest Press": true, "Rowing": true,
-      "Speed Walking": false, "Running": false, "Overhead Press": false, "Pole Vaulting": true};
+  void _loadList() {
+    //TODO: Implement API Access to get client list
   }
 
   Widget _buildExercises(BuildContext context, int index) {
-    var exercise = _assignedExercises.values;
+    var exercise = _list.values;
 
     return new Card(
       child: Slidable(
@@ -39,20 +38,20 @@ class _AssignedExercisesPageState extends State<AssignedExercisesPage> {
         actionExtentRatio: 0.33,
         actions: <Widget>[
           IconSlideAction(
-          caption: _assignedExercises.values.elementAt(index)
+          caption: exercise.elementAt(index)
               ? "Mark as Incomplete" : "Mark as Complete",
-            color: _assignedExercises.values.elementAt(index)
+            color: exercise.elementAt(index)
                 ? Colors.red : Colors.green,
-            icon: _assignedExercises.values.elementAt(index)
+            icon: exercise.elementAt(index)
                 ? Icons.not_interested : Icons.check,
             onTap: () => _exercisesToggled(
-                _assignedExercises.values.elementAt(index), index
+                exercise.elementAt(index), index
             ),
           )
         ],
         child: ListTile(
-          onTap: () => _navigateToExerciseDetails(_assignedExercises.keys.elementAt(index)),
-          title: Text(_assignedExercises.keys.elementAt(index)),
+          onTap: () => _navigateToExerciseDetails(_list.keys.elementAt(index)),
+          title: Text(_list.keys.elementAt(index)),
           subtitle: Text("duration"),
         ),
       ),
@@ -73,8 +72,8 @@ class _AssignedExercisesPageState extends State<AssignedExercisesPage> {
     // To-do: Implement API to use the exercises classes so that whenever
     // the exercise is marked complete, it's actually marked complete
     setState(
-            () => _assignedExercises.update(
-            _assignedExercises.keys.elementAt(index),
+            () => _list.update(
+            _list.keys.elementAt(index),
                 (bool value) => !value)
     );
     switch(value){
@@ -82,7 +81,7 @@ class _AssignedExercisesPageState extends State<AssignedExercisesPage> {
       // API call
         return Scaffold.of(context).showSnackBar(
             SnackBar(
-              content: Text("${_assignedExercises.keys.elementAt(index)} completed",
+              content: Text("${_list.keys.elementAt(index)} completed",
                   style: Decorations.snackBar
               )
             ),
@@ -91,7 +90,7 @@ class _AssignedExercisesPageState extends State<AssignedExercisesPage> {
       case true:
         return Scaffold.of(context).showSnackBar(
             SnackBar(
-              content: Text("${_assignedExercises.keys.elementAt(index)} not complete",
+              content: Text("${_list.keys.elementAt(index)} not complete",
                   style: Decorations.snackBar
               ),
             )
@@ -104,13 +103,13 @@ class _AssignedExercisesPageState extends State<AssignedExercisesPage> {
   Widget build(BuildContext context) {
     Widget content;
 
-    if (_assignedExercises.isEmpty) {
+    if (_list.isEmpty) {
       content = new Center(
         child: Text("Looks like you have no assigned exercises today"),
       );
     } else {
       content = ListView.builder(
-        itemCount: _assignedExercises.length,
+        itemCount: _list.length,
         itemBuilder: _buildExercises,
       );
     }

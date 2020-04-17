@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
 class CustomFilledButton extends StatelessWidget {
-  String text;
-  Color splashColor, highlightColor, fillColor, textColor;
-  VoidCallback onPressed;
+  final String text;
+  final Color splashColor, highlightColor, fillColor, textColor;
+  final VoidCallback onPressed;
 
   CustomFilledButton({this.text, this.splashColor, this.highlightColor, this.textColor, this.fillColor, this.onPressed});
 
