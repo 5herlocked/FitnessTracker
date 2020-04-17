@@ -1,7 +1,7 @@
-import 'package:fitnesstracker/customWidgets/customFilledButton.dart';
-import 'package:fitnesstracker/customWidgets/customOutlineButton.dart';
-import 'package:fitnesstracker/loginRegistrationPage/loginForm.dart';
-import 'package:fitnesstracker/loginRegistrationPage/registerForm.dart';
+import 'package:fitnesstracker/customWidgets/custom_filled_button.dart';
+import 'package:fitnesstracker/customWidgets/custom_outline_button.dart';
+import 'package:fitnesstracker/loginRegistrationPage/login_form.dart';
+import 'package:fitnesstracker/loginRegistrationPage/register_form.dart';
 import 'package:flutter/material.dart';
 
 import '../decorations.dart';
@@ -14,9 +14,7 @@ class LoginRegister extends StatefulWidget {
 }
 
 class _LoginRegisterState extends State<LoginRegister> {
-  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  PersistentBottomSheetController _sheetController;
+  final ScaffoldState state = new ScaffoldState();
 
   void initState() {
     super.initState();
@@ -27,25 +25,21 @@ class _LoginRegisterState extends State<LoginRegister> {
     Color primaryColor = Theme.of(context).primaryColor;
 
     void createLoginSheet() {
-      _sheetController = _scaffoldKey.currentState
-          .showBottomSheet<void>((BuildContext context) {
-        return LoginForm(
-          scaffoldKey: _scaffoldKey,
-          formKey: _formKey,
-          sheetController: _sheetController,
-        );
-      });
+      showModalBottomSheet(
+        isScrollControlled: true,
+        isDismissible: true,
+        context: context,
+        builder: (builder) => LoginForm(),
+      );
     }
 
     void createRegisterSheet() {
-      _sheetController = _scaffoldKey.currentState
-          .showBottomSheet<void>((BuildContext context) {
-        return RegisterForm(
-          scaffoldKey: _scaffoldKey,
-          formKey: _formKey,
-          sheetController: _sheetController,
-        );
-      });
+      showModalBottomSheet(
+        isDismissible: true,
+        context: context,
+        isScrollControlled: true,
+        builder: (builder) => RegisterForm(),
+      );
     }
 
     return Container(
@@ -54,7 +48,6 @@ class _LoginRegisterState extends State<LoginRegister> {
         ),
         child: Scaffold(
             resizeToAvoidBottomPadding: false,
-            key: _scaffoldKey,
             //backgroundColor: Theme.of(context).primaryColor,
             body: Column(
               children: <Widget>[
