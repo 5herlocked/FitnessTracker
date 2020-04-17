@@ -1,5 +1,4 @@
 import 'package:fitnesstracker/entities/client.dart';
-import 'package:fitnesstracker/entities/client_profile.dart';
 import 'package:flutter/material.dart';
 
 class ExerciseHistoryPage extends StatelessWidget {

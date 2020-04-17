@@ -1,17 +1,20 @@
 import 'package:fitnesstracker/entities/client.dart';
+import 'package:fitnesstracker/entities/profile.dart';
 import 'package:flutter/material.dart';
-import 'package:fitnesstracker/customWidgets/customTextField.dart';
-import 'package:fitnesstracker/customWidgets/customFilledButton.dart';
+import 'package:fitnesstracker/customWidgets/custom_text_field.dart';
+import 'package:fitnesstracker/customWidgets/custom_filled_button.dart';
 
-class ClientProfilePage extends StatefulWidget {
-  final Client client;
-  ClientProfilePage({Key key, this.client}) : super(key: key);
+import '../decorations.dart';
+
+class ProfilePage<T extends Profile> extends StatefulWidget {
+  final T client;
+  ProfilePage({Key key, this.client}) : super(key: key);
 
   @override
-  _ClientProfilePageState createState() => _ClientProfilePageState();
+  _ProfilePageState createState() => _ProfilePageState();
 }
 
-class _ClientProfilePageState extends State<ClientProfilePage> {
+class _ProfilePageState extends State<ProfilePage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   String _birthday, _description, _weight, _height, _fitnessGoal;
@@ -164,7 +167,7 @@ class _ClientProfilePageState extends State<ClientProfilePage> {
                           labelText: "Description",
                           hint: _description == null ? "Description" : _description,
                           isEnabled: _isEnabled ? true : false,
-                        )
+                        ),
                     ),
                     Padding(
                         padding: EdgeInsets.only(bottom: 20),
@@ -222,8 +225,35 @@ class _ClientProfilePageState extends State<ClientProfilePage> {
                     ),
 
                     Padding(
-                        padding: EdgeInsets.only(bottom: 20),
-                        child: CustomTextField(
+                        padding: EdgeInsets.only(bottom: 20, left: 20, right: 20),
+                        child: TextFormField(
+                          enabled: _isEnabled,
+                          decoration: InputDecoration(
+                            fillColor: Colors.white,
+                            labelText: "Fitness Goal",
+                            enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                color: Decorations.accentColour,
+                              ),
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                          ),
+                        )
+                      /*TextField(
+                          enabled: _isEnabled,
+                          decoration: InputDecoration(
+                            fillColor: Colors.white,
+                            labelText: "Fitness Goal",
+                            enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                color: Decorations.accentColour,
+                              ),
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                          ),
+                          cursorColor: Decorations.accentColour,
+                        ),*/
+                      /*CustomTextField(
                           icon: Icon(Icons.fitness_center),
                           onSaved: (input) => _fitnessGoal = input,
                           validator: (input) =>
@@ -232,7 +262,7 @@ class _ClientProfilePageState extends State<ClientProfilePage> {
                           maxLines: 1,
                           hint: _fitnessGoal == null ? "Birthday MM/DD/YYYY" : _fitnessGoal,
                           isEnabled: _isEnabled ? true : false,
-                        )
+                        )*/
                     ),
                     SizedBox(
                       height: 20,

@@ -8,9 +8,15 @@ class Destination {
   final IconData icon;
 }
 
-const List<Destination> allDestinationsList = <Destination> [
+const List<Destination> clientDestinationsList = <Destination> [
   Destination('Home', Icons.home),
   Destination('Assigned Exercises', Icons.directions_run),
   Destination('Previous Exercises', Icons.today),
   Destination('Profile', Icons.account_circle)
+];
+
+const List<Destination> trainerDestinationsList = <Destination> [
+  Destination('Home', Icons.home),
+  Destination('Client List', Icons.people),
+  Destination('Profile', Icons.account_circle),
 ];

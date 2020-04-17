@@ -1,6 +1,7 @@
 import 'dart:convert';
+import 'package:fitnesstracker/entities/profile.dart';
 import 'package:http/http.dart' as http;
-class Client {
+class Client extends Profile {
   // account
   String firstName, lastName, fullName, phoneNumber, email, password;
   int clientID;

@@ -1,10 +1,10 @@
 import 'package:fitnesstracker/app.dart';
-import 'package:fitnesstracker/customWidgets/customTextField.dart';
-import 'package:fitnesstracker/customWidgets/customFilledButton.dart';
+import 'package:fitnesstracker/customWidgets/custom_text_field.dart';
+import 'package:fitnesstracker/customWidgets/custom_filled_button.dart';
 import 'package:fitnesstracker/entities/trainer.dart';
 import 'package:flutter/material.dart';
 import 'package:fitnesstracker/entities/client.dart';
-import 'loginRegisterPage.dart';
+import 'login_register_page.dart';
 
 class RegisterForm extends StatefulWidget {
   final GlobalKey<ScaffoldState> scaffoldKey;

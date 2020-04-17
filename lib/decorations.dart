@@ -1,18 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class Decorations {
+  // colors
+  static var accentColour = Color(0xFFFA716F);
+
+  // text styles
   static var headline = TextStyle(
     fontFamily: "Raleway",
     fontWeight: FontWeight.w900,
     fontSize: 20,
-    color: Colors.white.withOpacity(0.87),
+    color: Colors.white.withOpacity(1.0),
   );
 
   static var subtitle = TextStyle(
     fontSize: 18,
     fontWeight: FontWeight.w500,
     fontFamily: "Raleway",
-    color: Colors.white.withOpacity(0.87),
+    color: Colors.white.withOpacity(1.0),
   );
 
   static var snackBar = TextStyle(
@@ -20,6 +25,27 @@ class Decorations {
       fontSize: 15,
   );
 
+  static var welcomeBack = TextStyle(
+    fontSize: 30,
+    fontFamily: 'Raleway',
+    fontWeight: FontWeight.w900,
+    color: Colors.black87,
+  );
+
+  static var logIn = TextStyle(
+    fontSize: 15,
+    fontFamily: 'Raleway',
+    fontStyle: FontStyle.italic,
+    color: Colors.grey,
+  );
+
+  static var radioButton = TextStyle(
+    fontSize: 16,
+    fontFamily: 'Raleway',
+    color: Colors.black,
+  );
+
+  // gradients
   static var backgroundGradient = LinearGradient(
       colors: [
         Color(0xFFFA716F),
@@ -33,5 +59,25 @@ class Decorations {
       ]
   );
 
-  static var accentColour = Color.fromARGB(200, 250, 90, 90);
+  // other formatting related funcitons
+  static String dateToTimeConverter(DateTime toConvert) {
+    DateFormat formatter = new DateFormat.jm("en_US");
+
+    return (formatter.format(toConvert)).toString();
+  }
+
+  static InputDecoration createInputDecoration(IconData trailingIcon, String label) {
+    return InputDecoration(
+      prefixIcon: Icon(trailingIcon),
+        fillColor: Colors.white,
+        filled: true,
+        labelText: "$label",
+        focusedBorder: OutlineInputBorder(
+          borderSide: BorderSide(
+            color: Decorations.accentColour,
+          ),
+          borderRadius: BorderRadius.circular(5),
+        )
+    );
+  }
 }
