@@ -172,7 +172,6 @@ class _MyLoginFormState extends State<MyLoginForm> {
                       ),
                       height: 55,
                       width: 150,
-                      //width: MediaQuery.of(context).size.width,
                     ),
             ),
           ],
