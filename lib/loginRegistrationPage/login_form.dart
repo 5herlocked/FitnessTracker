@@ -257,9 +257,23 @@ class _MyLoginFormState extends State<MyLoginForm> {
           });
     } else {
       if (possibleClient.clientID != null) {
+        Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              settings: const RouteSettings(name: '/'),
+              builder: (builder) => new App<Client>(user: possibleClient,),
+            )
+        );
         return possibleClient;
       }
       if (possibleTrainer.trainerID != null) {
+        Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              settings: const RouteSettings(name: '/'),
+              builder: (builder) => new App<Trainer>(user: possibleTrainer,),
+            )
+        );
         return possibleTrainer;
       } else
         return null;

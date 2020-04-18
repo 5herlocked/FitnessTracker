@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import '../decorations.dart';
 
 class ProfilePage<T extends Profile> extends StatefulWidget {
-  final T client;
-  ProfilePage({Key key, this.client}) : super(key: key);
+  final T user;
+  ProfilePage({Key key, this.user}) : super(key: key);
 
   @override
   _ProfilePageState createState() => _ProfilePageState();
