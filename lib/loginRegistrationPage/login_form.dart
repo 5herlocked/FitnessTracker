@@ -188,16 +188,6 @@ class _MyLoginFormState extends State<MyLoginForm> {
       setState(() {
         _loading = false;
       });
-      if (_user.firstName != null) {
-        Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-              settings: const RouteSettings(name: '/'),
-              builder: (builder) => new App(
-                client: _user,
-              ),
-            ));
-      }
     }
   }
 
@@ -205,10 +195,10 @@ class _MyLoginFormState extends State<MyLoginForm> {
     Client possibleClient = new Client();
     Trainer possibleTrainer = new Trainer();
 
-    possibleClient.email = _userEmail;
+    possibleClient.emailID = _userEmail;
     possibleClient.password = _userPassword;
 
-    possibleTrainer.email = _userEmail;
+    possibleTrainer.emailID = _userEmail;
     possibleTrainer.password = _userPassword;
 
     try {
@@ -261,7 +251,7 @@ class _MyLoginFormState extends State<MyLoginForm> {
             context,
             MaterialPageRoute(
               settings: const RouteSettings(name: '/'),
-              builder: (builder) => new App<Client>(user: possibleClient,),
+              builder: (builder) => new App<Client>(user: possibleClient, trainerView: false,),
             )
         );
         return possibleClient;
@@ -271,7 +261,7 @@ class _MyLoginFormState extends State<MyLoginForm> {
             context,
             MaterialPageRoute(
               settings: const RouteSettings(name: '/'),
-              builder: (builder) => new App<Trainer>(user: possibleTrainer,),
+              builder: (builder) => new App<Trainer>(user: possibleTrainer, trainerView: false,),
             )
         );
         return possibleTrainer;

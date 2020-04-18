@@ -239,7 +239,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     padding: EdgeInsets.only(
                         top: 10.0, left: 20, right: 20, bottom: 10),
                     child: Text(
-                      widget.client.firstName + "  " + widget.client.lastName,
+                      widget.user.firstName + "  " + widget.user.lastName,
                       style: Decorations.profileUserName,
                     ),
                     alignment: Alignment.center,

@@ -11,7 +11,7 @@ import 'entities/trainer.dart';
 
 // actual entry point into the app
 class App<T extends Profile> extends StatefulWidget {
-  final T user;
+  T user;
   final bool trainerView;
 
   // Takes in the client object as a key that is passed in
@@ -24,7 +24,7 @@ class App<T extends Profile> extends StatefulWidget {
 
 class _AppState<T extends Profile> extends State<App> {
   var _currentTab;
-  int _currentIndex = 1;
+  int _currentIndex = 0;
   Widget _currentBody;
   List<Destination> _currentDestinations;
 
@@ -35,7 +35,7 @@ class _AppState<T extends Profile> extends State<App> {
       _currentTab = ClientViewTabItem.profile;
       _currentDestinations = Destination.trainerClientViewDestinationList;
     }
-    switch(T.runtimeType) {
+    switch(T) {
       case Client:
         _currentTab = ClientTabItem.today;
         _currentDestinations = Destination.clientDestinationsList;
@@ -71,7 +71,7 @@ class _AppState<T extends Profile> extends State<App> {
   }
 
   void _setCurrentBody() {
-    if (T.runtimeType == Client) {
+    if (T == Client) {
       switch(_currentTab) {
         case ClientTabItem.today:
           _currentBody = HomePage<Client>(user: widget.user,);
@@ -87,7 +87,7 @@ class _AppState<T extends Profile> extends State<App> {
           break;
       }
     }
-    if (T.runtimeType == Trainer) {
+    if (T == Trainer) {
       switch(_currentTab) {
         case TrainerTabItem.today:
           _currentBody = HomePage<Trainer>(user: widget.user,);

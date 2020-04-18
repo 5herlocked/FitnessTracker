@@ -18,10 +18,6 @@ class MyApp extends StatelessWidget {
           fontFamily: "Raleway",
       ),
       home: LoginRegister(),
-      routes: <String, WidgetBuilder>{
-        '/app': (BuildContext context) => new App(),
-        '/login': (BuildContext context) => new LoginRegister(),
-      },
     );
   }
 }

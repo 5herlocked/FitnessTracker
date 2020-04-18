@@ -6,29 +6,27 @@ import 'client.dart';
 
 class Trainer extends Profile {
   // account
-  String firstName, lastName, fullName, phoneNumber, email, password;
+  String fullName;
   int trainerMembershipID;
   int trainerID;
   //profile
   String description, birthday, weight, height, fitnessGoal;
 
-  Trainer(
-      {
-        this.firstName,
-        this.lastName,
-        this.fullName,
-        this.email,
-        this.trainerID,
-        this.trainerMembershipID,
-        this.phoneNumber,
-        this.password,
-        this.description,
-        this.birthday,
-        this.weight,
-        this.height,
-        this.fitnessGoal,
-      }
-  );
+  Trainer({
+    firstName,
+    lastName,
+    this.trainerMembershipID,
+    this.fullName,
+    email,
+    this.trainerID,
+    phoneNumber,
+    password,
+    this.description,
+    this.birthday,
+    this.weight,
+    this.height,
+    this.fitnessGoal,
+    profilePicture}):super(firstName: firstName, lastName: lastName, emailID: email, phoneNumber: phoneNumber, password: password, profilePicture: profilePicture);
 
   factory Trainer.fromJson(Map<String, dynamic> json) {
     return Trainer(
@@ -44,7 +42,7 @@ class Trainer extends Profile {
     Map data = {
       'first_name': firstName,
       'last_name': lastName,
-      'email': email,
+      'email': emailID,
       'tr_password': password,
       'phone_number': phoneNumber,
     };
@@ -59,12 +57,12 @@ class Trainer extends Profile {
   // Send a POST request to the API to log the client in
   Future<Trainer> loginTrainer() async {
     Map data = {
-      'email': email,
+      'email': emailID,
       'tr_password': password,
     };
 
     final http.Response response = await http.post(
-        'https://mad-fitnesstracker.herokuapp.com/api/client/login',
+        'https://mad-fitnesstracker.herokuapp.com/api/trainer/login',
         body: data);
 
     return Trainer.fromJson(json.decode(response.body));

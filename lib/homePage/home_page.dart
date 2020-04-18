@@ -12,7 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
 class HomePage<T extends Profile> extends StatefulWidget {
-  final Profile user;
+  final T user;
   @override
   _HomePageState<T> createState() => _HomePageState<T>();
   HomePage ({Key key, this.user}) : super(key: key);
@@ -29,7 +29,7 @@ class _HomePageState<T extends Profile> extends State<HomePage<T>> {
 
   void _loadToday() {
     //TODO: Implement API Access
-    switch(widget.user.runtimeType) {
+    switch(T) {
       case Client:
         _today = List<Exercise>();
         break;
@@ -72,7 +72,7 @@ class _HomePageState<T extends Profile> extends State<HomePage<T>> {
   }
 
   Widget _buildToday (BuildContext context, int index) {
-    switch(widget.user.runtimeType) {
+    switch(T) {
       case Client:
         return _buildClientToday(context, index);
       case Trainer:

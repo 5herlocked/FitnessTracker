@@ -31,7 +31,7 @@ class _UserListPageState<T extends Profile> extends State<UserListPage<T>> {
     Widget content;
 
     if (_list.isEmpty) {
-      switch (T.runtimeType) {
+      switch (T) {
         case Client:
           content = new Center(
             child: Text("Looks like you have no assigned exercises today"),
@@ -44,7 +44,7 @@ class _UserListPageState<T extends Profile> extends State<UserListPage<T>> {
           break;
       }
     } else {
-      switch(T.runtimeType) {
+      switch(T) {
         case Client:
           content = ListView.builder(
             itemCount: _list.length,
@@ -79,7 +79,7 @@ class _UserListPageState<T extends Profile> extends State<UserListPage<T>> {
 
   void _loadList() {
     //TODO: Implement API Access to get client list
-    switch (T.runtimeType) {
+    switch (T) {
       case Client:
         _list = List<Exercise>();
         break;

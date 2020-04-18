@@ -270,7 +270,7 @@ class _MyRegisterFormState extends State<MyRegisterForm> {
         trainer.lastName = arr[1].trim();
         trainer.fullName = _displayName;
         trainer.phoneNumber = _phoneNumber;
-        trainer.email = _email;
+        trainer.emailID = _email;
         trainer.password = _password;
         trainer.trainerMembershipID = int.parse(_trainerMembershipID);
 
@@ -281,7 +281,7 @@ class _MyRegisterFormState extends State<MyRegisterForm> {
         client.lastName = arr[1].trim();
         client.fullName = _displayName;
         client.phoneNumber = _phoneNumber;
-        client.email = _email;
+        client.emailID = _email;
         client.password = _password;
 
         // Call the API to create a new user in the database
