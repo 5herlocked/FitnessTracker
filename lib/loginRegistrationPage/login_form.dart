@@ -7,7 +7,6 @@ import 'package:fitnesstracker/entities/trainer.dart';
 import 'package:fitnesstracker/decorations.dart';
 import 'package:flutter/material.dart';
 import 'package:fitnesstracker/entities/client.dart';
-import 'login_register_page.dart';
 
 class LoginForm extends StatefulWidget {
   _LoginFormState createState() => _LoginFormState();
@@ -99,6 +98,7 @@ class _MyLoginFormState extends State<MyLoginForm> {
 
   @override
   Widget build(BuildContext context) {
+    // TODO probable cause
     var formContents = Stack(
       children: _buildForm(context),
     );
@@ -108,46 +108,49 @@ class _MyLoginFormState extends State<MyLoginForm> {
   List<Widget> _buildForm(BuildContext context) {
     Form form = Form(
       key: _formKey,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Padding(
-            padding: EdgeInsets.all(20.0),
-            child: TextFormField(
-              validator: (value) => (value.isEmpty) ? "Enter an email" : null,
-              enabled: true,
-              cursorColor: Decorations.accentColour,
-              decoration: Decorations.createInputDecoration(Icons.mail, "Email"),
-              onChanged: (value) => _userEmail = value,
+      // broken
+      child: SingleChildScrollView(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Padding(
+              padding: EdgeInsets.all(20.0),
+              child: TextFormField(
+                validator: (value) => (value.isEmpty) ? "Enter an email" : null,
+                enabled: true,
+                cursorColor: Decorations.accentColour,
+                decoration: Decorations.createInputDecoration(Icons.mail, "Email"),
+                onChanged: (value) => _userEmail = value,
+              ),
             ),
-          ),
-          Padding(
-            padding: EdgeInsets.only(left: 20, right: 20),
-            child: TextFormField(
-              obscureText: true,
-              enabled: true,
-              cursorColor: Decorations.accentColour,
-              decoration: Decorations.createInputDecoration(Icons.lock, "Password"),
-              onChanged: (value) => _userPassword = value,
+            Padding(
+              padding: EdgeInsets.only(left: 20, right: 20),
+              child: TextFormField(
+                obscureText: true,
+                enabled: true,
+                cursorColor: Decorations.accentColour,
+                decoration: Decorations.createInputDecoration(Icons.lock, "Password"),
+                onChanged: (value) => _userPassword = value,
+              ),
             ),
-          ),
-          Padding(
-            padding: EdgeInsets.all(20),
-            child: Container(
-              width: 140,
-              child: FlatButton(
-                onPressed: () => _initiateLogin(),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-                splashColor: Colors.deepOrangeAccent,
-                color: Decorations.accentColour,
-                child: Text(
-                  "Login",
-                  style: Decorations.subtitle,
+            Padding(
+              padding: EdgeInsets.all(20),
+              child: Container(
+                width: 140,
+                child: FlatButton(
+                  onPressed: () => _initiateLogin(),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                  splashColor: Colors.deepOrangeAccent,
+                  color: Decorations.accentColour,
+                  child: Text(
+                    "Login",
+                    style: Decorations.subtitle,
+                  ),
                 ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
     var formList = List<Widget>();
@@ -185,13 +188,6 @@ class _MyLoginFormState extends State<MyLoginForm> {
       setState(() {
         _loading = false;
       });
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          settings: const RouteSettings(name: '/'),
-          builder: (builder) => new App(client: user,),
-        )
-      );
     }
   }
 
@@ -223,9 +219,23 @@ class _MyLoginFormState extends State<MyLoginForm> {
       );
     } else {
       if (possibleClient.clientID != null) {
+        Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              settings: const RouteSettings(name: '/'),
+              builder: (builder) => new App<Client>(user: possibleClient,),
+            )
+        );
         return possibleClient;
       }
       if (possibleTrainer.trainerID != null) {
+        Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              settings: const RouteSettings(name: '/'),
+              builder: (builder) => new App<Trainer>(user: possibleTrainer,),
+            )
+        );
         return possibleTrainer;
       }
       else return null;

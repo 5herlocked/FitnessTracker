@@ -1,22 +1,31 @@
 import 'package:flutter/material.dart';
 
-enum TabItem { today, exercises, history, profile }
+enum ClientTabItem { today, exercises, history, profile }
+enum TrainerTabItem { today, clientList, profile }
+enum ClientViewTabItem { profile, exercises, history }
 
 class Destination {
-  const Destination (this.title, this.icon);
+  const Destination (this.title, this.icon, this.tabItem);
   final String title;
   final IconData icon;
+  final dynamic tabItem;
+
+  static const  List<Destination> clientDestinationsList = <Destination> [
+    Destination('Home', Icons.home, ClientTabItem.today),
+    Destination('Assigned Exercises', Icons.directions_run, ClientTabItem.exercises),
+    Destination('Previous Exercises', Icons.today, ClientTabItem.history),
+    Destination('Profile', Icons.account_circle, ClientTabItem.profile)
+  ];
+
+  static const List<Destination> trainerDestinationsList = <Destination> [
+    Destination('Home', Icons.home, TrainerTabItem.today),
+    Destination('Client List', Icons.people, TrainerTabItem.clientList),
+    Destination('Profile', Icons.account_circle, TrainerTabItem.profile),
+  ];
+
+  static const List<Destination> trainerClientViewDestinationList = <Destination> [
+    Destination('Profile', Icons.account_circle, ClientViewTabItem.profile),
+    Destination('Assigned Exercies', Icons.directions_run, ClientViewTabItem.exercises),
+    Destination('Previous Exercises', Icons.history, ClientViewTabItem.history),
+  ];
 }
-
-const List<Destination> clientDestinationsList = <Destination> [
-  Destination('Home', Icons.home),
-  Destination('Assigned Exercises', Icons.directions_run),
-  Destination('Previous Exercises', Icons.today),
-  Destination('Profile', Icons.account_circle)
-];
-
-const List<Destination> trainerDestinationsList = <Destination> [
-  Destination('Home', Icons.home),
-  Destination('Client List', Icons.people),
-  Destination('Profile', Icons.account_circle),
-];

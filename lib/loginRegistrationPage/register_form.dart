@@ -285,7 +285,7 @@ class RegisterFormState extends State<RegisterForm> {
         trainer.phoneNumber = _phoneNumber;
         trainer.email = _email;
         trainer.password = _password;
-        trainer.trainerMembershipID = _trainerMembershipID;
+        trainer.trainerMembershipID = int.parse(_trainerMembershipID);
 
         // Call the API to create a new user in the database
         statusCode = await trainer.createTrainerAccount();
@@ -333,7 +333,7 @@ class RegisterFormState extends State<RegisterForm> {
         Navigator.of(context).pushReplacement(
             new MaterialPageRoute(
                 settings: const RouteSettings(name: '/app'),
-                builder: (context) => new App(client: client,)
+                builder: (context) => new App(user: client,)
             )
         );
       }

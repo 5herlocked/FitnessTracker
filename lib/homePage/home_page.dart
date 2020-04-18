@@ -19,7 +19,7 @@ class HomePage<T extends Profile> extends StatefulWidget {
 }
 
 class _HomePageState<T extends Profile> extends State<HomePage<T>> {
-  dynamic _today;
+  var _today;
 
   @override
   void initState() {
@@ -120,7 +120,7 @@ class _HomePageState<T extends Profile> extends State<HomePage<T>> {
 
     return Card(
       child: ListTile(
-        onTap: () async => _navigateToClientProfile(currentClient),
+        onTap: () => _navigateToClientProfile(currentClient),
         title: Text(currentClient.fullName),
         subtitle: Text(Decorations.dateToTimeConverter(currentClientSchedule)),
       ),
@@ -132,9 +132,9 @@ class _HomePageState<T extends Profile> extends State<HomePage<T>> {
       MaterialPageRoute(
         builder: (c) {
           // TODO lazy implementation, this cannot make it into prod
-          return new App(client: client,);
+          return App(user: client, trainerView: true,);
         }
-      )
+      ),
     );
   }
 
