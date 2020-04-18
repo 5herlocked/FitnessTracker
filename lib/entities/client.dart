@@ -3,28 +3,28 @@ import 'package:fitnesstracker/entities/profile.dart';
 import 'package:http/http.dart' as http;
 class Client extends Profile {
   // account
-  String firstName, lastName, fullName, phoneNumber, email, password;
+  String fullName;
   int clientID;
   int trainerID; // ID of the trainer assigned to the client
 
   //profile
-  String description, birthday, weight, height, fitnessGoal, profilePicture;
+  String description, birthday, weight, height, fitnessGoal;
 
   Client({
-    this.firstName,
-    this.lastName,
+    firstName,
+    lastName,
     this.fullName,
-    this.email,
+    email,
     this.clientID,
     this.trainerID,
-    this.phoneNumber,
-    this.password,
+    phoneNumber,
+    password,
     this.description,
     this.birthday,
     this.weight,
     this.height,
     this.fitnessGoal,
-    this.profilePicture});
+    profilePicture}):super(firstName: firstName, lastName: lastName, emailID: email, phoneNumber: phoneNumber, password: password, profilePicture: profilePicture);
 
   factory Client.fromJson(Map<String, dynamic> json) {
     return Client(
@@ -41,7 +41,7 @@ class Client extends Profile {
     Map data = {
       'first_name': firstName,
       'last_name': lastName,
-      'email': email,
+      'email': emailID,
       'cl_password': password,
       'phone_number': phoneNumber,
     };
@@ -56,7 +56,7 @@ class Client extends Profile {
   // Send a POST request to the API to log the client in
   Future<Client> loginClient() async {
     Map data = {
-      'email': email,
+      'email': emailID,
       'cl_password': password,
     };
 

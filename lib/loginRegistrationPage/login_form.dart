@@ -1,86 +1,102 @@
-import 'dart:async';
-
 import 'package:fitnesstracker/app.dart';
-import 'package:loading_animations/loading_animations.dart';
 import 'package:fitnesstracker/entities/profile.dart';
 import 'package:fitnesstracker/entities/trainer.dart';
-import 'package:fitnesstracker/decorations.dart';
 import 'package:flutter/material.dart';
 import 'package:fitnesstracker/entities/client.dart';
+import '../decorations.dart';
 
 class LoginForm extends StatefulWidget {
-  _LoginFormState createState() => _LoginFormState();
-
-  LoginForm({Key key}) : super (key: key);
+  @override
+  State<StatefulWidget> createState() {
+    return LoginFormState();
+  }
 }
 
-class _LoginFormState extends State<LoginForm> {
-  String errorMsg = "";
-
-  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-
+class LoginFormState extends State<LoginForm> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: MediaQuery.of(context).size.height * 92/100,
-      width: MediaQuery.of(context).size.width,
-      color: Colors.transparent,
-      child: Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.only(
-            topLeft: const Radius.circular(40),
-            topRight: const Radius.circular(40),
-          ),
-        ),
-        child: Stack(
-          alignment: Alignment.center,
-          children: <Widget>[
-            Positioned(
-              left: 10,
-              top: 10,
-              child: IconButton(
-                onPressed: () => Navigator.of(context).pop(),
-                icon: Icon(
-                  Icons.close,
-                  size: 30,
-                  color: Decorations.accentColour,
-                ),
+    return StatefulBuilder(builder: (BuildContext context, StateSetter state) {
+      return DecoratedBox(
+          decoration: BoxDecoration(color: Colors.transparent),
+          child: ClipRRect(
+            borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(40.0),
+                topRight: Radius.circular(40.0)),
+            child: Container(
+              child: ListView(
+                children: <Widget>[
+                  Container(
+                    child: Stack(
+                      children: <Widget>[
+                        Positioned(
+                          left: 10,
+                          top: 10,
+                          child: IconButton(
+                            onPressed: () => Navigator.of(context).pop(),
+                            icon: Icon(
+                              Icons.close,
+                              size: 30.0,
+                              color: Decorations.accentColour,
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+                    height: 50,
+                    width: 50,
+                  ),
+                  SingleChildScrollView(
+                    child: Column(
+                      children: <Widget>[
+                        Padding(
+                          padding: const EdgeInsets.only(
+                            top: 20,
+                            bottom: 10,
+                          ),
+                          child: CircleAvatar(
+                            backgroundImage: new NetworkImage(
+                                "https://19yw4b240vb03ws8qm25h366-wpengine.netdna-ssl.com/wp-content/uploads/Profile-Pic-Circle-Grey-Large.png"),
+                            radius: 80.0,
+                          ),
+                        ),
+                        Container(
+                          child: Padding(
+                            padding: const EdgeInsets.all(10.0),
+                            child: Text(
+                              "Welcome Back",
+                              style: Decorations.welcomeBack,
+                            ),
+                          ),
+                          alignment: Alignment.center,
+                        ),
+                        Container(
+                          child: Padding(
+                            padding: const EdgeInsets.only(
+                              top: 5,
+                              bottom: 10,
+                            ),
+                            child: Text(
+                              "Login to your existing account.",
+                              style: Decorations.logIn,
+                            ),
+                          ),
+                          alignment: Alignment.center,
+                        ),
+                        MyLoginForm(),
+                        SizedBox(
+                          height: 20,
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               ),
+              height: MediaQuery.of(context).size.height / 1.1,
+              width: MediaQuery.of(context).size.width,
+              color: Colors.white,
             ),
-            Column(
-              children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.only(top: 60, bottom: 10,),
-                  child: CircleAvatar(
-                    backgroundImage: new NetworkImage("https://19yw4b240vb03ws8qm25h366-wpengine.netdna-ssl.com/wp-content/uploads/Profile-Pic-Circle-Grey-Large.png"),
-                    radius: 80.0,
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: Text(
-                    "Welcome Back",
-                    style: Decorations.welcomeBack,
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 5, bottom: 10,),
-                  child: Text(
-                    "Login to your existing account.",
-                    style: Decorations.logIn,
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(20),
-                  child: MyLoginForm(),
-                ),
-              ],
-            )
-          ],
-        ),
-      ),
-    );
+          ));
+    });
   }
 }
 
@@ -91,35 +107,29 @@ class MyLoginForm extends StatefulWidget {
 
 class _MyLoginFormState extends State<MyLoginForm> {
   final _formKey = GlobalKey<FormState>();
-  Profile user;
+  Profile _user;
   var _userEmail;
   var _userPassword;
   bool _loading = false;
 
   @override
   Widget build(BuildContext context) {
-    // TODO probable cause
-    var formContents = Stack(
-      children: _buildForm(context),
-    );
-    return formContents;
+    return _buildForm(context);
   }
 
-  List<Widget> _buildForm(BuildContext context) {
-    Form form = Form(
-      key: _formKey,
-      // broken
-      child: SingleChildScrollView(
+  _buildForm(BuildContext context) {
+    return Form(
+        key: _formKey,
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Padding(
               padding: EdgeInsets.all(20.0),
               child: TextFormField(
-                validator: (value) => (value.isEmpty) ? "Enter an email" : null,
+                validator: (value) => (value.isEmpty) ? "*Required" : null,
                 enabled: true,
                 cursorColor: Decorations.accentColour,
-                decoration: Decorations.createInputDecoration(Icons.mail, "Email"),
+                decoration:
+                    Decorations.createInputDecoration(Icons.mail, "Email"),
                 onChanged: (value) => _userEmail = value,
               ),
             ),
@@ -127,55 +137,45 @@ class _MyLoginFormState extends State<MyLoginForm> {
               padding: EdgeInsets.only(left: 20, right: 20),
               child: TextFormField(
                 obscureText: true,
+                validator: (value) => (value.isEmpty) ? "*Required" : null,
                 enabled: true,
                 cursorColor: Decorations.accentColour,
-                decoration: Decorations.createInputDecoration(Icons.lock, "Password"),
+                decoration:
+                    Decorations.createInputDecoration(Icons.lock, "Password"),
                 onChanged: (value) => _userPassword = value,
               ),
             ),
+            SizedBox(
+              height: 20,
+            ),
             Padding(
-              padding: EdgeInsets.all(20),
-              child: Container(
-                width: 140,
-                child: FlatButton(
-                  onPressed: () => _initiateLogin(),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-                  splashColor: Colors.deepOrangeAccent,
-                  color: Decorations.accentColour,
-                  child: Text(
-                    "Login",
-                    style: Decorations.subtitle,
-                  ),
-                ),
-              ),
+              padding: EdgeInsets.only(
+                  left: 20,
+                  right: 20,
+                  bottom: MediaQuery.of(context).viewInsets.bottom),
+              child: _loading == true
+                  ? CircularProgressIndicator(
+                      valueColor: new AlwaysStoppedAnimation<Color>(
+                          Decorations.accentColour),
+                    )
+                  : Container(
+                      child: FlatButton(
+                        onPressed: () => _initiateLogin(),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30)),
+                        splashColor: Colors.deepOrangeAccent,
+                        color: Decorations.accentColour,
+                        child: Text(
+                          "Login",
+                          style: Decorations.loginRegButton,
+                        ),
+                      ),
+                      height: 55,
+                      width: 150,
+                    ),
             ),
           ],
-        ),
-      ),
-    );
-    var formList = List<Widget>();
-    formList.add(form);
-    if (_loading) {
-      var modal = Container(
-        height: MediaQuery.of(context).size.height,
-        width: MediaQuery.of(context).size.width,
-        child: Stack(
-          children: <Widget>[
-            Opacity(
-              opacity: 0.3,
-              child: const ModalBarrier(dismissible: false,),
-            ),
-            Center(
-              child: LoadingBouncingGrid.square(
-                backgroundColor: Decorations.accentColour,
-              ),
-            )
-          ],
-        ),
-      );
-      formList.add(modal);
-    }
-    return formList;
+        ));
   }
 
   void _initiateLogin() async {
@@ -184,7 +184,7 @@ class _MyLoginFormState extends State<MyLoginForm> {
       setState(() {
         _loading = true;
       });
-      user = await _backendCall();
+      _user = await _backendCall();
       setState(() {
         _loading = false;
       });
@@ -195,35 +195,63 @@ class _MyLoginFormState extends State<MyLoginForm> {
     Client possibleClient = new Client();
     Trainer possibleTrainer = new Trainer();
 
-    possibleClient.email = _userEmail;
+    possibleClient.emailID = _userEmail;
     possibleClient.password = _userPassword;
 
-    possibleTrainer.email = _userEmail;
+    possibleTrainer.emailID = _userEmail;
     possibleTrainer.password = _userPassword;
 
     try {
       possibleClient = await possibleClient.loginClient();
       possibleTrainer = await possibleTrainer.loginTrainer();
     } catch (Exception) {
-      Scaffold.of(context).showSnackBar(
-        SnackBar(
-          content: Text("Unexpected Error, please try later"),
-        ),
-      );
+      showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: new Text("Login Error"),
+              content: Container(
+                child: Text("Unexpected error. Please try again later."),
+              ),
+              actions: <Widget>[
+                // usually buttons at the bottom of the dialog
+                new FlatButton(
+                  child: new Text("OK"),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            );
+          });
     }
     if (possibleClient.clientID == null && possibleTrainer.trainerID == null) {
-      Scaffold.of(context).showSnackBar(
-          SnackBar(
-            content: Text("No account detected, please register"),
-          )
-      );
+      showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: new Text("Login Error"),
+              content: Container(
+                child: Text("Account not found. Please register."),
+              ),
+              actions: <Widget>[
+                // usually buttons at the bottom of the dialog
+                new FlatButton(
+                  child: new Text("OK"),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            );
+          });
     } else {
       if (possibleClient.clientID != null) {
         Navigator.pushReplacement(
             context,
             MaterialPageRoute(
               settings: const RouteSettings(name: '/'),
-              builder: (builder) => new App<Client>(user: possibleClient,),
+              builder: (builder) => new App<Client>(user: possibleClient, trainerView: false,),
             )
         );
         return possibleClient;
@@ -233,12 +261,12 @@ class _MyLoginFormState extends State<MyLoginForm> {
             context,
             MaterialPageRoute(
               settings: const RouteSettings(name: '/'),
-              builder: (builder) => new App<Trainer>(user: possibleTrainer,),
+              builder: (builder) => new App<Trainer>(user: possibleTrainer, trainerView: false,),
             )
         );
         return possibleTrainer;
-      }
-      else return null;
+      } else
+        return null;
     }
   }
 }

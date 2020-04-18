@@ -59,7 +59,7 @@ class HomePageHeader<T extends Profile> extends StatelessWidget {
   }
 
   String _getSubtitle() {
-    switch(user.runtimeType) {
+    switch(T) {
       case Client:
         return _getTodayExerciseStats();
       case Trainer:

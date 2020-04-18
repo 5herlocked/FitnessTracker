@@ -27,6 +27,7 @@ class _LoginRegisterState extends State<LoginRegister> {
     void createLoginSheet() {
       showModalBottomSheet(
         context: context,
+        isScrollControlled: true,
         builder: (builder) => LoginForm(),
       );
     }
@@ -34,6 +35,7 @@ class _LoginRegisterState extends State<LoginRegister> {
     void createRegisterSheet() {
       showModalBottomSheet(
         context: context,
+        isScrollControlled: true,
         builder: (builder) => RegisterForm(),
       );
     }
