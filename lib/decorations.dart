@@ -20,6 +20,26 @@ class Decorations {
     color: Colors.white.withOpacity(1.0),
   );
 
+  static var profileUserName = TextStyle(
+    fontSize: 20,
+    fontFamily: 'Raleway',
+    fontWeight: FontWeight.w900,
+    color: Colors.black,
+  );
+
+  static var loginRegButton = TextStyle(
+    fontSize: 18,
+    fontWeight: FontWeight.w900,
+    fontFamily: "Raleway",
+    color: Colors.white.withOpacity(1.0),
+  );
+
+  static var radioButtonLabel = TextStyle(
+    fontSize: 16,
+    fontFamily: 'Raleway',
+    color: Colors.black,
+  );
+
   static var snackBar = TextStyle(
       fontFamily: 'Raleway',
       fontSize: 15,
@@ -66,9 +86,9 @@ class Decorations {
     return (formatter.format(toConvert)).toString();
   }
 
-  static InputDecoration createInputDecoration(IconData trailingIcon, String label) {
+  static InputDecoration createInputDecoration(IconData prefixIcon, String label) {
     return InputDecoration(
-      prefixIcon: Icon(trailingIcon),
+      prefixIcon: prefixIcon != null? Icon(prefixIcon): Icon(null),
         fillColor: Colors.white,
         filled: true,
         labelText: "$label",
@@ -77,7 +97,13 @@ class Decorations {
             color: Decorations.accentColour,
           ),
           borderRadius: BorderRadius.circular(5),
-        )
+        ),
+        disabledBorder: OutlineInputBorder(
+          borderSide: BorderSide(
+            color: Colors.grey,
+          ),
+          borderRadius: BorderRadius.circular(5),
+        ),
     );
   }
 }
