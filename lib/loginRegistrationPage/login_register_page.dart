@@ -26,8 +26,6 @@ class _LoginRegisterState extends State<LoginRegister> {
 
     void createLoginSheet() {
       showModalBottomSheet(
-        isScrollControlled: true,
-        isDismissible: true,
         context: context,
         builder: (builder) => LoginForm(),
       );
@@ -35,9 +33,7 @@ class _LoginRegisterState extends State<LoginRegister> {
 
     void createRegisterSheet() {
       showModalBottomSheet(
-        isDismissible: true,
         context: context,
-        isScrollControlled: true,
         builder: (builder) => RegisterForm(),
       );
     }

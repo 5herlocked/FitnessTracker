@@ -7,8 +7,8 @@ import 'package:fitnesstracker/customWidgets/custom_filled_button.dart';
 import '../decorations.dart';
 
 class ProfilePage<T extends Profile> extends StatefulWidget {
-  final T client;
-  ProfilePage({Key key, this.client}) : super(key: key);
+  final T user;
+  ProfilePage({Key key, this.user}) : super(key: key);
 
   @override
   _ProfilePageState createState() => _ProfilePageState();
@@ -146,7 +146,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     Container(
                       padding: EdgeInsets.only(top: 10, bottom: 10),
                       child: Text(
-                        widget.client.firstName + "  " + widget.client.lastName,
+                        widget.user.firstName + "  " + widget.user.lastName,
                         style: TextStyle(
                           fontSize: 20,
                           fontFamily: 'Raleway',
