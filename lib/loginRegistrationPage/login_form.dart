@@ -246,6 +246,7 @@ class _MyLoginFormState extends State<MyLoginForm> {
             );
           });
     } else {
+      Navigator.popUntil(context, (route) => route.isFirst);
       if (possibleClient.clientID != null) {
         Navigator.pushReplacement(
             context,
