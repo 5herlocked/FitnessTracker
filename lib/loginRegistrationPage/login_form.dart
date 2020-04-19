@@ -1,9 +1,11 @@
 import 'package:fitnesstracker/app.dart';
 import 'package:fitnesstracker/entities/profile.dart';
 import 'package:fitnesstracker/entities/trainer.dart';
+import 'package:fitnesstracker/secure_store_mixin.dart';
 import 'package:flutter/material.dart';
 import 'package:fitnesstracker/entities/client.dart';
 import '../decorations.dart';
+import '../main.dart';
 
 class LoginForm extends StatefulWidget {
   @override
@@ -13,6 +15,7 @@ class LoginForm extends StatefulWidget {
 }
 
 class LoginFormState extends State<LoginForm> {
+
   @override
   Widget build(BuildContext context) {
     return StatefulBuilder(builder: (BuildContext context, StateSetter state) {
@@ -105,7 +108,7 @@ class MyLoginForm extends StatefulWidget {
   _MyLoginFormState createState() => _MyLoginFormState();
 }
 
-class _MyLoginFormState extends State<MyLoginForm> {
+class _MyLoginFormState extends State<MyLoginForm> with SecureStoreMixin {
   final _formKey = GlobalKey<FormState>();
   Profile _user;
   var _userEmail;
@@ -246,6 +249,7 @@ class _MyLoginFormState extends State<MyLoginForm> {
             );
           });
     } else {
+      Navigator.popUntil(context, (route) => route.isFirst);
       if (possibleClient.clientID != null) {
         Navigator.pushReplacement(
             context,
@@ -254,6 +258,7 @@ class _MyLoginFormState extends State<MyLoginForm> {
               builder: (builder) => new App<Client>(user: possibleClient, trainerView: false,),
             )
         );
+        await _writeToSecure<Client>(possibleClient.emailID, _userPassword);
         return possibleClient;
       }
       if (possibleTrainer.trainerID != null) {
@@ -264,9 +269,26 @@ class _MyLoginFormState extends State<MyLoginForm> {
               builder: (builder) => new App<Trainer>(user: possibleTrainer, trainerView: false,),
             )
         );
+        _writeToSecure<Trainer>(possibleTrainer.emailID, _userPassword);
         return possibleTrainer;
-      } else
+      }
+      else
         return null;
     }
+  }
+
+  Future<void> _writeToSecure <T extends Profile>(String userName, String password) async {
+    String userType;
+    switch (T) {
+      case Client:
+        userType = "Client";
+        break;
+      case Trainer:
+        userType = "Trainer";
+        break;
+    }
+    setSecureStore("email", userName.toString());
+    setSecureStore("password", password.toString());
+    setSecureStore("userType", userType.toString());
   }
 }
