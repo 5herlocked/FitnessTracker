@@ -70,6 +70,7 @@ class Client extends Profile {
   // Send a POST request to the API to log the client in
   Future<Client> updateClientProfile() async {
     Map data = {
+      'client_id' : clientID,
       'description': description,
       'birthday': birthday,
       'weight': weight,

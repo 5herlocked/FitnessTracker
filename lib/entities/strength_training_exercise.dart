@@ -1,4 +1,5 @@
 import 'package:fitnesstracker/entities/exercise.dart';
+import 'package:http/http.dart' as http;
 
 class StrengthTrainingExercise extends Exercise {
   double weight;
@@ -34,5 +35,25 @@ class StrengthTrainingExercise extends Exercise {
       notes: json["notes"],
       completed: json["completed"],
     );
+  }
+
+  // Send a POST request to the API to assign an exercise to the client
+  Future<int> assignStrengthExercise() async {
+    Map data = {
+      'client_id' : clientID, //int
+      'trainer_id': trainerID, //int
+      'notes': notes, //String
+      'reps': reps, //int
+      'sets': sets, //int
+      'weight': weight, //double
+      'name': name //String
+    };
+
+    final http.Response response = await http.post(
+        'https://mad-fitnesstracker.herokuapp.com/api/trainer/assign-strength-exercise',
+        body: data);
+
+    return response.statusCode;
+    //return CardioExercise.fromJson(json.decode(response.body));
   }
 }

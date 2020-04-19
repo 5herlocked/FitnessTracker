@@ -34,16 +34,17 @@ class _AppState<T extends Profile> extends State<App> {
     if (widget.trainerView) {
       _currentTab = ClientViewTabItem.profile;
       _currentDestinations = Destination.trainerClientViewDestinationList;
-    }
-    switch(T) {
-      case Client:
-        _currentTab = ClientTabItem.today;
-        _currentDestinations = Destination.clientDestinationsList;
-        break;
-      case Trainer:
-        _currentTab = TrainerTabItem.today;
-        _currentDestinations = Destination.trainerDestinationsList;
-        break;
+    } else {
+      switch (T) {
+        case Client:
+          _currentTab = ClientTabItem.today;
+          _currentDestinations = Destination.clientDestinationsList;
+          break;
+        case Trainer:
+          _currentTab = TrainerTabItem.today;
+          _currentDestinations = Destination.trainerDestinationsList;
+          break;
+      }
     }
     _setCurrentBody();
   }
@@ -71,7 +72,19 @@ class _AppState<T extends Profile> extends State<App> {
   }
 
   void _setCurrentBody() {
-    if (T == Client) {
+    if (widget.trainerView) {
+      switch(_currentTab) {
+        case ClientViewTabItem.profile:
+          _currentBody = ProfilePage<Client>(user: widget.user, isTrainerView: true,);
+          break;
+        case ClientViewTabItem.exercises:
+          _currentBody = UserListPage<Client>(user: widget.user, isTrainerView: true,);
+          break;
+        case ClientViewTabItem.history:
+          _currentBody = ExerciseHistoryPage(client: widget.user,);
+          break;
+      }
+    } else if (T == Client) {
       switch(_currentTab) {
         case ClientTabItem.today:
           _currentBody = HomePage<Client>(user: widget.user,);
@@ -83,33 +96,19 @@ class _AppState<T extends Profile> extends State<App> {
           _currentBody = ExerciseHistoryPage();
           break;
         case ClientTabItem.profile:
-          _currentBody = ProfilePage<Client>(user: widget.user,);
+          _currentBody = ProfilePage<Client>(user: widget.user, isTrainerView: false,);
           break;
       }
-    }
-    if (T == Trainer) {
+    } else if (T == Trainer) {
       switch(_currentTab) {
         case TrainerTabItem.today:
           _currentBody = HomePage<Trainer>(user: widget.user,);
           break;
         case TrainerTabItem.clientList:
-          _currentBody = UserListPage<Trainer>(user: widget.user,);
+          _currentBody = UserListPage<Trainer>(user: widget.user, isTrainerView: false,);
           break;
         case TrainerTabItem.profile:
-          _currentBody = ProfilePage<Trainer>(user: widget.user);
-          break;
-      }
-    }
-    if (widget.trainerView) {
-      switch(_currentTab) {
-        case ClientViewTabItem.profile:
-          _currentBody = ProfilePage<Client>(user: widget.user,);
-          break;
-        case ClientViewTabItem.exercises:
-          _currentBody = UserListPage<Client>(user: widget.user, trainerView: widget.trainerView,);
-          break;
-        case ClientViewTabItem.history:
-          _currentBody = ExerciseHistoryPage(client: widget.user,);
+          _currentBody = ProfilePage<Trainer>(user: widget.user, isTrainerView: false,);
           break;
       }
     }
