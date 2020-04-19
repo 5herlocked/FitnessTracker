@@ -89,8 +89,6 @@ class _UserListPageState<T extends Profile> extends State<UserListPage<T>> {
           ),
         ),
         floatingActionButton: new Visibility(
-          // if the text fields are enabled, then the floating action button
-          // should be invisible
             visible: isFloatingActionButtonVisible,
             child: FloatingActionButton(
               onPressed: () {
