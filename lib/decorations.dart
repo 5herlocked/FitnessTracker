@@ -65,6 +65,15 @@ class Decorations {
     color: Colors.black,
   );
 
+  static var searchBar = InputDecoration(
+      prefixIcon: new Icon(Icons.search, color: Colors.white,),
+      hintText: 'Enter Name or Email',
+      hintStyle: TextStyle(color: Colors.white, fontSize: 18),
+      enabledBorder: UnderlineInputBorder(
+        borderSide: BorderSide(color: Colors.white),
+      )
+  );
+
   // gradients
   static var backgroundGradient = LinearGradient(
       colors: [
