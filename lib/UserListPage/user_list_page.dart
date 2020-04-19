@@ -1,4 +1,5 @@
 import 'package:fitnesstracker/addClientPage/add_client_page.dart';
+import 'package:fitnesstracker/assignExercisePage/assign_exercise_page.dart';
 import 'package:fitnesstracker/entities/client.dart';
 import 'package:fitnesstracker/entities/trainer.dart';
 import 'package:fitnesstracker/entities/exercise.dart';
@@ -14,17 +15,16 @@ import '../decorations.dart';
 
 class UserListPage<T extends Profile> extends StatefulWidget {
   final T user;
-  bool trainerView;
+  bool isTrainerView;
 
   @override
   _UserListPageState<T> createState() => _UserListPageState<T>();
-  UserListPage({Key key, this.user, this.trainerView}) : super (key: key);
+  UserListPage({Key key, this.user, this.isTrainerView}) : super(key: key);
 }
 
 class _UserListPageState<T extends Profile> extends State<UserListPage<T>> {
   var _list;
   String pageTitle;
-  bool isFloatingActionButtonVisible;
 
   @override
   void initState() {
@@ -36,73 +36,18 @@ class _UserListPageState<T extends Profile> extends State<UserListPage<T>> {
   Widget build(BuildContext context) {
     Widget content;
 
-    if (_list.isEmpty) {
-      switch (T) {
-        case Client:
-          content = new Center(
-            child: Text("Looks like you have no assigned exercises today"),
-          );
-          pageTitle = "Assigned Exercises";
-          isFloatingActionButtonVisible = false;
-          break;
-        case Trainer:
-          content = new Center(
-            child: Text("Looks like you have no clients"),
-          );
-          pageTitle = "Client List";
-          isFloatingActionButtonVisible = true;
-          break;
-      }
-    } else {
-      switch(T) {
-        case Client:
-          content = ListView.builder(
-            itemCount: _list.length,
-            itemBuilder: _buildExercises,
-          );
-          isFloatingActionButtonVisible = false;
-          pageTitle = "Assigned Exercises";
-          break;
-        case Trainer:
-          content = ListView.builder(
-            itemCount: _list.length,
-            itemBuilder: _buildClients,
-          );
-          isFloatingActionButtonVisible = true;
-          pageTitle = "Client List";
-      }
+    switch (T) {
+      case Client:
+        pageTitle = "Assigned Exercises";
+        content = _buildClientPage(_list.isEmpty);
+        break;
+      case Trainer:
+        pageTitle = "Client List";
+        content = _buildTrainerPage(_list.isEmpty);
+        break;
     }
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(pageTitle),
-      ),
-        body: SafeArea(
-          child: Container (
-            decoration: BoxDecoration(
-              color: Colors.white,
-            ),
-            child: Stack(
-              children: <Widget>[
-                content,
-              ],
-            ),
-          ),
-        ),
-        floatingActionButton: new Visibility(
-            visible: isFloatingActionButtonVisible,
-            child: FloatingActionButton(
-              onPressed: () {
-                setState(() {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => AddClientPage(listOfClientsUnderTrainer: _list,)));
-                });
-              },
-              child: Icon(Icons.add),
-              backgroundColor: Decorations.accentColour,
-            )
-        )
-    );
+
+    return content;
   }
 
   void _loadList() {
@@ -113,7 +58,7 @@ class _UserListPageState<T extends Profile> extends State<UserListPage<T>> {
         break;
       case Trainer:
         //_list = List<Client>();
-      _list = TestEntities.testClientList;
+        _list = TestEntities.testClientList;
         break;
     }
   }
@@ -137,15 +82,16 @@ class _UserListPageState<T extends Profile> extends State<UserListPage<T>> {
         actionExtentRatio: 0.33,
         actions: <Widget>[
           IconSlideAction(
-          caption: exercise.elementAt(index).completed
-              ? "Mark as Incomplete" : "Mark as Complete",
-            color: exercise.elementAt(index).completed
-                ? Colors.red : Colors.green,
+            caption: exercise.elementAt(index).completed
+                ? "Mark as Incomplete"
+                : "Mark as Complete",
+            color:
+                exercise.elementAt(index).completed ? Colors.red : Colors.green,
             icon: exercise.elementAt(index).completed
-                ? Icons.not_interested : Icons.check,
-            onTap: () => _exercisesToggled(
-                exercise.elementAt(index).completed, index
-            ),
+                ? Icons.not_interested
+                : Icons.check,
+            onTap: () =>
+                _exercisesToggled(exercise.elementAt(index).completed, index),
           )
         ],
         child: ListTile(
@@ -159,13 +105,14 @@ class _UserListPageState<T extends Profile> extends State<UserListPage<T>> {
 
   void _navigateToClient(Client focusedClient) {
     // TODO: verify this works
-    Navigator.of(context).pushReplacement(
-      MaterialPageRoute(
-        builder: (c) {
-          return new App<Client>(user: focusedClient, trainerView: true,);
-        },
-      )
-    );
+    Navigator.of(context).push(MaterialPageRoute(
+      builder: (c) {
+        return new App<Client>(
+          user: focusedClient,
+          trainerView: true,
+        );
+      },
+    ));
   }
 
   void _navigateToExerciseDetails(String exercise) {
@@ -184,31 +131,91 @@ class _UserListPageState<T extends Profile> extends State<UserListPage<T>> {
     TODO: Implement API to use the exercises classes so that whenever
      the exercise is marked complete, it's actually marked complete
     */
-    setState(
-            () => _list.update(
-            _list.keys.elementAt(index),
-                (bool value) => !value)
-    );
-    switch(value){
+    setState(() =>
+        _list.update(_list.keys.elementAt(index), (bool value) => !value));
+    switch (value) {
       case false:
-      // API call
+        // API call
         return Scaffold.of(context).showSnackBar(
-            SnackBar(
+          SnackBar(
               content: Text("${_list.keys.elementAt(index)} completed",
-                  style: Decorations.snackBar
-              )
-            ),
+                  style: Decorations.snackBar)),
         );
         break;
       case true:
-        return Scaffold.of(context).showSnackBar(
-            SnackBar(
-              content: Text("${_list.keys.elementAt(index)} not complete",
-                  style: Decorations.snackBar
-              ),
-            )
-        );
+        return Scaffold.of(context).showSnackBar(SnackBar(
+          content: Text("${_list.keys.elementAt(index)} not complete",
+              style: Decorations.snackBar),
+        ));
         break;
     }
+  }
+
+  Widget _buildClientPage(bool isExerciseListEmpty) {
+    return Scaffold(
+        appBar: AppBar(
+          title: Text(pageTitle),
+        ),
+        backgroundColor: Colors.white,
+        body: SafeArea(
+          child: !isExerciseListEmpty
+              ? Stack(
+                  children: <Widget>[
+                    ListView.builder(
+                      itemCount: _list.length,
+                      itemBuilder: _buildExercises,
+                    ),
+                  ],
+                )
+              : Center(
+                  child:
+                      Text("Looks like you have no assigned exercises today")),
+        ),
+        floatingActionButton: new Visibility(
+          visible: true,
+          //visible: widget.trainerView,
+          child: FloatingActionButton(
+            onPressed: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => AssignExercisePage()));
+            },
+            child: Icon(Icons.add),
+            backgroundColor: Decorations.accentColour,
+          ),
+        ));
+  }
+
+  Widget _buildTrainerPage(bool isClientListEmpty) {
+    return Scaffold(
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        title: Text(pageTitle),
+      ),
+      body: SafeArea(
+          child: !isClientListEmpty
+              ? Stack(
+                  children: <Widget>[
+                    ListView.builder(
+                      itemCount: _list.length,
+                      itemBuilder: _buildClients,
+                    ),
+                  ],
+                )
+              : Center(child: Text("Looks like you have no clients"))),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => AddClientPage(
+                        listOfClientsUnderTrainer: _list,
+                      )));
+        },
+        child: Icon(Icons.add),
+        backgroundColor: Decorations.accentColour,
+      ),
+    );
   }
 }

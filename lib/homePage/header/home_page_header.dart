@@ -32,7 +32,7 @@ class HomePageHeader<T extends Profile> extends StatelessWidget {
 
   _navigateToProfilePage(BuildContext context) => Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (c) => ProfilePage<T>(user: user,)
+        builder: (c) => ProfilePage<T>(user: user, isTrainerView: false,)
       )
   );
 

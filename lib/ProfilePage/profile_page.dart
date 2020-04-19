@@ -8,7 +8,9 @@ import '../main.dart';
 
 class ProfilePage<T extends Profile> extends StatefulWidget {
   final T user;
-  ProfilePage({Key key, this.user}) : super(key: key);
+  bool isTrainerView = false;
+
+  ProfilePage({Key key, this.user, this.isTrainerView}) : super(key: key);
 
   @override
   _ProfilePageState createState() => _ProfilePageState();
@@ -37,9 +39,12 @@ class _ProfilePageState extends State<ProfilePage> with SecureStoreMixin {
         key: _scaffoldKey,
         backgroundColor: Colors.white,
         appBar: AppBar(
-          leading: new IconButton(
-              icon: Icon(Icons.exit_to_app),
-              onPressed: () => _clearCredentials()
+          leading: Visibility(
+            visible: !widget.isTrainerView,
+            child: new IconButton(
+                icon: Icon(Icons.exit_to_app),
+                onPressed: () => _clearCredentials()
+            )
           ),
           elevation: 0.0,
           title: Text(

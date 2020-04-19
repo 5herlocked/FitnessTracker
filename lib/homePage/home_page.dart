@@ -44,9 +44,13 @@ class _HomePageState<T extends Profile> extends State<HomePage<T>> {
     Widget content;
 
     if (_today.isEmpty) {
-      content = new Center(
-        child: Text("Looks like you have no Assigned Exercises Today"),
-      );
+      switch(T) {
+        case Trainer:
+          content = new Center(child: Text("Looks like you have no clients today"));
+          break;
+        case Client:
+          content = new Center(child: Text("Looks like you have no assigned exercises today"));
+      }
     } else {
       content = ListView.builder(
           itemCount: _today.length,
@@ -85,7 +89,6 @@ class _HomePageState<T extends Profile> extends State<HomePage<T>> {
 
   Widget _buildClientToday(BuildContext context, int index) {
     List<Exercise> clientDay = _today;
-
     Exercise currentElement = clientDay.elementAt(index);
 
     return Card(
@@ -132,7 +135,7 @@ class _HomePageState<T extends Profile> extends State<HomePage<T>> {
       MaterialPageRoute(
         builder: (c) {
           // TODO lazy implementation, this cannot make it into prod
-          return App(user: client, trainerView: true,);
+          return App<Client>(user: client, trainerView: true,);
         }
       ),
     );

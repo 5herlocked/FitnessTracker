@@ -1,4 +1,5 @@
 import 'package:fitnesstracker/entities/exercise.dart';
+import 'package:http/http.dart' as http;
 
 class CardioExercise extends Exercise {
   int distance;
@@ -30,5 +31,24 @@ class CardioExercise extends Exercise {
       timeStarted: json["time_started"],
       timeEnded: json["time_ended"]
     );
+  }
+
+  // Send a POST request to the API to assign an exercise to the client
+  Future<int> assignCardioExercise() async {
+    Map data = {
+      'client_id' : clientID, //int
+      'trainer_id': trainerID, //int
+      'notes': notes, //String
+      'duration': duration, //int
+      'distance': distance, //int
+      'name': name, //String
+    };
+
+    final http.Response response = await http.post(
+        'https://mad-fitnesstracker.herokuapp.com/api/trainer/assign-cardio-exercise',
+        body: data);
+
+    return response.statusCode;
+    //return CardioExercise.fromJson(json.decode(response.body));
   }
 }

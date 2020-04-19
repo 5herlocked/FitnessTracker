@@ -101,18 +101,24 @@ class Decorations {
         fillColor: Colors.white,
         filled: true,
         labelText: "$label",
-        focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(
-            color: Decorations.accentColour,
-          ),
-          borderRadius: BorderRadius.circular(5),
+      focusedBorder: OutlineInputBorder(
+        borderSide: BorderSide(
+          color: Decorations.accentColour,
         ),
-        disabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(
-            color: Colors.grey,
-          ),
-          borderRadius: BorderRadius.circular(5),
+        borderRadius: BorderRadius.circular(5),
+      ),
+      disabledBorder: OutlineInputBorder(
+        borderSide: BorderSide(
+          color: Colors.grey,
         ),
+        borderRadius: BorderRadius.circular(5),
+      ),
+      enabledBorder: OutlineInputBorder(
+        borderSide: BorderSide(
+          color: Colors.grey,
+        ),
+        borderRadius: BorderRadius.circular(5),
+      ),
     );
   }
 }
