@@ -1,24 +1,30 @@
+import 'package:fitnesstracker/addClientPage/add_client_page.dart';
 import 'package:fitnesstracker/entities/client.dart';
 import 'package:fitnesstracker/entities/trainer.dart';
 import 'package:fitnesstracker/entities/exercise.dart';
 import 'package:fitnesstracker/entities/profile.dart';
 import 'package:fitnesstracker/exerciseDetailPage/exercise_detail.dart';
+import 'package:fitnesstracker/loginRegistrationPage/login_form.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:fitnesstracker/app.dart';
+import 'package:fitnesstracker/entities/testEntities.dart';
 
 import '../decorations.dart';
 
 class UserListPage<T extends Profile> extends StatefulWidget {
   final T user;
+  bool trainerView;
 
   @override
   _UserListPageState<T> createState() => _UserListPageState<T>();
-  UserListPage({Key key, this.user}) : super (key: key);
+  UserListPage({Key key, this.user, this.trainerView}) : super (key: key);
 }
 
 class _UserListPageState<T extends Profile> extends State<UserListPage<T>> {
   var _list;
+  String pageTitle;
+  bool isFloatingActionButtonVisible;
 
   @override
   void initState() {
@@ -36,11 +42,15 @@ class _UserListPageState<T extends Profile> extends State<UserListPage<T>> {
           content = new Center(
             child: Text("Looks like you have no assigned exercises today"),
           );
+          pageTitle = "Assigned Exercises";
+          isFloatingActionButtonVisible = false;
           break;
         case Trainer:
           content = new Center(
             child: Text("Looks like you have no clients"),
           );
+          pageTitle = "Client List";
+          isFloatingActionButtonVisible = true;
           break;
       }
     } else {
@@ -50,17 +60,21 @@ class _UserListPageState<T extends Profile> extends State<UserListPage<T>> {
             itemCount: _list.length,
             itemBuilder: _buildExercises,
           );
+          isFloatingActionButtonVisible = false;
+          pageTitle = "Assigned Exercises";
           break;
         case Trainer:
           content = ListView.builder(
             itemCount: _list.length,
             itemBuilder: _buildClients,
           );
+          isFloatingActionButtonVisible = true;
+          pageTitle = "Client List";
       }
     }
     return Scaffold(
       appBar: AppBar(
-        title: Text("Assigned Exercises"),
+        title: Text(pageTitle),
       ),
         body: SafeArea(
           child: Container (
@@ -73,6 +87,20 @@ class _UserListPageState<T extends Profile> extends State<UserListPage<T>> {
               ],
             ),
           ),
+        ),
+        floatingActionButton: new Visibility(
+            visible: isFloatingActionButtonVisible,
+            child: FloatingActionButton(
+              onPressed: () {
+                setState(() {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => AddClientPage(listOfClientsUnderTrainer: _list,)));
+                });
+              },
+              child: Icon(Icons.add),
+              backgroundColor: Decorations.accentColour,
+            )
         )
     );
   }
@@ -84,7 +112,8 @@ class _UserListPageState<T extends Profile> extends State<UserListPage<T>> {
         _list = List<Exercise>();
         break;
       case Trainer:
-        _list = List<Client>();
+        //_list = List<Client>();
+      _list = TestEntities.testClientList;
         break;
     }
   }
