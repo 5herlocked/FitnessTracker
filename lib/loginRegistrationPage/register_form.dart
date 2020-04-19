@@ -317,9 +317,10 @@ class _MyRegisterFormState extends State<MyRegisterForm> {
         setState(() {
           _loading = false;
         });
+        Navigator.of(context).popUntil((route) => route.isFirst);
         Navigator.of(context).pushReplacement(
             new MaterialPageRoute(
-                settings: const RouteSettings(name: '/app'),
+                settings: const RouteSettings(name: '/'),
                 builder: (context) => new App(user: client,)
             )
         );

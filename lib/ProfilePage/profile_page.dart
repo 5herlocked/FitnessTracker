@@ -1,7 +1,10 @@
 import 'package:fitnesstracker/entities/client.dart';
 import 'package:fitnesstracker/entities/profile.dart';
+import 'package:fitnesstracker/loginRegistrationPage/login_register_page.dart';
+import 'package:fitnesstracker/secure_store_mixin.dart';
 import 'package:flutter/material.dart';
 import '../decorations.dart';
+import '../main.dart';
 
 class ProfilePage<T extends Profile> extends StatefulWidget {
   final T user;
@@ -11,7 +14,7 @@ class ProfilePage<T extends Profile> extends StatefulWidget {
   _ProfilePageState createState() => _ProfilePageState();
 }
 
-class _ProfilePageState extends State<ProfilePage> {
+class _ProfilePageState extends State<ProfilePage> with SecureStoreMixin {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
@@ -24,6 +27,84 @@ class _ProfilePageState extends State<ProfilePage> {
 
   void initState() {
     super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    Color primaryColor = Theme.of(context).primaryColor;
+    return Scaffold(
+        resizeToAvoidBottomPadding: false,
+        key: _scaffoldKey,
+        backgroundColor: Colors.white,
+        appBar: AppBar(
+          leading: new IconButton(
+              icon: Icon(Icons.exit_to_app),
+              onPressed: () => _clearCredentials()
+          ),
+          elevation: 0.0,
+          title: Text(
+            "Profile",
+            style: TextStyle(fontFamily: 'Raleway'),
+          ),
+        ),
+        body: Container(
+            padding: EdgeInsets.only(top: 20),
+            child: SingleChildScrollView(
+              child: Column(
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.only(
+                      top: 20,
+                      bottom: 10,
+                    ),
+                    child: CircleAvatar(
+                      backgroundImage: new NetworkImage(
+                          "https://19yw4b240vb03ws8qm25h366-wpengine.netdna-ssl.com/wp-content/uploads/Profile-Pic-Circle-Grey-Large.png"),
+                      radius: 80.0,
+                    ),
+                  ),
+                  Visibility(
+                    visible: _isEnabled,
+                    child: Container(
+                      padding: EdgeInsets.only(
+                          top: 10.0, left: 20, right: 20, bottom: 10),
+                      child: Text("Choose to select a new photo.",
+                          style: Decorations.logIn),
+                      alignment: Alignment.center,
+                    ),
+                  ),
+                  Container(
+                    padding: EdgeInsets.only(
+                        top: 10.0, left: 20, right: 20, bottom: 10),
+                    child: Text(
+                      widget.user.firstName + "  " + widget.user.lastName,
+                      style: Decorations.profileUserName,
+                    ),
+                    alignment: Alignment.center,
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  _buildForm()
+                ],
+              ),
+            )),
+        floatingActionButton: new Visibility(
+            // if the text fields are enabled, then the floating action button
+            // should be invisible
+            visible: !_isEnabled,
+            child: FloatingActionButton(
+              onPressed: () {
+                setState(() {
+                  _isEnabled = true; // enable the text fields
+                  _isSaveButtonVisible = true; // display the save button
+                });
+              },
+              child: Icon(Icons.edit),
+              backgroundColor: primaryColor,
+            )
+        )
+    );
   }
 
   void _saveProfile() async {
@@ -79,6 +160,7 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   // Build the Profile Form
+
   _buildForm() {
     return Form(
         key: _formKey,
@@ -193,79 +275,15 @@ class _ProfilePageState extends State<ProfilePage> {
           ],
         ));
   }
-
-  @override
-  Widget build(BuildContext context) {
-    Color primaryColor = Theme.of(context).primaryColor;
-    return Scaffold(
-        resizeToAvoidBottomPadding: false,
-        key: _scaffoldKey,
-        backgroundColor: Colors.white,
-        appBar: AppBar(
-          actions: <Widget>[],
-          elevation: 0.0,
-          title: Text(
-            "Profile",
-            style: TextStyle(fontFamily: 'Raleway'),
-          ),
-        ),
-        body: Container(
-            padding: EdgeInsets.only(top: 20),
-            child: SingleChildScrollView(
-              child: Column(
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.only(
-                      top: 20,
-                      bottom: 10,
-                    ),
-                    child: CircleAvatar(
-                      backgroundImage: new NetworkImage(
-                          "https://19yw4b240vb03ws8qm25h366-wpengine.netdna-ssl.com/wp-content/uploads/Profile-Pic-Circle-Grey-Large.png"),
-                      radius: 80.0,
-                    ),
-                  ),
-                  Visibility(
-                    visible: _isEnabled,
-                    child: Container(
-                      padding: EdgeInsets.only(
-                          top: 10.0, left: 20, right: 20, bottom: 10),
-                      child: Text("Choose to select a new photo.",
-                          style: Decorations.logIn),
-                      alignment: Alignment.center,
-                    ),
-                  ),
-                  Container(
-                    padding: EdgeInsets.only(
-                        top: 10.0, left: 20, right: 20, bottom: 10),
-                    child: Text(
-                      widget.user.firstName + "  " + widget.user.lastName,
-                      style: Decorations.profileUserName,
-                    ),
-                    alignment: Alignment.center,
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  _buildForm()
-                ],
-              ),
-            )),
-        floatingActionButton: new Visibility(
-            // if the text fields are enabled, then the floating action button
-            // should be invisible
-            visible: !_isEnabled,
-            child: FloatingActionButton(
-              onPressed: () {
-                setState(() {
-                  _isEnabled = true; // enable the text fields
-                  _isSaveButtonVisible = true; // display the save button
-                });
-              },
-              child: Icon(Icons.edit),
-              backgroundColor: primaryColor,
-            )
-        )
+  _clearCredentials() {
+    clearAll();
+    Navigator.popUntil(context, (route) => route.isFirst);
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        settings: const RouteSettings(name: '/'),
+        builder: (builder) => LoginRegister(),
+      )
     );
   }
 }

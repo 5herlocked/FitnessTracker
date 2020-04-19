@@ -1,6 +1,10 @@
 import 'package:fitnesstracker/app.dart';
+import 'package:fitnesstracker/loginRegistrationPage/login_register_page.dart';
+import 'package:fitnesstracker/secure_store_mixin.dart';
 import 'package:flutter/material.dart';
-import 'loginRegistrationPage/login_register_page.dart';
+import 'package:fitnesstracker/entities/client.dart';
+import 'package:fitnesstracker/entities/trainer.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 void main() => runApp(MyApp());
 
@@ -17,7 +21,7 @@ class MyApp extends StatelessWidget {
           canvasColor: Colors.transparent,
           fontFamily: "Raleway",
       ),
-      home: LoginRegister(),
+      home: LoginRegister(), // TODO: change to a legitimate Splash Screen
     );
   }
 }
