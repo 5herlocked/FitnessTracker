@@ -23,7 +23,7 @@ class _AssignExercisePageState extends State<AssignExercisePage> {
 
   String _exerciseName, _notes;
   int _duration, _distance;
-  double _weight;
+  int _weight;
   int _reps, _sets;
 
   bool _loading = false;
@@ -239,7 +239,7 @@ class _AssignExercisePageState extends State<AssignExercisePage> {
                               padding: EdgeInsets.only(
                                   top: 10.0, left: 20, right: 20, bottom: 10),
                               child: TextFormField(
-                                onSaved: (input) => _weight = double.parse(input),
+                                onSaved: (input) => _weight = int.parse(input),
                                 validator: (input) =>
                                 input.isEmpty ? "*Required" : null,
                                 cursorColor: Decorations.accentColour,
