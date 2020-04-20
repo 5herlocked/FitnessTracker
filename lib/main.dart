@@ -22,7 +22,7 @@ class MyApp extends StatelessWidget {
           canvasColor: Colors.transparent,
           fontFamily: "Raleway",
       ),
-      home: SplashScreen(), // TODO: change to a legitimate Splash Screen
+      home: SplashScreen(),
     );
   }
 }
