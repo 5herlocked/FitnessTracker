@@ -5,11 +5,9 @@ import 'package:fitnesstracker/entities/trainer.dart';
 import 'package:fitnesstracker/entities/exercise.dart';
 import 'package:fitnesstracker/entities/profile.dart';
 import 'package:fitnesstracker/exerciseDetailPage/exercise_detail.dart';
-import 'package:fitnesstracker/loginRegistrationPage/login_form.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:fitnesstracker/app.dart';
-import 'package:fitnesstracker/entities/testEntities.dart';
 
 import '../decorations.dart';
 
@@ -82,16 +80,16 @@ class _UserListPageState<T extends Profile> extends State<UserListPage<T>> {
         actionExtentRatio: 0.33,
         actions: <Widget>[
           IconSlideAction(
-            caption: exercise.elementAt(index).completed
+            caption: exercise.elementAt(index).completed == 1
                 ? "Mark as Incomplete"
                 : "Mark as Complete",
             color:
-                exercise.elementAt(index).completed ? Colors.red : Colors.green,
-            icon: exercise.elementAt(index).completed
+                exercise.elementAt(index).completed == 1 ? Colors.red : Colors.green,
+            icon: exercise.elementAt(index).completed == 1
                 ? Icons.not_interested
                 : Icons.check,
             onTap: () =>
-                _exercisesToggled(exercise.elementAt(index).completed, index),
+                _exercisesToggled(exercise.elementAt(index).completed == 1, index),
           )
         ],
         child: ListTile(
