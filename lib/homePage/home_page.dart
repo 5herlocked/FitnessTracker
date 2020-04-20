@@ -3,6 +3,7 @@ import 'package:fitnesstracker/app.dart';
 import 'package:fitnesstracker/entities/client.dart';
 import 'package:fitnesstracker/entities/exercise.dart';
 import 'package:fitnesstracker/entities/profile.dart';
+import 'package:fitnesstracker/entities/testEntities.dart';
 import 'package:fitnesstracker/entities/trainer.dart';
 import 'package:fitnesstracker/exerciseDetailPage/exercise_detail.dart';
 import 'package:fitnesstracker/homePage/header/home_page_header.dart';
@@ -24,7 +25,6 @@ class _HomePageState<T extends Profile> extends State<HomePage<T>> {
   @override
   void initState() {
     super.initState();
-    _loadToday();
   }
 
   Future<void> _loadToday() async {
@@ -36,13 +36,14 @@ class _HomePageState<T extends Profile> extends State<HomePage<T>> {
         break;
       case Trainer:
         Trainer currentTrainer = widget.user as Trainer;
-        _today = await currentTrainer.getClientList();
+        _today = TestEntities.testClientList;
         break;
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    _loadToday();
     Widget content;
 
     if (_today.isEmpty) {
