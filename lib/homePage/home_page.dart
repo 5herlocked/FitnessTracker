@@ -23,18 +23,18 @@ class _HomePageState<T extends Profile> extends State<HomePage<T>> {
 
   @override
   void initState() {
+    //_loadToday();
     super.initState();
-    _loadToday();
   }
 
-  void _loadToday() {
-    //TODO: Implement API Access
+  void _loadToday() async {
     switch(T) {
       case Client:
         _today = List<Exercise>();
         break;
       case Trainer:
-        _today = Map<Client, DateTime>();
+        Trainer currentTrainer = widget.user as Trainer;
+        _today = currentTrainer.listOfClients;
         break;
     }
   }
@@ -43,7 +43,12 @@ class _HomePageState<T extends Profile> extends State<HomePage<T>> {
   Widget build(BuildContext context) {
     Widget content;
 
-    if (_today.isEmpty) {
+    _loadToday();
+
+    if(_today == null) {
+      // This is what we show while we're loading
+      content = new Container();
+    } else if (_today.isEmpty) {
       switch(T) {
         case Trainer:
           content = new Center(child: Text("Looks like you have no clients today"));
@@ -53,10 +58,11 @@ class _HomePageState<T extends Profile> extends State<HomePage<T>> {
       }
     } else {
       content = ListView.builder(
-          itemCount: _today.length,
-          itemBuilder: _buildToday,
+        itemCount: _today.length,
+        itemBuilder: _buildToday,
       );
     }
+
     return SafeArea(
         child: Container(
           decoration: BoxDecoration(
@@ -116,16 +122,16 @@ class _HomePageState<T extends Profile> extends State<HomePage<T>> {
   }
 
   Widget _buildTrainerToday(BuildContext context, int index) {
-    Map<Client, DateTime> trainerDay = _today;
+    List<Client> trainerDay = _today;
 
-    Client currentClient = trainerDay.keys.elementAt(index);
-    DateTime currentClientSchedule = trainerDay.values.elementAt(index);
+    Client currentClient = trainerDay.elementAt(index);
+    //DateTime currentClientSchedule = trainerDay.elementAt(index);
 
     return Card(
       child: ListTile(
         onTap: () => _navigateToClientProfile(currentClient),
-        title: Text(currentClient.fullName),
-        subtitle: Text(Decorations.dateToTimeConverter(currentClientSchedule)),
+        title: Text(currentClient.firstName + " " + currentClient.lastName),
+        //subtitle: Text(Decorations.dateToTimeConverter(currentClientSchedule)),
       ),
     );
   }
