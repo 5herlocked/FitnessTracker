@@ -16,15 +16,16 @@ class _SplashScreenState extends State<SplashScreen> with SecureStoreMixin {
   @override
   Widget build(BuildContext context) {
     _convertAsyncToNot();
-
-    return Container(
-      decoration: BoxDecoration(
-          gradient: Decorations.backgroundGradient,
-      ),
-      child: Center(
-        child: Text(
-          "Fitness Tracker",
-          style: Decorations.splashScreen,
+    return Material(
+      child: Container(
+        decoration: BoxDecoration(
+            gradient: Decorations.backgroundGradient,
+        ),
+        child: Center(
+          child: Text(
+            "Fitness Tracker",
+            style: Decorations.splashScreen,
+          ),
         ),
       ),
     );
