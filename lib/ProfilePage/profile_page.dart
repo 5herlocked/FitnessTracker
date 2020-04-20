@@ -17,7 +17,7 @@ class ProfilePage<T extends Profile> extends StatefulWidget {
 }
 
 class _ProfilePageState<T extends Profile> extends State<ProfilePage> with SecureStoreMixin {
-  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>(); // safe remove
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   bool _isEnabled = false;
@@ -29,20 +29,15 @@ class _ProfilePageState<T extends Profile> extends State<ProfilePage> with Secur
   String errorMsg = "";
 
   void initState() {
-    _getProfile().then((value) {
-      setState(() {
-      });
-    });
+    _getProfile().then((value) => _updateFields<T>(value));
     super.initState();
   }
 
   // get profile info for the corresponding
   Future<Profile> _getProfile() async {
-    Client client = new Client();
-    Trainer trainer = new Trainer();
     switch (T) {
       case Client:
-        client = widget.user;
+        Client client = widget.user as Client;
         if (widget.isAlternateView) {
           // trainer is viewing client's profile
           // disable editing permissions
@@ -50,21 +45,38 @@ class _ProfilePageState<T extends Profile> extends State<ProfilePage> with Secur
         }
         return await client.getClientProfile();
       case Trainer:
-        trainer = widget.user;
+        Trainer trainer = widget.user as Trainer;
         if (widget.isAlternateView) {
           // client is viewing trainer's profile
           // disable editing permissions
           _isEditButtonVisible = false;
         }
-
-        try {
           return await trainer.getTrainerProfile();
-        } catch (Exception) {}
-        _description = trainer.description;
-        _birthday = trainer.birthday;
-        _height = trainer.height;
-        _weight = trainer.weight;
-        _fitnessGoal = trainer.fitnessGoal;
+    }
+  }
+
+  void _updateFields<T extends Profile>(T user) {
+    widget.user = user;
+    switch(T) {
+      case Client:
+        setState(() {
+          Client client = user as Client;
+          _description = client.description;
+          _birthday = client.birthday;
+          _height = client.height;
+          _weight = client.weight;
+          _fitnessGoal = client.fitnessGoal;
+        });
+        break;
+      case Trainer:
+        setState(() {
+          Trainer trainer = user as Trainer;
+          _description = trainer.description;
+          _birthday = trainer.birthday;
+          _height = trainer.height;
+          _weight = trainer.weight;
+          _fitnessGoal = trainer.fitnessGoal;
+        });
         break;
     }
   }
@@ -154,7 +166,7 @@ class _ProfilePageState<T extends Profile> extends State<ProfilePage> with Secur
                 });
               },
               child: Icon(Icons.edit),
-              backgroundColor: Colors.transparent,
+              backgroundColor: Decorations.accentColour,
             )
         )
     );
@@ -269,7 +281,8 @@ class _ProfilePageState<T extends Profile> extends State<ProfilePage> with Secur
                   decoration: Decorations.createInputDecoration(
                       Icons.calendar_today, "Birthday MM/DD/YYYY"),
                   enabled: _isEnabled ? true : false,
-                )),
+                )
+            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
@@ -333,7 +346,8 @@ class _ProfilePageState<T extends Profile> extends State<ProfilePage> with Secur
               child: _loading == true
                   ? CircularProgressIndicator(
                       valueColor: new AlwaysStoppedAnimation<Color>(
-                          Decorations.accentColour),
+                          Decorations.accentColour
+                      ),
                     )
                   : Container(
                       child: Visibility(

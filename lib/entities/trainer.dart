@@ -126,7 +126,7 @@ class Trainer extends Profile with ChangeNotifier {
   // Send a POST request to the API to log the client in
   Future<Trainer> getTrainerProfile() async {
     final http.Response response = await http.get(
-        'https://mad-fitnesstracker.herokuapp.com/api/trainer/getProfile?trainer_id' +
+        'https://mad-fitnesstracker.herokuapp.com/api/trainer/getProfile?trainer_id=' +
             "$trainerID");
 
     return Trainer.fromJson(json.decode(response.body));
