@@ -1,6 +1,8 @@
 import 'package:fitnesstracker/addClientPage/add_client_page.dart';
 import 'package:fitnesstracker/assignExercisePage/assign_exercise_page.dart';
+import 'package:fitnesstracker/entities/cardio_exercise.dart';
 import 'package:fitnesstracker/entities/client.dart';
+import 'package:fitnesstracker/entities/strength_training_exercise.dart';
 import 'package:fitnesstracker/entities/trainer.dart';
 import 'package:fitnesstracker/entities/exercise.dart';
 import 'package:fitnesstracker/entities/profile.dart';
@@ -27,37 +29,38 @@ class _UserListPageState<T extends Profile> extends State<UserListPage<T>> {
   @override
   void initState() {
     super.initState();
-    _loadList();
+    _loadList().then((value) {
+      setState(() {
+        _list = value;
+      });
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     Widget content;
-
     switch (T) {
       case Client:
         pageTitle = "Assigned Exercises";
-        content = _buildClientPage(_list.isEmpty);
+        content = _buildClientPage();
         break;
       case Trainer:
         pageTitle = "Client List";
-        content = _buildTrainerPage(_list.isEmpty);
+        content = _buildTrainerPage();
         break;
     }
 
     return content;
   }
 
-  void _loadList() {
-    //TODO: Implement API Access to get client list
+  Future<List> _loadList() async {
     switch (T) {
       case Client:
-        _list = List<Exercise>();
-        break;
+        Client currentClient = widget.user as Client;
+        return await currentClient.getAssignedExercises();
       case Trainer:
         Trainer currentTrainer = widget.user as Trainer;
-        _list = currentTrainer.listOfClients;
-        break;
+        return await currentTrainer.getClientList();
     }
   }
 
@@ -74,47 +77,59 @@ class _UserListPageState<T extends Profile> extends State<UserListPage<T>> {
   Widget _buildExercises(BuildContext context, int index) {
     List<Exercise> exercise = _list;
 
+    Exercise currentElement = exercise.elementAt(index);
+
     return new Card(
       child: Slidable(
         actionPane: SlidableScrollActionPane(),
         actionExtentRatio: 0.33,
         actions: <Widget>[
           IconSlideAction(
-            caption: exercise.elementAt(index).completed == 1
-                ? "Mark as Incomplete"
-                : "Mark as Complete",
-            color:
-                exercise.elementAt(index).completed == 1 ? Colors.red : Colors.green,
-            icon: exercise.elementAt(index).completed == 1
-                ? Icons.not_interested
-                : Icons.check,
+            caption: (currentElement.completed == 1)
+                ? "Mark as Incomplete" : "Mark as Complete",
+            color: (currentElement.completed == 1)
+                ? Colors.red : Colors.green,
+            icon: (currentElement.completed == 1)
+                ? Icons.not_interested : Icons.check,
             onTap: () =>
-                _exercisesToggled(exercise.elementAt(index).completed == 1, index),
+                _exercisesToggled(currentElement.completed, index),
           )
         ],
-        child: ListTile(
-          onTap: () => _navigateToExerciseDetails(_list.elementAt(index).name),
-          title: Text(_list.elementAt(index)),
-          subtitle: Text("duration"),
-        ),
+        child: _buildExerciseListTile(currentElement),
       ),
     );
   }
 
+  ListTile _buildExerciseListTile(Exercise currentElement) {
+    if (currentElement is CardioExercise) {
+      return ListTile(
+        title: Text(currentElement.name),
+        subtitle: Text("${currentElement.duration} minutes"),
+      );
+    } else if (currentElement is StrengthTrainingExercise) {
+      return ListTile(
+        title: Text(currentElement.name),
+        subtitle: Text("${currentElement.sets} sets, ${currentElement.reps} reps, at ${currentElement.weight} pounds"),
+      );
+    } else {
+      return null;
+    }
+  }
+
   void _navigateToClient(Client focusedClient) {
-    // TODO: verify this works
-    Navigator.of(context).push(MaterialPageRoute(
-      builder: (c) {
-        return new App<Client>(
-          user: focusedClient,
-          trainerView: true,
-        );
-      },
-    ));
+    Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (c) {
+            return new App<Client>(
+              user: focusedClient,
+              trainerView: true,
+            );
+          },
+        )
+    );
   }
 
   void _navigateToExerciseDetails(String exercise) {
-    // TODO: change this to actually take us to the correct exercise details
     Navigator.of(context).push(
       new MaterialPageRoute(
         builder: (c) {
@@ -124,15 +139,15 @@ class _UserListPageState<T extends Profile> extends State<UserListPage<T>> {
     );
   }
 
-  _exercisesToggled(bool value, int index) {
+  _exercisesToggled(int value, int index) {
     /*
     TODO: Implement API to use the exercises classes so that whenever
      the exercise is marked complete, it's actually marked complete
     */
     setState(() =>
-        _list.update(_list.keys.elementAt(index), (bool value) => !value));
+        _list.update(_list.elementAt(index), (int value) => (value == 1) ? 0 : 1));
     switch (value) {
-      case false:
+      case 0:
         // API call
         return Scaffold.of(context).showSnackBar(
           SnackBar(
@@ -140,7 +155,7 @@ class _UserListPageState<T extends Profile> extends State<UserListPage<T>> {
                   style: Decorations.snackBar)),
         );
         break;
-      case true:
+      case 1:
         return Scaffold.of(context).showSnackBar(SnackBar(
           content: Text("${_list.keys.elementAt(index)} not complete",
               style: Decorations.snackBar),
@@ -149,25 +164,14 @@ class _UserListPageState<T extends Profile> extends State<UserListPage<T>> {
     }
   }
 
-  Widget _buildClientPage(bool isExerciseListEmpty) {
+  Widget _buildClientPage() {
     return Scaffold(
         appBar: AppBar(
           title: Text(pageTitle),
         ),
         backgroundColor: Colors.white,
         body: SafeArea(
-          child: !isExerciseListEmpty
-              ? Stack(
-                  children: <Widget>[
-                    ListView.builder(
-                      itemCount: _list.length,
-                      itemBuilder: _buildExercises,
-                    ),
-                  ],
-                )
-              : Center(
-                  child:
-                      Text("Looks like you have no assigned exercises today")),
+          child: _buildClientContents(),
         ),
         floatingActionButton: new Visibility(
           visible: true,
@@ -185,23 +189,32 @@ class _UserListPageState<T extends Profile> extends State<UserListPage<T>> {
         ));
   }
 
-  Widget _buildTrainerPage(bool isClientListEmpty) {
+  Widget _buildClientContents() {
+    if (_list == null || _list.isEmpty) {
+      return Center(
+          child: Text("Looks like you have no assigned exercises today"),
+      );
+    } else {
+      return Stack(
+        children: <Widget>[
+          ListView.builder(
+            itemCount: _list.length,
+            itemBuilder: _buildExercises,
+          ),
+        ],
+      );
+    }
+  }
+
+  Widget _buildTrainerPage() {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
         title: Text(pageTitle),
       ),
       body: SafeArea(
-          child: !isClientListEmpty
-              ? Stack(
-                  children: <Widget>[
-                    ListView.builder(
-                      itemCount: _list.length,
-                      itemBuilder: _buildClients,
-                    ),
-                  ],
-                )
-              : Center(child: Text("Looks like you have no clients"))),
+          child: _buildTrainerContent(),
+      ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.push(
@@ -215,5 +228,22 @@ class _UserListPageState<T extends Profile> extends State<UserListPage<T>> {
         backgroundColor: Decorations.accentColour,
       ),
     );
+  }
+
+  _buildTrainerContent() {
+    if (_list == null || _list.isEmpty) {
+      return Center(
+          child: Text("Looks like you have no Clients"),
+      );
+    } else {
+      return Stack(
+        children: <Widget>[
+          ListView.builder(
+            itemCount: _list.length,
+            itemBuilder: _buildClients,
+          ),
+        ],
+      );
+    }
   }
 }

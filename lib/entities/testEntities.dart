@@ -123,7 +123,7 @@ class TestEntities {
 
     ),
     CardioExercise(
-      name :"Strength4",
+      name :"Cardio3",
       completed: false,
     ),
   ];

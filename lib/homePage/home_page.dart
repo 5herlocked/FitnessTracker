@@ -1,8 +1,9 @@
-// internal imports
 import 'package:fitnesstracker/app.dart';
+import 'package:fitnesstracker/entities/cardio_exercise.dart';
 import 'package:fitnesstracker/entities/client.dart';
 import 'package:fitnesstracker/entities/exercise.dart';
 import 'package:fitnesstracker/entities/profile.dart';
+import 'package:fitnesstracker/entities/strength_training_exercise.dart';
 import 'package:fitnesstracker/entities/testEntities.dart';
 import 'package:fitnesstracker/entities/trainer.dart';
 import 'package:fitnesstracker/exerciseDetailPage/exercise_detail.dart';
@@ -25,31 +26,16 @@ class _HomePageState<T extends Profile> extends State<HomePage<T>> {
   @override
   void initState() {
     super.initState();
-  }
-
-  void _loadToday() async {
-    switch(T) {
-      case Client:
-        _today = List<Exercise>();
-        break;
-      case Trainer:
-        Trainer currentTrainer = widget.user as Trainer;
-        _today = currentTrainer.listOfClients;
-        break;
-    }
+    _loadToday().then((value) {
+      setState(() {_today = value;});
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    _loadToday();
     Widget content;
 
-    _loadToday();
-
-    if(_today == null) {
-      // This is what we show while we're loading
-      content = new Container();
-    } else if (_today.isEmpty) {
+    if (_today == null || _today.isEmpty) {
       switch(T) {
         case Trainer:
           content = new Center(child: Text("Looks like you have no clients today"));
@@ -82,6 +68,19 @@ class _HomePageState<T extends Profile> extends State<HomePage<T>> {
     );
   }
 
+
+  Future<List> _loadToday() async {
+    //TODO: Implement API Access
+    switch(T) {
+      case Client:
+        Client currentClient = widget.user as Client;
+        return await currentClient.getAssignedExercises();
+      case Trainer:
+        Trainer currentTrainer = widget.user as Trainer;
+        return await currentTrainer.getClientList();
+    }
+  }
+
   Widget _buildToday (BuildContext context, int index) {
     switch(T) {
       case Client:
@@ -102,11 +101,7 @@ class _HomePageState<T extends Profile> extends State<HomePage<T>> {
       child: Slidable(
         actionPane: SlidableScrollActionPane(),
         actionExtentRatio: 0.33,
-        child: ListTile(
-          onTap: () async => _navigateToExerciseDetails(clientDay.elementAt(index).name),
-          title: Text(clientDay.elementAt(index).name),
-          subtitle: Text("Duration: 30 minutes"),
-        ),
+        child: _buildExerciseListTile(currentElement),
         actions: <Widget>[
           IconSlideAction(
             caption: currentElement.completed == 1
@@ -122,17 +117,30 @@ class _HomePageState<T extends Profile> extends State<HomePage<T>> {
     );
   }
 
+  ListTile _buildExerciseListTile(Exercise currentElement) {
+    if (currentElement is CardioExercise) {
+      return ListTile(
+        title: Text(currentElement.name),
+        subtitle: Text("${currentElement.duration} minutes"),
+      );
+    } else if (currentElement is StrengthTrainingExercise) {
+      return ListTile(
+        title: Text(currentElement.name),
+        subtitle: Text("${currentElement.sets} sets, ${currentElement.reps} reps, at ${currentElement.weight} pounds"),
+      );
+    } else {
+      return null;
+    }
+  }
+
   Widget _buildTrainerToday(BuildContext context, int index) {
     List<Client> trainerDay = _today;
-
     Client currentClient = trainerDay.elementAt(index);
-    //DateTime currentClientSchedule = trainerDay.elementAt(index);
 
     return Card(
       child: ListTile(
         onTap: () => _navigateToClientProfile(currentClient),
-        title: Text(currentClient.firstName + " " + currentClient.lastName),
-        //subtitle: Text(Decorations.dateToTimeConverter(currentClientSchedule)),
+        title: Text("${currentClient.firstName} ${currentClient.lastName}"),
       ),
     );
   }
@@ -141,7 +149,6 @@ class _HomePageState<T extends Profile> extends State<HomePage<T>> {
     Navigator.of(context).push(
       MaterialPageRoute(
         builder: (c) {
-          // TODO lazy implementation, this cannot make it into prod
           return App<Client>(user: client, trainerView: true,);
         }
       ),
