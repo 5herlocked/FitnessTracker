@@ -24,7 +24,6 @@ class _HomePageState<T extends Profile> extends State<HomePage<T>> {
 
   @override
   void initState() {
-    //_loadToday();
     super.initState();
   }
 
@@ -106,15 +105,15 @@ class _HomePageState<T extends Profile> extends State<HomePage<T>> {
         child: ListTile(
           onTap: () async => _navigateToExerciseDetails(clientDay.elementAt(index).name),
           title: Text(clientDay.elementAt(index).name),
-          subtitle: Text("duration"),
+          subtitle: Text("Duration: 30 minutes"),
         ),
         actions: <Widget>[
           IconSlideAction(
-            caption: currentElement.completed
+            caption: currentElement.completed == 1
                 ? "Mark as Incomplete" : "Mark as complete",
-            color: currentElement.completed
+            color: currentElement.completed == 1
                 ? Colors.red : Colors.green,
-            icon: currentElement.completed
+            icon: currentElement.completed == 1
                 ? Icons.not_interested : Icons.check,
             onTap: () => _exercisesToggled(clientDay, index),
           )
@@ -154,10 +153,10 @@ class _HomePageState<T extends Profile> extends State<HomePage<T>> {
     // the exercise is marked complete, it's actually marked complete
     setState(
             () => exerciseList.elementAt(index).completed =
-            !exerciseList.elementAt(index).completed
+            exerciseList.elementAt(index).completed == 1? 0: 1
     );
     switch(exerciseList.elementAt(index).completed){
-      case false:
+      case 1:
         // API call
         return Scaffold.of(context).showSnackBar(
           SnackBar(
@@ -165,7 +164,7 @@ class _HomePageState<T extends Profile> extends State<HomePage<T>> {
           )
         );
         break;
-      case true:
+      case 0:
         return Scaffold.of(context).showSnackBar(
           SnackBar(
             content: Text("${exerciseList.elementAt(index)} not complete"),
