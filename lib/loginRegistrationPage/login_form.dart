@@ -252,10 +252,6 @@ class _MyLoginFormState extends State<MyLoginForm> with SecureStoreMixin {
     } else {
       Navigator.popUntil(context, (route) => route.isFirst);
       if (possibleClient.clientID != null) {
-        // Get the client's exercises
-        possibleClient.getCardioExercises();
-        possibleClient.getStrengthExercises();
-
         Navigator.pushReplacement(
             context,
             MaterialPageRoute(
@@ -267,9 +263,6 @@ class _MyLoginFormState extends State<MyLoginForm> with SecureStoreMixin {
         return possibleClient;
       }
       if (possibleTrainer.trainerID != null) {
-
-        possibleTrainer.getClientList();
-
         Navigator.pushReplacement(
             context,
             MaterialPageRoute(

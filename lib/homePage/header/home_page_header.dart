@@ -30,11 +30,13 @@ class HomePageHeader<T extends Profile> extends StatelessWidget {
     );
   }
 
-  _navigateToProfilePage(BuildContext context) => Navigator.of(context).push(
+  _navigateToProfilePage(BuildContext context) {
+    return Navigator.of(context).push(
       MaterialPageRoute(
         builder: (c) => ProfilePage<T>(user: user, isAlternateView: false,)
       )
-  );
+    );
+  }
 
   Widget _buildWelcomeMessage(BuildContext context) {
     return Column(

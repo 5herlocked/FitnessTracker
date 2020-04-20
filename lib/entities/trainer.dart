@@ -121,28 +121,24 @@ class Trainer extends Profile with ChangeNotifier {
         body: data);
 
     return response.statusCode;
-    //return Trainer.fromJson(json.decode(response.body));
   }
 
   // Send a POST request to the API to log the client in
   Future<Trainer> getTrainerProfile() async {
     final http.Response response = await http.get(
-        'https://mad-fitnesstracker.herokuapp.com/api/client/updateprofile' +
+        'https://mad-fitnesstracker.herokuapp.com/api/trainer/getProfile?trainer_id' +
             "$trainerID");
 
     return Trainer.fromJson(json.decode(response.body));
   }
 
   Future<int> addClient(String clientEmail) async {
-    Map data = {
-      'trainer_id': this.trainerID,
-      'client_email': clientEmail,
-    };
 
     final http.Response response = await http.post(
-        'https://mad-fitnesstracker.herokuapp.com/api/trainer/addClient',
-        body: data);
-
+        'https://mad-fitnesstracker.herokuapp.com/api/trainer/addClient?'
+            'trainer_id=$trainerID&client_email=$clientEmail',);
+    final Client client = Client.fromJson(jsonDecode(response.body));
+    this.listOfClients.add(client);
     return response.statusCode;
   }
 }
