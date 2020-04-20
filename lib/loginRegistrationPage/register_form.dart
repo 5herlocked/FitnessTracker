@@ -203,7 +203,7 @@ class _MyRegisterFormState extends State<MyRegisterForm> with SecureStoreMixin {
                           color: Decorations.accentColour,
                           child: Text(
                             "Register",
-                            style: Decorations.loginRegButton,
+                            style: Decorations.subtitle,
                           ),
                         ),
                         height: 55,

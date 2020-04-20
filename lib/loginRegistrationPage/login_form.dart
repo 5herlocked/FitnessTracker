@@ -170,7 +170,7 @@ class _MyLoginFormState extends State<MyLoginForm> with SecureStoreMixin {
                         color: Decorations.accentColour,
                         child: Text(
                           "Login",
-                          style: Decorations.loginRegButton,
+                          style: Decorations.subtitle,
                         ),
                       ),
                       height: 55,
