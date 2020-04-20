@@ -6,6 +6,13 @@ class Decorations {
   static var accentColour = Color(0xFFFA716F);
 
   // text styles
+  static var splashScreen = TextStyle(
+    fontSize: 26,
+    fontFamily: 'Raleway',
+    fontWeight: FontWeight.w900,
+    color: Colors.white,
+  );
+
   static var headline = TextStyle(
     fontFamily: "Raleway",
     fontWeight: FontWeight.w900,
@@ -25,13 +32,6 @@ class Decorations {
     fontFamily: 'Raleway',
     fontWeight: FontWeight.w900,
     color: Colors.black,
-  );
-
-  static var loginRegButton = TextStyle(
-    fontSize: 18,
-    fontWeight: FontWeight.w900,
-    fontFamily: "Raleway",
-    color: Colors.white.withOpacity(1.0),
   );
 
   static var radioButtonLabel = TextStyle(

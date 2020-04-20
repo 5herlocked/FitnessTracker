@@ -23,50 +23,6 @@ class _LoginRegisterState extends State<LoginRegister> with SecureStoreMixin {
 
   void initState() {
     super.initState();
-    _convertAsyncToNot();
-  }
-
-  void _convertAsyncToNot() async {
-    await _attemptLogin();
-  }
-
-  _attemptLogin () async {
-    String userType = await getSecureStore("userType");
-    String password = await getSecureStore("password");
-    String userName = await getSecureStore("email");
-    if (userType == null || password == null || userName == null) {
-      return;
-    }
-    switch (userType) {
-      case "Client":
-        Client previousClient = Client();
-        previousClient.emailID = userName;
-        previousClient.password = password;
-        previousClient = await previousClient.loginClient();
-        Navigator.popUntil(context, (route) => route.isFirst);
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            settings: const RouteSettings(name: '/', isInitialRoute: true),
-            builder: (builder) => App<Client>(user: previousClient, trainerView: false,),
-          )
-        );
-        break;
-      case "Trainer":
-        Trainer previousTrainer = Trainer();
-        previousTrainer.emailID = userName;
-        previousTrainer.password = password;
-        previousTrainer = await previousTrainer.loginTrainer();
-        Navigator.popUntil(context, (route) => route.isFirst);
-        Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-                settings: const RouteSettings(name: '/', isInitialRoute: true),
-                builder: (builder) => App<Trainer>(user: previousTrainer, trainerView: false,),
-            )
-        );
-        break;
-    }
   }
 
   @override
@@ -103,12 +59,7 @@ class _LoginRegisterState extends State<LoginRegister> with SecureStoreMixin {
                   padding: EdgeInsets.only(top: 10, bottom: 10),
                   child: Text(
                     "Fitness Tracker",
-                    style: TextStyle(
-                      fontSize: 26,
-                      fontFamily: 'Raleway',
-                      fontWeight: FontWeight.w900,
-                      color: Colors.white,
-                    ),
+                    style: Decorations.splashScreen,
                   ),
                   alignment: Alignment.center,
                 ),
