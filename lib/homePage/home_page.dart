@@ -1,8 +1,9 @@
-// internal imports
 import 'package:fitnesstracker/app.dart';
+import 'package:fitnesstracker/entities/cardio_exercise.dart';
 import 'package:fitnesstracker/entities/client.dart';
 import 'package:fitnesstracker/entities/exercise.dart';
 import 'package:fitnesstracker/entities/profile.dart';
+import 'package:fitnesstracker/entities/strength_training_exercise.dart';
 import 'package:fitnesstracker/entities/testEntities.dart';
 import 'package:fitnesstracker/entities/trainer.dart';
 import 'package:fitnesstracker/exerciseDetailPage/exercise_detail.dart';
@@ -33,7 +34,7 @@ class _HomePageState<T extends Profile> extends State<HomePage<T>> {
     switch(T) {
       case Client:
         Client currentClient = widget.user as Client;
-        _today = await currentClient.getAssignedExercises();
+        _today = TestEntities.testExerciseList;
         break;
       case Trainer:
         Trainer currentTrainer = widget.user as Trainer;
@@ -46,8 +47,6 @@ class _HomePageState<T extends Profile> extends State<HomePage<T>> {
   Widget build(BuildContext context) {
     _loadToday();
     Widget content;
-
-    _loadToday();
 
     if(_today == null) {
       // This is what we show while we're loading
@@ -105,11 +104,7 @@ class _HomePageState<T extends Profile> extends State<HomePage<T>> {
       child: Slidable(
         actionPane: SlidableScrollActionPane(),
         actionExtentRatio: 0.33,
-        child: ListTile(
-          onTap: () async => _navigateToExerciseDetails(clientDay.elementAt(index).name),
-          title: Text(clientDay.elementAt(index).name),
-          subtitle: Text("duration"),
-        ),
+        child: _buildExerciseListTile(currentElement),
         actions: <Widget>[
           IconSlideAction(
             caption: currentElement.completed
@@ -123,6 +118,22 @@ class _HomePageState<T extends Profile> extends State<HomePage<T>> {
         ],
       ),
     );
+  }
+
+  ListTile _buildExerciseListTile(Exercise currentElement) {
+    if (currentElement is CardioExercise) {
+      return ListTile(
+        title: Text(currentElement.name),
+        subtitle: Text("${currentElement.duration} minutes"),
+      );
+    } else if (currentElement is StrengthTrainingExercise) {
+      return ListTile(
+        title: Text(currentElement.name),
+        subtitle: Text("${currentElement.sets} sets, ${currentElement.reps} reps, at ${currentElement.weight} pounds"),
+      );
+    } else {
+      return null;
+    }
   }
 
   Widget _buildTrainerToday(BuildContext context, int index) {
