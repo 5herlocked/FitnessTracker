@@ -98,9 +98,13 @@ class HomePageHeader<T extends Profile> extends StatelessWidget {
   String _getTodayExerciseStats() {
     List<Exercise> clientDay = today;
 
+    if (clientDay == null) {
+      return "";
+    }
+
     int completedExercises = 0;
     // compute completed exercises
-    clientDay.forEach((Exercise e) => completedExercises += (e.completed) ? 1 : 0);
+    clientDay.forEach((Exercise e) => completedExercises += (e.completed == 1) ? 1 : 0);
     if (clientDay.isEmpty) {
       return "You've have no assigned exercies left";
     } else if (now.isBefore(noon)) {

@@ -2,7 +2,7 @@ import 'package:fitnesstracker/entities/exercise.dart';
 import 'package:http/http.dart' as http;
 
 class StrengthTrainingExercise extends Exercise {
-  double weight;
+  int weight;
   int reps;
   int sets;
   StrengthTrainingExercise(
