@@ -1,17 +1,21 @@
 import 'package:fitnesstracker/decorations.dart';
 import 'package:fitnesstracker/entities/client.dart';
-import 'package:fitnesstracker/entities/testEntities.dart';
+import 'package:fitnesstracker/entities/profile.dart';
+import 'package:fitnesstracker/entities/trainer.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
-class AddClientPage extends StatefulWidget {
+class AddClientPage<T extends Profile> extends StatefulWidget {
   List<Client> listOfClientsUnderTrainer;
-  AddClientPage({ Key key, this.listOfClientsUnderTrainer}) : super(key: key);
+  T user;
+  AddClientPage({ Key key, this.listOfClientsUnderTrainer, this.user}) : super(key: key);
 
   @override
   __AddClientPageState createState() => new __AddClientPageState();
 }
 
-class __AddClientPageState extends State<AddClientPage> {
+class __AddClientPageState<T extends Profile> extends State<AddClientPage> {
   // final formKey = new GlobalKey<FormState>();
   // final key = new GlobalKey<ScaffoldState>();
   final TextEditingController _filter = new TextEditingController();
@@ -38,8 +42,8 @@ class __AddClientPageState extends State<AddClientPage> {
 
   @override
   void initState() {
-    this._getNames();
     super.initState();
+    this._getNames();
   }
 
   Widget build(BuildContext context) {
@@ -68,9 +72,15 @@ class __AddClientPageState extends State<AddClientPage> {
   }
 
   Widget _buildList() {
+    if (filteredNames == null) {
+      // This is what we show while we're loading
+      return new Container();
+    }
+
     if (_searchText.isNotEmpty) {
       List<Client> tempList = new List();
       for(Client client in filteredNames) {
+        client.fullName = client.firstName + " " + client.lastName;
         if(client.fullName.toLowerCase().contains(_searchText.toLowerCase()) || client.emailID.contains(_searchText)){
           tempList.add(client);
         }
@@ -82,7 +92,7 @@ class __AddClientPageState extends State<AddClientPage> {
       itemBuilder: (BuildContext context, int index) {
         return Card(
           child: ListTile(
-            title: Text(filteredNames.elementAt(index).fullName),
+            title: Text(filteredNames.elementAt(index).firstName),
             onTap: () {
               _addClient(filteredNames, index);
             },
@@ -94,11 +104,13 @@ class __AddClientPageState extends State<AddClientPage> {
 
 
   void _addClient(List<Client> filteredNames, int index) {
-    if(!(widget.listOfClientsUnderTrainer.contains(filteredNames.elementAt(index))))
+    Trainer trainer = widget.user as Trainer;
+    if(!(widget.listOfClientsUnderTrainer.contains(filteredNames.elementAt(index)))) {
       widget.listOfClientsUnderTrainer.add(filteredNames.elementAt(index));
 
-    //send a post request to the API to set the trainerId field for this client
-
+      //send a post request to the API to set the trainerId field for this client
+      trainer.addClient(filteredNames.elementAt(index).emailID);
+    }
   }
 
   void _searchPressed() {
@@ -119,15 +131,41 @@ class __AddClientPageState extends State<AddClientPage> {
     });
   }
 
-  void _getNames() async {
-    List tempList = new List();
+  Future<List<Client>> _getNames() async {
+    List<Client> tempList = new List();
     // call the API to get a list of all the clients not assigned to this trainer
-    // getAllUnassignedClients()
-    tempList = TestEntities.testClientListAll;
+     getAllUnassignedClients();
+     tempList = await getAllUnassignedClients();
+
     setState(() {
       names = tempList;
       names.shuffle();
       filteredNames = names;
     });
+    return tempList;
+  }
+
+  Future<List<Client>> getAllUnassignedClients() async {
+    //TODO verify this works as expected
+
+    final http.Response response = await http.get(
+        'https://mad-fitnesstracker.herokuapp.com/api/trainer/getUnassignedClientList');
+
+    // 1. Create a List of Users
+    final List<Client> fetchedUserList = [];
+
+    // 2. Decode the response body
+    List<dynamic> responseData = jsonDecode(response.body);
+
+    // 3. Iterate through all the users in the list
+    responseData?.forEach((dynamic userData) {
+      // 4. Create a new user and add to the list
+      final Client client = Client.fromJson(userData);
+      fetchedUserList.add(client);
+    });
+
+    // 5. Update our list and the UI
+    return fetchedUserList;
+
   }
 }

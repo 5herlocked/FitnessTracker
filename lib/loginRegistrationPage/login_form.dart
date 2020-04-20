@@ -1,5 +1,6 @@
 import 'package:fitnesstracker/app.dart';
 import 'package:fitnesstracker/entities/profile.dart';
+import 'package:fitnesstracker/entities/testEntities.dart';
 import 'package:fitnesstracker/entities/trainer.dart';
 import 'package:fitnesstracker/secure_store_mixin.dart';
 import 'package:flutter/material.dart';
@@ -262,6 +263,9 @@ class _MyLoginFormState extends State<MyLoginForm> with SecureStoreMixin {
         return possibleClient;
       }
       if (possibleTrainer.trainerID != null) {
+
+        possibleTrainer.getClientList();
+
         Navigator.pushReplacement(
             context,
             MaterialPageRoute(

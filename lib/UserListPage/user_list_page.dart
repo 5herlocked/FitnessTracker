@@ -57,8 +57,8 @@ class _UserListPageState<T extends Profile> extends State<UserListPage<T>> {
         _list = List<Exercise>();
         break;
       case Trainer:
-        //_list = List<Client>();
-        _list = TestEntities.testClientList;
+        Trainer currentTrainer = widget.user as Trainer;
+        _list = currentTrainer.listOfClients;
         break;
     }
   }
@@ -68,7 +68,7 @@ class _UserListPageState<T extends Profile> extends State<UserListPage<T>> {
     return Card(
       child: ListTile(
         onTap: () => _navigateToClient(clients.elementAt(index)),
-        title: Text(clients.elementAt(index).fullName),
+        title: Text(clients.elementAt(index).firstName + " " + clients.elementAt(index).lastName),
       ),
     );
   }
@@ -210,7 +210,7 @@ class _UserListPageState<T extends Profile> extends State<UserListPage<T>> {
               context,
               MaterialPageRoute(
                   builder: (context) => AddClientPage(
-                        listOfClientsUnderTrainer: _list,
+                        listOfClientsUnderTrainer: _list, user: widget.user,
                       )));
         },
         child: Icon(Icons.add),
