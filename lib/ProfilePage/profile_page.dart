@@ -269,7 +269,7 @@ class _ProfilePageState extends State<ProfilePage> with SecureStoreMixin {
                           color: Decorations.accentColour,
                           child: Text(
                             "Save",
-                            style: Decorations.loginRegButton,
+                            style: Decorations.subtitle,
                           ),
                         ),
                       ),

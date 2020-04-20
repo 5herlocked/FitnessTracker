@@ -314,7 +314,7 @@ class _AssignExercisePageState extends State<AssignExercisePage> {
                     color: Decorations.accentColour,
                     child: Text(
                       "Assign",
-                      style: Decorations.loginRegButton,
+                      style: Decorations.subtitle,
                     ),
                   ),
                   height: 55,
