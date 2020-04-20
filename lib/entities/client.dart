@@ -35,7 +35,12 @@ class Client extends Profile {
         lastName: json['last_name'],
         email: json['email'],
         phoneNumber: json['phone_number'],
-        clientID: json['client_id']
+        clientID: json['client_id'],
+        description: json['description'],
+        birthday: json['birthday'],
+        height: json['height'],
+        weight: json['weight'],
+        fitnessGoal: json['fitness_goal']
     );
   }
 
@@ -71,7 +76,7 @@ class Client extends Profile {
   }
 
   // Send a POST request to the API to log the client in
-  Future<Client> updateClientProfile() async {
+  Future<int> updateClientProfile() async {
     Map data = {
       'client_id' : clientID,
       'description': description,
@@ -85,10 +90,20 @@ class Client extends Profile {
         'https://mad-fitnesstracker.herokuapp.com/api/client/updateprofile',
         body: data);
 
+    return response.statusCode;
+    //return Client.fromJson(json.decode(response.body));
+  }
+
+  // Send a POST request to the API to log the client in
+  Future<Client> getClientProfile() async {
+    final http.Response response = await http.get(
+        'https://mad-fitnesstracker.herokuapp.com/api/client/updateprofile' + "$clientID");
+
     //return response.statusCode;
     return Client.fromJson(json.decode(response.body));
   }
 
+<<<<<<< HEAD
   Future<List<Exercise>> getAssignedExercises() async {
     // TODO verify this works
     List<Exercise> assignedExercises;
@@ -108,4 +123,6 @@ class Client extends Profile {
     assignedExercises.addAll(strengthList);
     return assignedExercises;
   }
+=======
+>>>>>>> master
 }

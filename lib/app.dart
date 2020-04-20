@@ -75,7 +75,7 @@ class _AppState<T extends Profile> extends State<App> {
     if (widget.trainerView) {
       switch(_currentTab) {
         case ClientViewTabItem.profile:
-          _currentBody = ProfilePage<Client>(user: widget.user, isTrainerView: true,);
+          _currentBody = ProfilePage<Client>(user: widget.user, isAlternateView: true,);
           break;
         case ClientViewTabItem.exercises:
           _currentBody = UserListPage<Client>(user: widget.user, isTrainerView: true,);
@@ -96,7 +96,7 @@ class _AppState<T extends Profile> extends State<App> {
           _currentBody = ExerciseHistoryPage();
           break;
         case ClientTabItem.profile:
-          _currentBody = ProfilePage<Client>(user: widget.user, isTrainerView: false,);
+          _currentBody = ProfilePage<Client>(user: widget.user, isAlternateView: false,);
           break;
       }
     } else if (T == Trainer) {
@@ -108,7 +108,7 @@ class _AppState<T extends Profile> extends State<App> {
           _currentBody = UserListPage<Trainer>(user: widget.user, isTrainerView: false,);
           break;
         case TrainerTabItem.profile:
-          _currentBody = ProfilePage<Trainer>(user: widget.user, isTrainerView: false,);
+          _currentBody = ProfilePage<Trainer>(user: widget.user, isAlternateView: false,);
           break;
       }
     }

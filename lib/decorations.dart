@@ -88,7 +88,7 @@ class Decorations {
       ]
   );
 
-  // other formatting related funcitons
+  // other formatting related functions
   static String dateToTimeConverter(DateTime toConvert) {
     DateFormat formatter = new DateFormat.jm("en_US");
 
