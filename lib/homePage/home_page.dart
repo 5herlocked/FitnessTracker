@@ -24,6 +24,7 @@ class _HomePageState<T extends Profile> extends State<HomePage<T>> {
 
   @override
   void initState() {
+    //_loadToday();
     super.initState();
   }
 
@@ -46,7 +47,12 @@ class _HomePageState<T extends Profile> extends State<HomePage<T>> {
     _loadToday();
     Widget content;
 
-    if (_today.isEmpty) {
+    _loadToday();
+
+    if(_today == null) {
+      // This is what we show while we're loading
+      content = new Container();
+    } else if (_today.isEmpty) {
       switch(T) {
         case Trainer:
           content = new Center(child: Text("Looks like you have no clients today"));
@@ -56,10 +62,11 @@ class _HomePageState<T extends Profile> extends State<HomePage<T>> {
       }
     } else {
       content = ListView.builder(
-          itemCount: _today.length,
-          itemBuilder: _buildToday,
+        itemCount: _today.length,
+        itemBuilder: _buildToday,
       );
     }
+
     return SafeArea(
         child: Container(
           decoration: BoxDecoration(

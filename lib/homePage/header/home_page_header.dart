@@ -72,6 +72,10 @@ class HomePageHeader<T extends Profile> extends StatelessWidget {
   String _getTrainerDay() {
     List<Client> trainerDay = today;
 
+    if (trainerDay == null) {
+      return "";
+    }
+
     // personalisation tricks
     // assumes that past clients from that day are removed
     if (trainerDay.isEmpty) {

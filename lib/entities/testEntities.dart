@@ -21,7 +21,7 @@ class TestEntities {
     lastName: "Levinsky",
     fullName: "Christopher Levinsky",
     email: "clevinsky@goldgym.org",
-    trainerID: 4,
+    trainerID: 2,
     trainerMembershipID: 5,
     phoneNumber: "7777777777",
     password: "thisshallbewrittennary",
