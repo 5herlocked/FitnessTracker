@@ -1,5 +1,8 @@
 import 'dart:convert';
+import 'package:fitnesstracker/entities/cardio_exercise.dart';
+import 'package:fitnesstracker/entities/exercise.dart';
 import 'package:fitnesstracker/entities/profile.dart';
+import 'package:fitnesstracker/entities/strength_training_exercise.dart';
 import 'package:http/http.dart' as http;
 class Client extends Profile {
   // account
@@ -84,5 +87,25 @@ class Client extends Profile {
 
     //return response.statusCode;
     return Client.fromJson(json.decode(response.body));
+  }
+
+  Future<List<Exercise>> getAssignedExercises() async {
+    // TODO verify this works
+    List<Exercise> assignedExercises;
+    List<CardioExercise> cardioList;
+    List<StrengthTrainingExercise> strengthList;
+
+    final http.Response cardioResponse = await http.put(
+      'https://mad-fitnesstracker.herokuapp.com/api/client/getAssignedCardioExercies?'
+          'client_id=$clientID');
+    final http.Response strengthTrainingResponse = await http.put(
+      'https://mad-fitnesstracker.herokuapp.com/api/client/getAssignedStrengthExercises?'
+          'client_id=$clientID');
+
+    cardioList = jsonDecode(cardioResponse.toString())[cardioList];
+    strengthList = jsonDecode(strengthTrainingResponse.toString())[strengthList];
+    assignedExercises.addAll(cardioList);
+    assignedExercises.addAll(strengthList);
+    return assignedExercises;
   }
 }

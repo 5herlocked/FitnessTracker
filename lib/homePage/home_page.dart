@@ -27,14 +27,16 @@ class _HomePageState<T extends Profile> extends State<HomePage<T>> {
     _loadToday();
   }
 
-  void _loadToday() {
+  Future<void> _loadToday() async {
     //TODO: Implement API Access
     switch(T) {
       case Client:
-        _today = List<Exercise>();
+        Client currentClient = widget.user as Client;
+        _today = await currentClient.getAssignedExercises();
         break;
       case Trainer:
-        _today = Map<Client, DateTime>();
+        Trainer currentTrainer = widget.user as Trainer;
+        _today = await currentTrainer.getClientList();
         break;
     }
   }
@@ -116,16 +118,14 @@ class _HomePageState<T extends Profile> extends State<HomePage<T>> {
   }
 
   Widget _buildTrainerToday(BuildContext context, int index) {
-    Map<Client, DateTime> trainerDay = _today;
+    List<Client> trainerDay = _today;
 
-    Client currentClient = trainerDay.keys.elementAt(index);
-    DateTime currentClientSchedule = trainerDay.values.elementAt(index);
+    Client currentClient = trainerDay.elementAt(index);
 
     return Card(
       child: ListTile(
         onTap: () => _navigateToClientProfile(currentClient),
         title: Text(currentClient.fullName),
-        subtitle: Text(Decorations.dateToTimeConverter(currentClientSchedule)),
       ),
     );
   }
@@ -134,7 +134,6 @@ class _HomePageState<T extends Profile> extends State<HomePage<T>> {
     Navigator.of(context).push(
       MaterialPageRoute(
         builder: (c) {
-          // TODO lazy implementation, this cannot make it into prod
           return App<Client>(user: client, trainerView: true,);
         }
       ),
