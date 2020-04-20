@@ -97,22 +97,34 @@ class TestEntities {
   static List<Exercise> testExerciseList = <Exercise> [
     // TODO fill this out please please please
     CardioExercise(
+      name :"Cardio1",
+      duration: 30,
+      completed: false,
 
     ),
     CardioExercise(
+      name :"Cardio2",
+      duration: 20,
+      completed: false,
+    ),
+    StrengthTrainingExercise(
+      name :"Strength1",
+      completed: false,
 
     ),
     StrengthTrainingExercise(
+      name :"Strength2",
+      completed: false,
 
     ),
     StrengthTrainingExercise(
-
-    ),
-    StrengthTrainingExercise(
+      name :"Strength3",
+      completed: false,
 
     ),
     CardioExercise(
-
+      name :"Strength4",
+      completed: false,
     ),
   ];
 }

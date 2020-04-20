@@ -1,34 +1,96 @@
 import 'package:fitnesstracker/entities/client.dart';
 import 'package:fitnesstracker/entities/profile.dart';
+import 'package:fitnesstracker/entities/trainer.dart';
 import 'package:fitnesstracker/loginRegistrationPage/login_register_page.dart';
 import 'package:fitnesstracker/secure_store_mixin.dart';
 import 'package:flutter/material.dart';
 import '../decorations.dart';
-import '../main.dart';
 
 class ProfilePage<T extends Profile> extends StatefulWidget {
-  final T user;
-  bool isTrainerView = false;
+  T user;
+  bool isAlternateView = false;
 
-  ProfilePage({Key key, this.user, this.isTrainerView}) : super(key: key);
+  ProfilePage({Key key, this.user, this.isAlternateView}) : super(key: key);
 
   @override
-  _ProfilePageState createState() => _ProfilePageState();
+  _ProfilePageState createState() => _ProfilePageState<T>();
 }
 
-class _ProfilePageState extends State<ProfilePage> with SecureStoreMixin {
+class _ProfilePageState<T extends Profile> extends State<ProfilePage>
+    with SecureStoreMixin {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   bool _isEnabled = false;
   bool _isSaveButtonVisible = false;
+  bool _isEditButtonVisible = true;
   String _birthday, _description, _weight, _height, _fitnessGoal;
   bool _loading = false;
   bool _autoValidate = false;
   String errorMsg = "";
 
   void initState() {
+    _getProfile();
     super.initState();
+  }
+
+  // get profile info for the corresponding
+  void _getProfile() async {
+    Client client = new Client();
+    Trainer trainer = new Trainer();
+    switch (T) {
+      case Client:
+        client = widget.user;
+        if (widget.isAlternateView) {
+          // trainer is viewing client's profile
+          // disable editing permissions
+          _isEditButtonVisible = false;
+        }
+
+        try {
+          client.getClientProfile();
+        } catch (Exception) {}
+
+        _description = client.description;
+        _birthday = client.birthday;
+        _height = client.height;
+        _weight = client.weight;
+        _fitnessGoal = client.fitnessGoal;
+
+        break;
+      case Trainer:
+        trainer = widget.user;
+        if (widget.isAlternateView) {
+          // client is viewing trainer's profile
+          // disable editing permissions
+          _isEditButtonVisible = false;
+        }
+
+        try {
+          trainer.getTrainerProfile();
+        } catch (Exception) {}
+
+        trainer.getTrainerProfile();
+        _description = trainer.description;
+        _birthday = trainer.birthday;
+        _height = trainer.height;
+        _weight = trainer.weight;
+        _fitnessGoal = trainer.fitnessGoal;
+        break;
+    }
+  }
+
+  // build app bar with logout icon for trainer and client
+  _buildAppBar() {
+    return AppBar(
+      leading: IconButton(
+          icon: Icon(Icons.exit_to_app), onPressed: () => _clearCredentials()),
+      elevation: 0.0,
+      title: Text(
+        "Profile",
+        style: TextStyle(fontFamily: 'Raleway'),
+      ),
+    );
   }
 
   @override
@@ -38,20 +100,15 @@ class _ProfilePageState extends State<ProfilePage> with SecureStoreMixin {
         resizeToAvoidBottomPadding: false,
         key: _scaffoldKey,
         backgroundColor: Colors.white,
-        appBar: AppBar(
-          leading: Visibility(
-            visible: !widget.isTrainerView,
-            child: new IconButton(
-                icon: Icon(Icons.exit_to_app),
-                onPressed: () => _clearCredentials()
-            )
-          ),
-          elevation: 0.0,
-          title: Text(
-            "Profile",
-            style: TextStyle(fontFamily: 'Raleway'),
-          ),
-        ),
+        appBar: !widget.isAlternateView
+            ? _buildAppBar()
+            : AppBar(
+                elevation: 0.0,
+                title: Text(
+                  "Profile",
+                  style: TextStyle(fontFamily: 'Raleway'),
+                ),
+              ),
         body: Container(
             padding: EdgeInsets.only(top: 20),
             child: SingleChildScrollView(
@@ -97,34 +154,52 @@ class _ProfilePageState extends State<ProfilePage> with SecureStoreMixin {
         floatingActionButton: new Visibility(
             // if the text fields are enabled, then the floating action button
             // should be invisible
-            visible: !_isEnabled,
+            visible: !_isEnabled && _isEditButtonVisible,
             child: FloatingActionButton(
               onPressed: () {
                 setState(() {
                   _isEnabled = true; // enable the text fields
                   _isSaveButtonVisible = true; // display the save button
+                  _isEditButtonVisible = false;
                 });
               },
               child: Icon(Icons.edit),
               backgroundColor: primaryColor,
-            )
-        )
-    );
+            )));
   }
 
   void _saveProfile() async {
     final FormState form = _formKey.currentState;
+    setState(() {
+      _loading = true;
+    });
     form.save();
-    Client client = new Client();
-    client.description = _description;
-    client.birthday = _birthday;
-    client.weight = _weight;
-    client.height = _height;
-    client.fitnessGoal = _fitnessGoal;
-    // Call the API to update the client's profile in the database
-    //final statusCode = await  clientUser.updateClientProfile();
-    //clientUser = await clientUser.updateClientProfile();
-    final statusCode = 200;
+    int statusCode;
+    switch (T) {
+      case Client:
+        Client client = widget.user as Client;
+        client.description = _description;
+        client.birthday = _birthday;
+        client.height = _height;
+        client.weight = _weight;
+        client.fitnessGoal = _fitnessGoal;
+
+        // Call the API to update the client's profile in the database
+        statusCode = await client.updateClientProfile();
+        break;
+      case Trainer:
+        Trainer trainer = widget.user as Trainer;
+        trainer.description = _description;
+        trainer.birthday = _birthday;
+        trainer.height = _height;
+        trainer.weight = _weight;
+        trainer.fitnessGoal = _fitnessGoal;
+
+        // Call the API to update the client's profile in the database
+        statusCode = await trainer.updateTrainerProfile();
+        break;
+    }
+
     if (statusCode != 200) {
       setState(() {
         errorMsg =
@@ -149,6 +224,7 @@ class _ProfilePageState extends State<ProfilePage> with SecureStoreMixin {
                       _isEnabled = false; // lock the text field
                       _isSaveButtonVisible = false; // hide the save button
                       _loading = false;
+                      _isEditButtonVisible = true;
                     });
                   },
                 ),
@@ -158,6 +234,7 @@ class _ProfilePageState extends State<ProfilePage> with SecureStoreMixin {
     } else {
       setState(() {
         _isEnabled = false;
+        _isEditButtonVisible = true;
         _isSaveButtonVisible = false;
         _loading = false;
       });
@@ -176,6 +253,7 @@ class _ProfilePageState extends State<ProfilePage> with SecureStoreMixin {
               padding:
                   EdgeInsets.only(top: 10.0, left: 20, right: 20, bottom: 10),
               child: TextFormField(
+                initialValue: _description,
                 onSaved: (input) => _description = input,
                 cursorColor: Decorations.accentColour,
                 validator: (input) => input.isEmpty ? "*Required" : null,
@@ -201,37 +279,35 @@ class _ProfilePageState extends State<ProfilePage> with SecureStoreMixin {
               children: <Widget>[
                 new Flexible(
                     child: Container(
-                      width: 300,
-                      child: Padding(
-                        padding: EdgeInsets.only(
-                            top: 10.0, left: 20, right: 20, bottom: 10),
-                          child: TextFormField(
-                            onSaved: (input) => _height = input,
-                            validator: (input) =>
-                                input.isEmpty ? "*Required" : null,
-                            cursorColor: Decorations.accentColour,
-                            decoration:
-                                Decorations.createInputDecoration(null, "Height"),
-                            enabled: _isEnabled ? true : false,
-                          )
-                      ),
+                  width: 300,
+                  child: Padding(
+                      padding: EdgeInsets.only(
+                          top: 10.0, left: 20, right: 20, bottom: 10),
+                      child: TextFormField(
+                        onSaved: (input) => _height = input,
+                        validator: (input) =>
+                            input.isEmpty ? "*Required" : null,
+                        cursorColor: Decorations.accentColour,
+                        decoration:
+                            Decorations.createInputDecoration(null, "Height"),
+                        enabled: _isEnabled ? true : false,
+                      )),
                 )),
                 new Flexible(
                     child: Container(
-                      width: 300,
-                      child: Padding(
-                        padding: EdgeInsets.only(
-                            top: 10.0, left: 20, right: 20, bottom: 10),
-                        child: TextFormField(
-                          onSaved: (input) => _weight = input,
-                          validator: (input) =>
-                              input.isEmpty ? "*Required" : null,
-                          cursorColor: Decorations.accentColour,
-                          decoration:
-                              Decorations.createInputDecoration(null, "Weight"),
-                          enabled: _isEnabled ? true : false,
-                        )
-                      ),
+                  width: 300,
+                  child: Padding(
+                      padding: EdgeInsets.only(
+                          top: 10.0, left: 20, right: 20, bottom: 10),
+                      child: TextFormField(
+                        onSaved: (input) => _weight = input,
+                        validator: (input) =>
+                            input.isEmpty ? "*Required" : null,
+                        cursorColor: Decorations.accentColour,
+                        decoration:
+                            Decorations.createInputDecoration(null, "Weight"),
+                        enabled: _isEnabled ? true : false,
+                      )),
                 )),
               ],
             ),
@@ -280,15 +356,15 @@ class _ProfilePageState extends State<ProfilePage> with SecureStoreMixin {
           ],
         ));
   }
+
   _clearCredentials() {
     clearAll();
     Navigator.popUntil(context, (route) => route.isFirst);
     Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(
-        settings: const RouteSettings(name: '/'),
-        builder: (builder) => LoginRegister(),
-      )
-    );
+        context,
+        MaterialPageRoute(
+          settings: const RouteSettings(name: '/'),
+          builder: (builder) => LoginRegister(),
+        ));
   }
 }
