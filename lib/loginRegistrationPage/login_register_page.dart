@@ -34,6 +34,9 @@ class _LoginRegisterState extends State<LoginRegister> with SecureStoreMixin {
     String userType = await getSecureStore("userType");
     String password = await getSecureStore("password");
     String userName = await getSecureStore("email");
+    if (userType == null || password == null || userName == null) {
+      return;
+    }
     switch (userType) {
       case "Client":
         Client previousClient = Client();
