@@ -12,10 +12,10 @@ class AddClientPage<T extends Profile> extends StatefulWidget {
   AddClientPage({ Key key, this.listOfClientsUnderTrainer, this.user}) : super(key: key);
 
   @override
-  __AddClientPageState createState() => new __AddClientPageState();
+  _AddClientPageState createState() => new _AddClientPageState();
 }
 
-class __AddClientPageState<T extends Profile> extends State<AddClientPage> {
+class _AddClientPageState<T extends Profile> extends State<AddClientPage> {
   // final formKey = new GlobalKey<FormState>();
   // final key = new GlobalKey<ScaffoldState>();
   final TextEditingController _filter = new TextEditingController();
@@ -25,7 +25,7 @@ class __AddClientPageState<T extends Profile> extends State<AddClientPage> {
   Icon _searchIcon = new Icon(Icons.search);
   Widget _appBarTitle = new Text('Search Client');
 
-  __AddClientPageState() {
+  _AddClientPageState() {
     _filter.addListener(() {
       if (_filter.text.isEmpty) {
         setState(() {
@@ -106,8 +106,6 @@ class __AddClientPageState<T extends Profile> extends State<AddClientPage> {
   void _addClient(List<Client> filteredNames, int index) {
     Trainer trainer = widget.user as Trainer;
     if(!(widget.listOfClientsUnderTrainer.contains(filteredNames.elementAt(index)))) {
-      widget.listOfClientsUnderTrainer.add(filteredNames.elementAt(index));
-
       //send a post request to the API to set the trainerId field for this client
       trainer.addClient(filteredNames.elementAt(index).emailID);
     }
@@ -166,6 +164,5 @@ class __AddClientPageState<T extends Profile> extends State<AddClientPage> {
 
     // 5. Update our list and the UI
     return fetchedUserList;
-
   }
 }

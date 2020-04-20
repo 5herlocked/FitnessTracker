@@ -26,31 +26,16 @@ class _HomePageState<T extends Profile> extends State<HomePage<T>> {
   @override
   void initState() {
     super.initState();
-  }
-
-  Future<void> _loadToday() async {
-    //TODO: Implement API Access
-    switch(T) {
-      case Client:
-        Client currentClient = widget.user as Client;
-        _today = TestEntities.testExerciseList;
-        break;
-      case Trainer:
-        Trainer currentTrainer = widget.user as Trainer;
-        _today = TestEntities.testClientList;
-        break;
-    }
+    _loadToday().then((value) {
+      setState(() {_today = value;});
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    _loadToday();
     Widget content;
 
-    if(_today == null) {
-      // This is what we show while we're loading
-      content = new Container();
-    } else if (_today.isEmpty) {
+    if (_today == null || _today.isEmpty) {
       switch(T) {
         case Trainer:
           content = new Center(child: Text("Looks like you have no clients today"));
@@ -81,6 +66,19 @@ class _HomePageState<T extends Profile> extends State<HomePage<T>> {
           )
       )
     );
+  }
+
+
+  Future<List> _loadToday() async {
+    //TODO: Implement API Access
+    switch(T) {
+      case Client:
+        Client currentClient = widget.user as Client;
+        return await currentClient.getAssignedExercises();
+      case Trainer:
+        Trainer currentTrainer = widget.user as Trainer;
+        return await currentTrainer.getClientList();
+    }
   }
 
   Widget _buildToday (BuildContext context, int index) {
@@ -137,13 +135,12 @@ class _HomePageState<T extends Profile> extends State<HomePage<T>> {
 
   Widget _buildTrainerToday(BuildContext context, int index) {
     List<Client> trainerDay = _today;
-
     Client currentClient = trainerDay.elementAt(index);
 
     return Card(
       child: ListTile(
         onTap: () => _navigateToClientProfile(currentClient),
-        title: Text(currentClient.fullName),
+        title: Text("${currentClient.firstName} ${currentClient.lastName}"),
       ),
     );
   }

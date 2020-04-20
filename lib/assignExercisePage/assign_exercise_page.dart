@@ -36,7 +36,6 @@ class _AssignExercisePageState extends State<AssignExercisePage> {
 
   @override
   Widget build(BuildContext context) {
-    Color primaryColor = Theme.of(context).primaryColor;
     return Scaffold(
         resizeToAvoidBottomPadding: false,
         key: _scaffoldKey,
