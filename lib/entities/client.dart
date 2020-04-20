@@ -102,8 +102,7 @@ class Client extends Profile {
     //return response.statusCode;
     return Client.fromJson(json.decode(response.body));
   }
-
-<<<<<<< HEAD
+  
   Future<List<Exercise>> getAssignedExercises() async {
     // TODO verify this works
     List<Exercise> assignedExercises;
@@ -123,6 +122,4 @@ class Client extends Profile {
     assignedExercises.addAll(strengthList);
     return assignedExercises;
   }
-=======
->>>>>>> master
 }
