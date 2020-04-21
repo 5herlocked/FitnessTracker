@@ -1,4 +1,5 @@
 import 'package:fitnesstracker/entities/cardio_exercise.dart';
+import 'package:fitnesstracker/entities/client.dart';
 import 'package:fitnesstracker/entities/profile.dart';
 import 'package:fitnesstracker/entities/strength_training_exercise.dart';
 import 'package:flutter/material.dart';
@@ -66,24 +67,29 @@ class _AssignExercisePageState extends State<AssignExercisePage> {
     final FormState form = _formKey.currentState;
     form.save();
 
+    setState(() {
+      _loading = true;
+    });
+
+    Client client = widget.user as Client;
     CardioExercise cardioExercise = new CardioExercise();
     StrengthTrainingExercise strengthTrainingExercise = new StrengthTrainingExercise();
     int statusCode;
 
     if (isCardioExercise) {
-//      cardioExercise.trainerID = ;
-//      cardioExercise.clientID = ;
+      cardioExercise.trainerID = client.trainerID;
+      cardioExercise.clientID = client.clientID;
       cardioExercise.name = _exerciseName;
       cardioExercise.distance = _distance;
       cardioExercise.duration = _duration;
       cardioExercise.notes = _notes;
 
       // Call the API to assign this exercise to the client
-      //statusCode = await  cardioExercise.assignCardioExercise();
+      statusCode = await  cardioExercise.assignCardioExercise();
 
     } else {
-//      strengthTrainingExercise.trainerID = ;
-//      strengthTrainingExercise.clientID = ;
+      strengthTrainingExercise.trainerID = client.trainerID;
+      strengthTrainingExercise.clientID = client.clientID;
       strengthTrainingExercise.weight = _weight;
       strengthTrainingExercise.reps = _reps;
       strengthTrainingExercise.sets = _sets;
@@ -91,12 +97,9 @@ class _AssignExercisePageState extends State<AssignExercisePage> {
       strengthTrainingExercise.notes = _notes;
 
       // Call the API to assign this exercise to the client
-      //statusCode = await  strengthTrainingExercise.assignStrengthExercise();
+      statusCode = await  strengthTrainingExercise.assignStrengthExercise();
     }
 
-    // Call the API to update the client's profile in the database
-    //clientUser = await clientUser.updateClientProfile();
-    statusCode = 200;
     if (statusCode != 200) {
       setState(() {
         errorMsg =

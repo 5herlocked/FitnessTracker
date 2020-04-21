@@ -37,23 +37,13 @@ class StrengthTrainingExercise extends Exercise {
     );
   }
 
-  // Send a POST request to the API to assign an exercise to the client
+  // Send a POST request to the API to assign a strength training exercise to the client
   Future<int> assignStrengthExercise() async {
-    Map data = {
-      'client_id' : clientID, //int
-      'trainer_id': trainerID, //int
-      'notes': notes, //String
-      'reps': reps, //int
-      'sets': sets, //int
-      'weight': weight, //double
-      'name': name //String
-    };
+    String url = 'https://mad-fitnesstracker.herokuapp.com/api/trainer/assignStrengthExercise?'
+        'client_id=$clientID&trainer_id=$trainerID&notes=$notes&name=$name&reps=$reps&sets=$sets&weight=$weight';
 
-    final http.Response response = await http.post(
-        'https://mad-fitnesstracker.herokuapp.com/api/trainer/assign-strength-exercise',
-        body: data);
+    final http.Response response = await http.post(url);
 
     return response.statusCode;
-    //return CardioExercise.fromJson(json.decode(response.body));
   }
 }
