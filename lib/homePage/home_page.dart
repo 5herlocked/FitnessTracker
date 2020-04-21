@@ -122,11 +122,13 @@ class _HomePageState<T extends Profile> extends State<HomePage<T>> {
       return ListTile(
         title: Text(currentElement.name),
         subtitle: Text("${currentElement.duration} minutes"),
+        onTap: () => _navigateToExerciseDetails(currentElement),
       );
     } else if (currentElement is StrengthTrainingExercise) {
       return ListTile(
         title: Text(currentElement.name),
         subtitle: Text("${currentElement.sets} sets, ${currentElement.reps} reps, at ${currentElement.weight} pounds"),
+        onTap: () => _navigateToExerciseDetails(currentElement),
       );
     } else {
       return null;
@@ -181,7 +183,7 @@ class _HomePageState<T extends Profile> extends State<HomePage<T>> {
     }
   }
 
-  void _navigateToExerciseDetails(String exercise) {
+  void _navigateToExerciseDetails(Exercise exercise) {
     Navigator.of(context).push(
       new MaterialPageRoute(
         builder: (c) {

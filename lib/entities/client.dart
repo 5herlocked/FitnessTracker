@@ -122,7 +122,7 @@ class Client extends Profile {
     // Send a POST request to the API to log the client in
     Future<List<CardioExercise>> getCardioExercises() async {
       final http.Response response = await http.get(
-          'https://mad-fitnesstracker.herokuapp.com/api/client/getAssignedCardioExercises?client_id=34');
+          'https://mad-fitnesstracker.herokuapp.com/api/client/getAssignedCardioExercises?client_id=$clientID');
 
 
       // 1. Create a List of Users
@@ -145,7 +145,7 @@ class Client extends Profile {
     // Send a POST request to the API to log the client in
     Future<List<StrengthTrainingExercise>> getStrengthExercises() async {
       final http.Response response = await http.get(
-          'https://mad-fitnesstracker.herokuapp.com/api/client/getAssignedStrengthExercises?client_id=34');
+          'https://mad-fitnesstracker.herokuapp.com/api/client/getAssignedStrengthExercises?client_id=$clientID');
 
       // 1. Create a List of Users
       final List<StrengthTrainingExercise> fetchedStrengthExercisesList = [];
