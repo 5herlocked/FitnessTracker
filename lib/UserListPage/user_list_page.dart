@@ -105,11 +105,13 @@ class _UserListPageState<T extends Profile> extends State<UserListPage<T>> {
       return ListTile(
         title: Text(currentElement.name),
         subtitle: Text("${currentElement.duration} minutes"),
+        onTap: () => _navigateToExerciseDetails(currentElement),
       );
     } else if (currentElement is StrengthTrainingExercise) {
       return ListTile(
         title: Text(currentElement.name),
         subtitle: Text("${currentElement.sets} sets, ${currentElement.reps} reps, at ${currentElement.weight} pounds"),
+          onTap: () => _navigateToExerciseDetails(currentElement)
       );
     } else {
       return null;
@@ -129,7 +131,7 @@ class _UserListPageState<T extends Profile> extends State<UserListPage<T>> {
     );
   }
 
-  void _navigateToExerciseDetails(String exercise) {
+  void _navigateToExerciseDetails(Exercise exercise) {
     Navigator.of(context).push(
       new MaterialPageRoute(
         builder: (c) {
@@ -174,8 +176,7 @@ class _UserListPageState<T extends Profile> extends State<UserListPage<T>> {
           child: _buildClientContents(),
         ),
         floatingActionButton: new Visibility(
-          visible: true,
-          //visible: widget.trainerView,
+          visible: widget.isTrainerView,
           child: FloatingActionButton(
             onPressed: () {
               Navigator.push(
