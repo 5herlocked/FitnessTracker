@@ -181,7 +181,7 @@ class _UserListPageState<T extends Profile> extends State<UserListPage<T>> {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => AssignExercisePage()));
+                      builder: (context) => AssignExercisePage(user: widget.user)));
             },
             child: Icon(Icons.add),
             backgroundColor: Decorations.accentColour,

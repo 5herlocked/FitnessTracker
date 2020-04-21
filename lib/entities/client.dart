@@ -39,6 +39,7 @@ class Client extends Profile {
         email: json['email'],
         phoneNumber: json['phone_number'],
         clientID: json['client_id'],
+        trainerID: json['trainer_id'],
         description: json['description'],
         birthday: json['birthday'],
         height: json['height'],
@@ -100,7 +101,7 @@ class Client extends Profile {
   // Send a POST request to the API to log the client in
   Future<Client> getClientProfile() async {
     final http.Response response = await http.get(
-        'https://mad-fitnesstracker.herokuapp.com/api/client/getProfile' + "$clientID");
+        'https://mad-fitnesstracker.herokuapp.com/api/client/getProfile?client_id=' + "$clientID");
 
     //return response.statusCode;
     return Client.fromJson(json.decode(response.body));
