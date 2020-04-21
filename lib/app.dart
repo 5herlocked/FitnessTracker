@@ -93,7 +93,7 @@ class _AppState<T extends Profile> extends State<App> {
           _currentBody = UserListPage<Client>(user: widget.user, isTrainerView: false,);
           break;
         case ClientTabItem.history:
-          _currentBody = ExerciseHistoryPage();
+          _currentBody = ExerciseHistoryPage(client: widget.user as Client,);
           break;
         case ClientTabItem.profile:
           _currentBody = ProfilePage<Client>(user: widget.user, isAlternateView: false,);

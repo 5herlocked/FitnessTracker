@@ -81,11 +81,10 @@ class _ExerciseDetailPageState extends State<ExerciseDetailPage> {
     return StatefulBuilder(builder: (BuildContext context, StateSetter state) {
       return Form(
           child: Column(
-        children: <Widget>[
-          Padding(
-              padding:
-                  EdgeInsets.only(top: 10.0, left: 20, right: 20, bottom: 10),
-              child: isCardioExercise
+            children: <Widget>[
+            Padding(
+                padding: EdgeInsets.only(top: 10.0, left: 20, right: 20, bottom: 10),
+                child: isCardioExercise
                   ? Text(
                       "Exercise Type: Cardio",
                       style: TextStyle(fontSize: 16),
@@ -93,109 +92,116 @@ class _ExerciseDetailPageState extends State<ExerciseDetailPage> {
                   : Text(
                       "Exercise Type: Strength Training",
                       style: TextStyle(fontSize: 16),
-                    )),
-          Padding(
-              padding:
-                  EdgeInsets.only(top: 10.0, left: 20, right: 20, bottom: 10),
-              child: TextFormField(
-                initialValue: _exerciseName,
-                enabled: false,
-                cursorColor: Decorations.accentColour,
-                decoration:
-                    Decorations.createInputDecoration(null, "Exercise Name"),
-              )),
-          Visibility(
-            visible: isCardioExercise,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: <Widget>[
-                new Flexible(
-                    child: Container(
-                  width: 300,
-                  child: Padding(
-                      padding: EdgeInsets.only(
-                          top: 10.0, left: 20, right: 20, bottom: 10),
-                      child: TextFormField(
-                        initialValue: _duration.toString(),
-                        enabled: false,
-                        decoration:
-                            Decorations.createInputDecoration(null, "Duration"),
-                      )),
-                )),
-                new Flexible(
-                    child: Container(
-                  width: 300,
-                  child: Padding(
-                      padding: EdgeInsets.only(
-                          top: 10.0, left: 20, right: 20, bottom: 10),
-                      child: TextFormField(
-                        initialValue: _distance.toString(),
-                        enabled: false,
-                        decoration:
-                            Decorations.createInputDecoration(null, "Distance"),
-                      )),
-                )),
-              ],
+                    )
             ),
-          ),
-          Visibility(
-            visible: !isCardioExercise,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: <Widget>[
-                new Flexible(
-                    child: Container(
-                  width: 300,
-                  child: Padding(
-                      padding: EdgeInsets.only(
-                          top: 10.0, left: 20, right: 20, bottom: 10),
-                      child: TextFormField(
-                        initialValue: _weight.toString(),
-                        enabled: false,
-                        decoration:
-                            Decorations.createInputDecoration(null, "Weight"),
-                      )),
-                )),
-                new Flexible(
-                    child: Container(
-                  width: 300,
-                  child: Padding(
-                      padding: EdgeInsets.only(
-                          top: 10.0, left: 20, right: 20, bottom: 10),
-                      child: TextFormField(
-                        initialValue: _reps.toString(),
-                        enabled: false,
-                        decoration:
-                            Decorations.createInputDecoration(null, "Reps"),
-                      )),
-                )),
-              ],
+            Padding(
+                padding: EdgeInsets.only(top: 10.0, left: 20, right: 20, bottom: 10),
+                child: TextFormField(
+                  initialValue: _exerciseName,
+                  enabled: false,
+                  cursorColor: Decorations.accentColour,
+                  decoration: Decorations.createInputDecoration(null, "Exercise Name"),
+                )
             ),
-          ),
-          Visibility(
-            visible: !isCardioExercise,
-            child: Padding(
-              padding:
-                  EdgeInsets.only(top: 10.0, left: 20, right: 20, bottom: 10),
-              child: TextFormField(
-                initialValue: _sets.toString(),
-                enabled: false,
-                decoration: Decorations.createInputDecoration(null, "Sets"),
+            Visibility(
+                visible: isCardioExercise,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: <Widget>[
+                    Flexible(
+                      child: Container(
+                        width: 300,
+                          child: Padding(
+                            padding: EdgeInsets.only(
+                              top: 10.0, left: 20, right: 20, bottom: 10),
+                              child: TextFormField(
+                                initialValue: _duration.toString(),
+                                enabled: false,
+                                decoration:
+                                  Decorations.createInputDecoration(null, "Duration"),
+                              )
+                          ),
+                      ),
+                    ),
+                    Flexible(
+                      child: Container(
+                        width: 300,
+                        child: Padding(
+                            padding: EdgeInsets.only(
+                                top: 10.0, left: 20, right: 20, bottom: 10),
+                            child: TextFormField(
+                              initialValue: _distance.toString(),
+                              enabled: false,
+                              decoration: Decorations.createInputDecoration(null, "Distance"),
+                            )
+                        ),
+                      )
+                    ),
+                  ],
+                ),
+            ),
+            Visibility(
+              visible: !isCardioExercise,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+                  Flexible(
+                    child: Container(
+                      width: 300,
+                      child: Padding(
+                          padding: EdgeInsets.only(
+                          top: 10.0, left: 20, right: 20, bottom: 10),
+                          child: TextFormField(
+                            initialValue: _weight.toString(),
+                            enabled: false,
+                            decoration: Decorations.createInputDecoration(null, "Weight"),
+                          )
+                      ),
+                    )
+                  ),
+                  Flexible(
+                    child: Container(
+                      width: 300,
+                      child: Padding(
+                        padding: EdgeInsets.only(
+                            top: 10.0, left: 20, right: 20, bottom: 10),
+                          child: TextFormField(
+                            initialValue: _reps.toString(),
+                            enabled: false,
+                            decoration:
+                              Decorations.createInputDecoration(null, "Reps"),
+                          )
+                      ),
+                    )
+                  ),
+                ],
               ),
             ),
-          ),
-          Padding(
-            padding:
-                EdgeInsets.only(top: 10.0, left: 20, right: 20, bottom: 10),
-            child: TextFormField(
-              initialValue: _notes,
-              enabled: false,
-              maxLines: 2,
-              decoration: Decorations.createInputDecoration(null, "Notes"),
+            Visibility(
+              visible: !isCardioExercise,
+              child: Padding(
+                padding:
+                  EdgeInsets.only(top: 10.0, left: 20, right: 20, bottom: 10),
+                child: TextFormField(
+                  initialValue: _sets.toString(),
+                  enabled: false,
+                  decoration: Decorations.createInputDecoration(null, "Sets"),
+                ),
+              ),
             ),
-          ),
-        ],
-      ));
+            Padding(
+              padding:
+                EdgeInsets.only(top: 10.0, left: 20, right: 20, bottom: 10),
+              child: TextFormField(
+                initialValue: _notes,
+                enabled: false,
+                maxLines: 2,
+                decoration: Decorations.createInputDecoration(null, "Notes"),
+              ),
+            ),
+          ],
+        )
+      );
     });
   }
 }

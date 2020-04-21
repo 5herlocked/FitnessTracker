@@ -58,9 +58,14 @@ class _HomePageState<T extends Profile> extends State<HomePage<T>> {
           child: Stack(
             children: <Widget>[
               HomePageHeader(widget.user, _today),
-              new Padding(
-                padding: const EdgeInsets.only(top: 260),
-                child: content,
+              RefreshIndicator(
+                onRefresh: () => _loadToday(),
+                backgroundColor: Decorations.accentColour,
+                color: Colors.white,
+                child: new Padding(
+                  padding: const EdgeInsets.only(top: 260),
+                  child: content,
+                ),
               ),
             ],
           )
@@ -70,7 +75,6 @@ class _HomePageState<T extends Profile> extends State<HomePage<T>> {
 
 
   Future<List> _loadToday() async {
-    //TODO: Implement API Access
     switch(T) {
       case Client:
         Client currentClient = widget.user as Client;

@@ -1,18 +1,16 @@
 import 'dart:convert';
 import 'package:fitnesstracker/entities/profile.dart';
-import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 import 'client.dart';
 
-class Trainer extends Profile with ChangeNotifier {
+class Trainer extends Profile {
   // account
   String fullName;
+  String credentials;
   List<Client> listOfClients;
   int trainerMembershipID;
   int trainerID;
-  //profile
-  String description, birthday, weight, height, fitnessGoal;
 
   Trainer({
     firstName,
@@ -24,19 +22,25 @@ class Trainer extends Profile with ChangeNotifier {
     this.trainerID,
     phoneNumber,
     password,
-    this.description,
-    this.birthday,
-    this.weight,
-    this.height,
-    this.fitnessGoal,
+    description,
+    birthday,
+    weight,
+    height,
+    fitnessGoal,
     profilePicture,
   }) : super(
-            firstName: firstName,
-            lastName: lastName,
-            emailID: email,
-            phoneNumber: phoneNumber,
-            password: password,
-            profilePicture: profilePicture);
+    firstName: firstName,
+    lastName: lastName,
+    emailID: email,
+    phoneNumber: phoneNumber,
+    password: password,
+    profilePicture: profilePicture,
+    description: description,
+    birthday: birthday,
+    weight: weight,
+    height: height,
+    fitnessGoal: fitnessGoal,
+  );
 
   factory Trainer.fromJson(Map<String, dynamic> json) {
     return Trainer(
@@ -78,7 +82,8 @@ class Trainer extends Profile with ChangeNotifier {
 
     final http.Response response = await http.post(
         'https://mad-fitnesstracker.herokuapp.com/api/trainer/login',
-        body: data);
+        body: data
+    );
 
     return Trainer.fromJson(json.decode(response.body));
   }
@@ -86,7 +91,9 @@ class Trainer extends Profile with ChangeNotifier {
   // request to API to get the list of clients for a particular trainer id
   Future<List<Client>> getClientList() async {
     final http.Response response = await http.get(
-        'https://mad-fitnesstracker.herokuapp.com/api/trainer/getClientList?trainer_id=$trainerID');
+        'https://mad-fitnesstracker.herokuapp.com/api/trainer/getClientList?'
+            'trainer_id=$trainerID'
+    );
 
     // 1. Create a List of Users
     final List<Client> fetchedUserList = [];
@@ -126,8 +133,9 @@ class Trainer extends Profile with ChangeNotifier {
   // Send a POST request to the API to log the client in
   Future<Trainer> getTrainerProfile() async {
     final http.Response response = await http.get(
-        'https://mad-fitnesstracker.herokuapp.com/api/trainer/getProfile?trainer_id=' +
-            "$trainerID");
+        'https://mad-fitnesstracker.herokuapp.com/api/trainer/getProfile?'
+            'trainer_id=$trainerID'
+    );
 
     return Trainer.fromJson(json.decode(response.body));
   }

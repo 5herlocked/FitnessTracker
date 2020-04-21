@@ -4,37 +4,45 @@ import 'package:fitnesstracker/entities/exercise.dart';
 import 'package:fitnesstracker/entities/profile.dart';
 import 'package:fitnesstracker/entities/strength_training_exercise.dart';
 import 'package:http/http.dart' as http;
+
 class Client extends Profile {
   // account
   String fullName;
   int clientID;
   int trainerID; // ID of the trainer assigned to the client
 
-  //profile
-  String description, birthday, weight, height, fitnessGoal;
-
   List<Exercise> assignedExercises;
 
-  Client({
-    firstName,
-    lastName,
-    this.fullName,
-    this.assignedExercises,
-    email,
-    this.clientID,
-    this.trainerID,
-    phoneNumber,
-    password,
-    this.description,
-    this.birthday,
-    this.weight,
-    this.height,
-    this.fitnessGoal,
-    profilePicture}
-    ) : super (
-      firstName: firstName, lastName: lastName,
-      emailID: email, phoneNumber: phoneNumber,
-      password: password, profilePicture: profilePicture
+  Client(
+      {
+        firstName,
+        lastName,
+        this.fullName,
+        this.assignedExercises,
+        email,
+        this.clientID,
+        this.trainerID,
+        phoneNumber,
+        password,
+        description,
+        birthday,
+        weight,
+        height,
+        fitnessGoal,
+        profilePicture
+      }
+  ) : super(
+        firstName: firstName,
+        lastName: lastName,
+        emailID: email,
+        phoneNumber: phoneNumber,
+        password: password,
+        profilePicture: profilePicture,
+        description: description,
+        birthday: birthday,
+        weight: weight,
+        height: height,
+        fitnessGoal: fitnessGoal,
   );
 
   factory Client.fromJson(Map<String, dynamic> json) {
@@ -49,8 +57,7 @@ class Client extends Profile {
         birthday: json['birthday'],
         height: json['height'],
         weight: json['weight'],
-        fitnessGoal: json['fitness_goal']
-    );
+        fitnessGoal: json['fitness_goal']);
   }
 
   // Send a POST request to the API to create a new client
@@ -87,7 +94,7 @@ class Client extends Profile {
   // Send a POST request to the API to log the client in
   Future<int> updateClientProfile() async {
     Map data = {
-      'client_id' : clientID,
+      'client_id': clientID,
       'description': description,
       'birthday': birthday,
       'weight': weight,
@@ -106,12 +113,13 @@ class Client extends Profile {
   // Send a POST request to the API to log the client in
   Future<Client> getClientProfile() async {
     final http.Response response = await http.get(
-        'https://mad-fitnesstracker.herokuapp.com/api/client/getProfile?client_id=' + "$clientID");
+        'https://mad-fitnesstracker.herokuapp.com/api/client/getProfile?client_id=' +
+            "$clientID");
 
     //return response.statusCode;
     return Client.fromJson(json.decode(response.body));
   }
-  
+
   Future<List<Exercise>> getAssignedExercises() async {
     // TODO verify this works
     List<Exercise> assignedExercises = new List<Exercise>();
@@ -124,49 +132,48 @@ class Client extends Profile {
     return assignedExercises;
   }
 
-    // Send a POST request to the API to log the client in
-    Future<List<CardioExercise>> getCardioExercises() async {
-      final http.Response response = await http.get(
-          'https://mad-fitnesstracker.herokuapp.com/api/client/getAssignedCardioExercises?client_id=$clientID');
+  // Send a POST request to the API to log the client in
+  Future<List<CardioExercise>> getCardioExercises() async {
+    final http.Response response = await http.get(
+        'https://mad-fitnesstracker.herokuapp.com/api/client/getAssignedCardioExercises?client_id=$clientID');
 
+    // 1. Create a List of Users
+    final List<CardioExercise> fetchedCardioList = [];
 
-      // 1. Create a List of Users
-      final List<CardioExercise> fetchedCardioList = [];
+    // 2. Decode the response body
+    List<dynamic> responseData = jsonDecode(response.body);
 
-      // 2. Decode the response body
-      List<dynamic> responseData = jsonDecode(response.body);
+    // 3. Iterate through all the users in the list
+    responseData?.forEach((dynamic userData) {
+      // 4. Create a new user and add to the list
+      final CardioExercise cardioExercise = CardioExercise.fromJson(userData);
+      fetchedCardioList.add(cardioExercise);
+    });
 
-      // 3. Iterate through all the users in the list
-      responseData?.forEach((dynamic userData) {
-        // 4. Create a new user and add to the list
-        final CardioExercise cardioExercise = CardioExercise.fromJson(userData);
-        fetchedCardioList.add(cardioExercise);
-      });
+    // 5. Update our list and the UI
+    return fetchedCardioList;
+  }
 
-      // 5. Update our list and the UI
-      return fetchedCardioList;
-    }
+  // Send a POST request to the API to log the client in
+  Future<List<StrengthTrainingExercise>> getStrengthExercises() async {
+    final http.Response response = await http.get(
+        'https://mad-fitnesstracker.herokuapp.com/api/client/getAssignedStrengthExercises?client_id=$clientID');
 
-    // Send a POST request to the API to log the client in
-    Future<List<StrengthTrainingExercise>> getStrengthExercises() async {
-      final http.Response response = await http.get(
-          'https://mad-fitnesstracker.herokuapp.com/api/client/getAssignedStrengthExercises?client_id=$clientID');
+    // 1. Create a List of Users
+    final List<StrengthTrainingExercise> fetchedStrengthExercisesList = [];
 
-      // 1. Create a List of Users
-      final List<StrengthTrainingExercise> fetchedStrengthExercisesList = [];
+    // 2. Decode the response body
+    List<dynamic> responseData = jsonDecode(response.body);
 
-      // 2. Decode the response body
-      List<dynamic> responseData = jsonDecode(response.body);
+    // 3. Iterate through all the users in the list
+    responseData?.forEach((dynamic userData) {
+      // 4. Create a new user and add to the list
+      final StrengthTrainingExercise strengthTrainingExercise =
+      StrengthTrainingExercise.fromJson(userData);
+      fetchedStrengthExercisesList.add(strengthTrainingExercise);
+    });
 
-      // 3. Iterate through all the users in the list
-      responseData?.forEach((dynamic userData) {
-        // 4. Create a new user and add to the list
-        final StrengthTrainingExercise strengthTrainingExercise = StrengthTrainingExercise
-            .fromJson(userData);
-        fetchedStrengthExercisesList.add(strengthTrainingExercise);
-      });
-
-      // 5. Update our list and the UI
-      return fetchedStrengthExercisesList;
-    }
+    // 5. Update our list and the UI
+    return fetchedStrengthExercisesList;
+  }
 }

@@ -146,20 +146,22 @@ class _UserListPageState<T extends Profile> extends State<UserListPage<T>> {
     TODO: Implement API to use the exercises classes so that whenever
      the exercise is marked complete, it's actually marked complete
     */
-    setState(() =>
-        _list.update(_list.elementAt(index), (int value) => (value == 1) ? 0 : 1));
+    setState(() {
+      Exercise currentElement = _list.elementAt(value);
+      _list.elementAt(value).completed = (currentElement.completed == 1) ? 0 : 1;
+    });
     switch (value) {
       case 0:
         // API call
         return Scaffold.of(context).showSnackBar(
           SnackBar(
-              content: Text("${_list.keys.elementAt(index)} completed",
+              content: Text("${_list.elementAt(index).name} completed",
                   style: Decorations.snackBar)),
         );
         break;
       case 1:
         return Scaffold.of(context).showSnackBar(SnackBar(
-          content: Text("${_list.keys.elementAt(index)} not complete",
+          content: Text("${_list.elementAt(index).name} not complete",
               style: Decorations.snackBar),
         ));
         break;
@@ -172,8 +174,13 @@ class _UserListPageState<T extends Profile> extends State<UserListPage<T>> {
           title: Text(pageTitle),
         ),
         backgroundColor: Colors.white,
-        body: SafeArea(
-          child: _buildClientContents(),
+        body: RefreshIndicator(
+          onRefresh: _loadList,
+          backgroundColor: Decorations.accentColour,
+          color: Colors.white,
+          child: SafeArea(
+            child: _buildClientContents(),
+          ),
         ),
         floatingActionButton: new Visibility(
           visible: widget.isTrainerView,
@@ -182,7 +189,9 @@ class _UserListPageState<T extends Profile> extends State<UserListPage<T>> {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => AssignExercisePage(user: widget.user)));
+                      builder: (context) => AssignExercisePage(user: widget.user)
+                  )
+              );
             },
             child: Icon(Icons.add),
             backgroundColor: Decorations.accentColour,
