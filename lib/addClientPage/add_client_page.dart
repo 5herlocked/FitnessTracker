@@ -114,7 +114,6 @@ class _AddClientPageState<T extends Profile> extends State<AddClientPage> {
     if(!(widget.listOfClientsUnderTrainer.contains(filteredNames.elementAt(index)))) {
       //send a post request to the API to set the trainerId field for this client
       trainer.addClient(filteredNames.elementAt(index).emailID);
-      //_selected[index] = !_selected[index];
       filteredNames.elementAt(index).isTrainerAssigned = true;
 
       key.currentState.showSnackBar(
