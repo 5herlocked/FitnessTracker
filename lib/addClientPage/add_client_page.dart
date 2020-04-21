@@ -7,8 +7,8 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 class AddClientPage<T extends Profile> extends StatefulWidget {
-  List<Client> listOfClientsUnderTrainer;
-  T user;
+  final List<Client> listOfClientsUnderTrainer;
+  final T user;
   AddClientPage({ Key key, this.listOfClientsUnderTrainer, this.user}) : super(key: key);
 
   @override
@@ -16,12 +16,13 @@ class AddClientPage<T extends Profile> extends StatefulWidget {
 }
 
 class _AddClientPageState<T extends Profile> extends State<AddClientPage> {
-  // final formKey = new GlobalKey<FormState>();
-  // final key = new GlobalKey<ScaffoldState>();
+  final key = new GlobalKey<ScaffoldState>();
   final TextEditingController _filter = new TextEditingController();
   String _searchText = "";
+
   List<Client> names = new List();
   List<Client> filteredNames = new List();
+
   Icon _searchIcon = new Icon(Icons.search);
   Widget _appBarTitle = new Text('Search Client');
 
@@ -48,12 +49,13 @@ class _AddClientPageState<T extends Profile> extends State<AddClientPage> {
 
   Widget build(BuildContext context) {
     return Scaffold(
+      key: key,
       appBar: _buildBar(context),
       body: Container(
         decoration: BoxDecoration(
           color: Colors.white,
         ),
-        child: _buildList(),
+        child: _buildList(context),
       ),
       resizeToAvoidBottomPadding: false,
     );
@@ -71,7 +73,7 @@ class _AddClientPageState<T extends Profile> extends State<AddClientPage> {
     );
   }
 
-  Widget _buildList() {
+  Widget _buildList(BuildContext context) {
     if (filteredNames == null) {
       // This is what we show while we're loading
       return new Container();
@@ -86,15 +88,20 @@ class _AddClientPageState<T extends Profile> extends State<AddClientPage> {
         }
       }
       filteredNames = tempList;
+
     }
     return ListView.builder(
       itemCount: names == null ? 0 : filteredNames.length,
       itemBuilder: (BuildContext context, int index) {
         return Card(
           child: ListTile(
-            title: Text(filteredNames.elementAt(index).firstName),
+            title: Text(filteredNames.elementAt(index).firstName + " " + filteredNames.elementAt(index).lastName),
+            subtitle: Text(filteredNames.elementAt(index).emailID),
+            trailing: filteredNames.elementAt(index).isTrainerAssigned? Icon(Icons.check): Icon(null),
             onTap: () {
-              _addClient(filteredNames, index);
+              setState(() {
+                _addClient(filteredNames, index);
+              });
             },
           )
         );
@@ -102,12 +109,24 @@ class _AddClientPageState<T extends Profile> extends State<AddClientPage> {
     );
   }
 
-
   void _addClient(List<Client> filteredNames, int index) {
     Trainer trainer = widget.user as Trainer;
     if(!(widget.listOfClientsUnderTrainer.contains(filteredNames.elementAt(index)))) {
       //send a post request to the API to set the trainerId field for this client
       trainer.addClient(filteredNames.elementAt(index).emailID);
+      filteredNames.elementAt(index).isTrainerAssigned = true;
+
+      key.currentState.showSnackBar(
+          SnackBar(
+            content: Text(filteredNames.elementAt(index).firstName + " has been added"),
+            action: SnackBarAction(
+              label: 'Undo',
+              onPressed: () {
+                // Some code to undo the change.
+              },
+            ),
+          )
+      );
     }
   }
 
@@ -129,40 +148,16 @@ class _AddClientPageState<T extends Profile> extends State<AddClientPage> {
     });
   }
 
-  Future<List<Client>> _getNames() async {
+  void _getNames() async {
+    Trainer trainer = widget.user as Trainer;
     List<Client> tempList = new List();
     // call the API to get a list of all the clients not assigned to this trainer
-     getAllUnassignedClients();
-     tempList = await getAllUnassignedClients();
+     tempList = await trainer.getAllUnassignedClients();
 
-    setState(() {
+     setState(() {
       names = tempList;
       names.shuffle();
       filteredNames = names;
     });
-    return tempList;
-  }
-
-  Future<List<Client>> getAllUnassignedClients() async {
-    //TODO verify this works as expected
-
-    final http.Response response = await http.get(
-        'https://mad-fitnesstracker.herokuapp.com/api/trainer/getUnassignedClientList');
-
-    // 1. Create a List of Users
-    final List<Client> fetchedUserList = [];
-
-    // 2. Decode the response body
-    List<dynamic> responseData = jsonDecode(response.body);
-
-    // 3. Iterate through all the users in the list
-    responseData?.forEach((dynamic userData) {
-      // 4. Create a new user and add to the list
-      final Client client = Client.fromJson(userData);
-      fetchedUserList.add(client);
-    });
-
-    // 5. Update our list and the UI
-    return fetchedUserList;
   }
 }

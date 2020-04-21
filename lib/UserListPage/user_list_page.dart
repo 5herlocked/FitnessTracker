@@ -70,6 +70,7 @@ class _UserListPageState<T extends Profile> extends State<UserListPage<T>> {
       child: ListTile(
         onTap: () => _navigateToClient(clients.elementAt(index)),
         title: Text(clients.elementAt(index).firstName + " " + clients.elementAt(index).lastName),
+        subtitle: Text(clients.elementAt(index).emailID),
       ),
     );
   }
@@ -200,7 +201,10 @@ class _UserListPageState<T extends Profile> extends State<UserListPage<T>> {
   }
 
   Widget _buildClientContents() {
-    if (_list == null || _list.isEmpty) {
+    if (_list == null) {
+      // Show blank container while page loads
+      return new Container();
+    } else if (_list.isEmpty) {
       return Center(
           child: Text("Looks like you have no assigned exercises today"),
       );
@@ -243,7 +247,9 @@ class _UserListPageState<T extends Profile> extends State<UserListPage<T>> {
   }
 
   _buildTrainerContent() {
-    if (_list == null || _list.isEmpty) {
+    if (_list == null) {
+      return Container();
+    } else if (_list.isEmpty) {
       return Center(
           child: Text("Looks like you have no Clients"),
       );

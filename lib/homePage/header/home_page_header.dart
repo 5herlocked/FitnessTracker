@@ -66,14 +66,14 @@ class HomePageHeader<T extends Profile> extends StatelessWidget {
     return Column(
       children: <Widget>[
         Padding(
-          padding: EdgeInsets.only(left: 30, right: 30,),
+          padding: EdgeInsets.only(left: 20, right: 20,),
           child: Text(
             "Hi ${user.firstName},",
             style: Decorations.headline,
           ),
         ),
         Padding(
-          padding: EdgeInsets.only(left: 30, right: 30),
+          padding: EdgeInsets.only(left: 20, right: 20),
           child: Text(
             _getSubtitle(),
             style: Decorations.subtitle,
@@ -100,7 +100,10 @@ class HomePageHeader<T extends Profile> extends StatelessWidget {
 
     // personalisation tricks
     // assumes that past clients from that day are removed
-    if (trainerDay == null || trainerDay.isEmpty) {
+    if (trainerDay == null) {
+    // While loading trainer info, use this as a placeholder.
+    return "";
+    } else if (trainerDay.isEmpty) {
       return "Looks like you have no ${trainerDay.length > 1 ? "client" : "clients"}";
     } else if (now.isBefore(noon)) {
       return "Good Morning ${user.firstName}, looks like you have, "
@@ -129,7 +132,11 @@ class HomePageHeader<T extends Profile> extends StatelessWidget {
     if (clientDay != null) {
       clientDay.forEach((Exercise e) => completedExercises += (e.completed == 1) ? 1 : 0);
     }
-    if (clientDay == null || clientDay.isEmpty) {
+
+    if (clientDay == null) {
+      // While loading client info, use this as a placeholder.
+      return "";
+    } else if (clientDay.isEmpty) {
       return "You've have no assigned exercies left";
     } else if (now.isBefore(noon)) {
       return "Good Morning ${user.firstName}, You've completed "

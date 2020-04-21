@@ -8,6 +8,7 @@ import 'package:http/http.dart' as http;
 class Client extends Profile {
   // account
   String fullName;
+  bool isTrainerAssigned = false;
   int clientID;
   int trainerID; // ID of the trainer assigned to the client
 
@@ -20,6 +21,7 @@ class Client extends Profile {
         this.fullName,
         this.assignedExercises,
         email,
+        this.isTrainerAssigned,
         this.clientID,
         this.trainerID,
         phoneNumber,
@@ -57,7 +59,7 @@ class Client extends Profile {
         birthday: json['birthday'],
         height: json['height'],
         weight: json['weight'],
-        fitnessGoal: json['fitness_goal']);
+        fitnessGoal: json['fitness_goal'],);
   }
 
   // Send a POST request to the API to create a new client
@@ -121,7 +123,6 @@ class Client extends Profile {
   }
 
   Future<List<Exercise>> getAssignedExercises() async {
-    // TODO verify this works
     List<Exercise> assignedExercises = new List<Exercise>();
     List<CardioExercise> cardioList = await getCardioExercises();
     List<StrengthTrainingExercise> strengthList = await getStrengthExercises();
