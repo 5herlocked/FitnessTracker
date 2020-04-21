@@ -105,6 +105,8 @@ class Trainer extends Profile {
     responseData?.forEach((dynamic userData) {
       // 4. Create a new user and add to the list
       final Client client = Client.fromJson(userData);
+      client.trainerID == 1? client.isTrainerAssigned = false
+          : client.isTrainerAssigned = true;
       fetchedUserList.add(client);
     });
 
@@ -141,12 +143,33 @@ class Trainer extends Profile {
   }
 
   Future<int> addClient(String clientEmail) async {
-
     final http.Response response = await http.post(
         'https://mad-fitnesstracker.herokuapp.com/api/trainer/addClient?'
             'trainer_id=$trainerID&client_email=$clientEmail',);
     final Client client = Client.fromJson(jsonDecode(response.body));
     this.listOfClients.add(client);
     return response.statusCode;
+  }
+
+  Future<List<Client>> getAllUnassignedClients() async {
+    final http.Response response = await http.get(
+        'https://mad-fitnesstracker.herokuapp.com/api/trainer/getUnassignedClientList');
+
+    // 1. Create a List of Users
+    final List<Client> fetchedUserList = [];
+
+    // 2. Decode the response body
+    List<dynamic> responseData = jsonDecode(response.body);
+
+    // 3. Iterate through all the users in the list
+    responseData?.forEach((dynamic userData) {
+      // 4. Create a new user and add to the list
+      final Client client = Client.fromJson(userData);
+      client.isTrainerAssigned = false;
+      fetchedUserList.add(client);
+    });
+
+    // 5. Update our list and the UI
+    return fetchedUserList;
   }
 }

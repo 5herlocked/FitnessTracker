@@ -35,7 +35,10 @@ class _HomePageState<T extends Profile> extends State<HomePage<T>> {
   Widget build(BuildContext context) {
     Widget content;
 
-    if (_today == null || _today.isEmpty) {
+    if (_today == null) {
+      // Show blank container while page loads
+      content = new Container();
+    } else if(_today.isEmpty) {
       switch(T) {
         case Trainer:
           content = new Center(child: Text("Looks like you have no clients today"));
