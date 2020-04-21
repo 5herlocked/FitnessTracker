@@ -30,7 +30,12 @@ class Client extends Profile {
     this.weight,
     this.height,
     this.fitnessGoal,
-    profilePicture}):super(firstName: firstName, lastName: lastName, emailID: email, phoneNumber: phoneNumber, password: password, profilePicture: profilePicture);
+    profilePicture}
+    ) : super (
+      firstName: firstName, lastName: lastName,
+      emailID: email, phoneNumber: phoneNumber,
+      password: password, profilePicture: profilePicture
+  );
 
   factory Client.fromJson(Map<String, dynamic> json) {
     return Client(
@@ -90,7 +95,7 @@ class Client extends Profile {
     };
 
     final http.Response response = await http.put(
-        'https://mad-fitnesstracker.herokuapp.com/api/client/updateprofile',
+        'https://mad-fitnesstracker.herokuapp.com/api/client/updateProfile',
         body: data);
 
     return response.statusCode;
@@ -100,7 +105,7 @@ class Client extends Profile {
   // Send a POST request to the API to log the client in
   Future<Client> getClientProfile() async {
     final http.Response response = await http.get(
-        'https://mad-fitnesstracker.herokuapp.com/api/client/getProfile' + "$clientID");
+        'https://mad-fitnesstracker.herokuapp.com/api/client/getProfile?client_id=' + "$clientID");
 
     //return response.statusCode;
     return Client.fromJson(json.decode(response.body));

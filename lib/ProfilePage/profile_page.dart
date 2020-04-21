@@ -16,8 +16,9 @@ class ProfilePage<T extends Profile> extends StatefulWidget {
   _ProfilePageState createState() => _ProfilePageState<T>();
 }
 
-class _ProfilePageState<T extends Profile> extends State<ProfilePage> with SecureStoreMixin {
-  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>(); // safe remove
+class _ProfilePageState<T extends Profile> extends State<ProfilePage>
+    with SecureStoreMixin {
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   bool _isEnabled = false;
@@ -29,54 +30,52 @@ class _ProfilePageState<T extends Profile> extends State<ProfilePage> with Secur
   String errorMsg = "";
 
   void initState() {
-    _getProfile().then((value) => _updateFields<T>(value));
+    _getProfile();
     super.initState();
   }
 
   // get profile info for the corresponding
-  Future<Profile> _getProfile() async {
+  void _getProfile() async {
+    Client client = new Client();
+    Trainer trainer = new Trainer();
     switch (T) {
       case Client:
-        Client client = widget.user as Client;
+        client = widget.user;
         if (widget.isAlternateView) {
           // trainer is viewing client's profile
           // disable editing permissions
           _isEditButtonVisible = false;
         }
-        return await client.getClientProfile();
+
+        try {
+          client.getClientProfile();
+        } catch (Exception) {}
+
+        _description = client.description;
+        _birthday = client.birthday;
+        _height = client.height;
+        _weight = client.weight;
+        _fitnessGoal = client.fitnessGoal;
+
+        break;
       case Trainer:
-        Trainer trainer = widget.user as Trainer;
+        trainer = widget.user;
         if (widget.isAlternateView) {
           // client is viewing trainer's profile
           // disable editing permissions
           _isEditButtonVisible = false;
         }
-          return await trainer.getTrainerProfile();
-    }
-  }
 
-  void _updateFields<T extends Profile>(T user) {
-    widget.user = user;
-    switch(T) {
-      case Client:
-        setState(() {
-          Client client = user as Client;
-          _description = client.description;
-          _birthday = client.birthday;
-          _height = client.height;
-          _weight = client.weight;
-          _fitnessGoal = client.fitnessGoal;
-        });
-        break;
-      case Trainer:
-        setState(() {
-          Trainer trainer = user as Trainer;
-          _description = trainer.description;
-          _birthday = trainer.birthday;
-          _height = trainer.height;
-          _weight = trainer.weight;
-          _fitnessGoal = trainer.fitnessGoal;
-        });
+        try {
+          trainer.getTrainerProfile();
+        } catch (Exception) {}
+
+        trainer.getTrainerProfile();
+        _description = trainer.description;
+        _birthday = trainer.birthday;
+        _height = trainer.height;
+        _weight = trainer.weight;
+        _fitnessGoal = trainer.fitnessGoal;
         break;
     }
   }
@@ -85,7 +84,8 @@ class _ProfilePageState<T extends Profile> extends State<ProfilePage> with Secur
   _buildAppBar() {
     return AppBar(
       leading: IconButton(
-          icon: Icon(Icons.exit_to_app), onPressed: () => _clearCredentials()),
+          icon: Icon(Icons.exit_to_app), onPressed: () => _clearCredentials()
+      ),
       elevation: 0.0,
       title: Text(
         "Profile",
@@ -96,6 +96,7 @@ class _ProfilePageState<T extends Profile> extends State<ProfilePage> with Secur
 
   @override
   Widget build(BuildContext context) {
+    Color primaryColor = Theme.of(context).primaryColor;
     return Scaffold(
         resizeToAvoidBottomPadding: false,
         key: _scaffoldKey,
@@ -103,12 +104,12 @@ class _ProfilePageState<T extends Profile> extends State<ProfilePage> with Secur
         appBar: !widget.isAlternateView
             ? _buildAppBar()
             : AppBar(
-                elevation: 0.0,
-                title: Text(
-                  "Profile",
-                  style: TextStyle(fontFamily: 'Raleway'),
-                ),
-              ),
+          elevation: 0.0,
+          title: Text(
+            "Profile",
+            style: TextStyle(fontFamily: 'Raleway'),
+          ),
+        ),
         body: Container(
             padding: EdgeInsets.only(top: 20),
             child: SingleChildScrollView(
@@ -131,8 +132,7 @@ class _ProfilePageState<T extends Profile> extends State<ProfilePage> with Secur
                       padding: EdgeInsets.only(
                           top: 10.0, left: 20, right: 20, bottom: 10),
                       child: Text("Choose to select a new photo.",
-                          style: Decorations.logIn
-                      ),
+                          style: Decorations.logIn),
                       alignment: Alignment.center,
                     ),
                   ),
@@ -151,11 +151,10 @@ class _ProfilePageState<T extends Profile> extends State<ProfilePage> with Secur
                   _buildForm()
                 ],
               ),
-            )
-        ),
+            )),
         floatingActionButton: new Visibility(
-            // if the text fields are enabled, then the floating action button
-            // should be invisible
+          // if the text fields are enabled, then the floating action button
+          // should be invisible
             visible: !_isEnabled && _isEditButtonVisible,
             child: FloatingActionButton(
               onPressed: () {
@@ -166,10 +165,8 @@ class _ProfilePageState<T extends Profile> extends State<ProfilePage> with Secur
                 });
               },
               child: Icon(Icons.edit),
-              backgroundColor: Decorations.accentColour,
-            )
-        )
-    );
+              backgroundColor: primaryColor,
+            )));
   }
 
   void _saveProfile() async {
@@ -207,7 +204,7 @@ class _ProfilePageState<T extends Profile> extends State<ProfilePage> with Secur
     if (statusCode != 200) {
       setState(() {
         errorMsg =
-            "There has been an error processing your request. Please try again.";
+        "There has been an error processing your request. Please try again.";
         _loading = false;
       });
       showDialog(
@@ -246,12 +243,8 @@ class _ProfilePageState<T extends Profile> extends State<ProfilePage> with Secur
   }
 
   // Build the Profile Form
-  Widget _buildForm() {
-    _getProfile().then((value) {
-      setState(() {
-        widget.user = value;
-      });
-    });
+
+  _buildForm() {
     return Form(
         key: _formKey,
         autovalidate: _autoValidate,
@@ -259,7 +252,7 @@ class _ProfilePageState<T extends Profile> extends State<ProfilePage> with Secur
           children: <Widget>[
             Padding(
               padding:
-                  EdgeInsets.only(top: 10.0, left: 20, right: 20, bottom: 10),
+              EdgeInsets.only(top: 10.0, left: 20, right: 20, bottom: 10),
               child: TextFormField(
                 initialValue: _description,
                 onSaved: (input) => _description = input,
@@ -273,7 +266,7 @@ class _ProfilePageState<T extends Profile> extends State<ProfilePage> with Secur
             ),
             Padding(
                 padding:
-                    EdgeInsets.only(top: 10.0, left: 20, right: 20, bottom: 10),
+                EdgeInsets.only(top: 10.0, left: 20, right: 20, bottom: 10),
                 child: TextFormField(
                   onSaved: (input) => _birthday = input,
                   cursorColor: Decorations.accentColour,
@@ -281,8 +274,7 @@ class _ProfilePageState<T extends Profile> extends State<ProfilePage> with Secur
                   decoration: Decorations.createInputDecoration(
                       Icons.calendar_today, "Birthday MM/DD/YYYY"),
                   enabled: _isEnabled ? true : false,
-                )
-            ),
+                )),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
@@ -290,38 +282,34 @@ class _ProfilePageState<T extends Profile> extends State<ProfilePage> with Secur
                     child: Container(
                       width: 300,
                       child: Padding(
-                        padding: EdgeInsets.only(
-                          top: 10.0, left: 20, right: 20, bottom: 10),
-                        child: TextFormField(
-                          onSaved: (input) => _height = input,
-                          validator: (input) =>
+                          padding: EdgeInsets.only(
+                              top: 10.0, left: 20, right: 20, bottom: 10),
+                          child: TextFormField(
+                            onSaved: (input) => _height = input,
+                            validator: (input) =>
                             input.isEmpty ? "*Required" : null,
-                          cursorColor: Decorations.accentColour,
-                          decoration:
+                            cursorColor: Decorations.accentColour,
+                            decoration:
                             Decorations.createInputDecoration(null, "Height"),
-                          enabled: _isEnabled ? true : false,
-                        )
-                      ),
-                    )
-                ),
+                            enabled: _isEnabled ? true : false,
+                          )),
+                    )),
                 new Flexible(
                     child: Container(
                       width: 300,
                       child: Padding(
-                        padding: EdgeInsets.only(
-                          top: 10.0, left: 20, right: 20, bottom: 10),
+                          padding: EdgeInsets.only(
+                              top: 10.0, left: 20, right: 20, bottom: 10),
                           child: TextFormField(
                             onSaved: (input) => _weight = input,
                             validator: (input) =>
                             input.isEmpty ? "*Required" : null,
-                              cursorColor: Decorations.accentColour,
+                            cursorColor: Decorations.accentColour,
                             decoration:
-                              Decorations.createInputDecoration(null, "Weight"),
+                            Decorations.createInputDecoration(null, "Weight"),
                             enabled: _isEnabled ? true : false,
-                         )
-                      ),
-                    )
-                ),
+                          )),
+                    )),
               ],
             ),
             Padding(
@@ -333,8 +321,7 @@ class _ProfilePageState<T extends Profile> extends State<ProfilePage> with Secur
                   cursorColor: Decorations.accentColour,
                   decoration: Decorations.createInputDecoration(
                       Icons.fitness_center, "Fitness Goal"),
-                )
-            ),
+                )),
             SizedBox(
               height: 20,
             ),
@@ -345,28 +332,28 @@ class _ProfilePageState<T extends Profile> extends State<ProfilePage> with Secur
                   bottom: MediaQuery.of(context).viewInsets.bottom),
               child: _loading == true
                   ? CircularProgressIndicator(
-                      valueColor: new AlwaysStoppedAnimation<Color>(
-                          Decorations.accentColour
-                      ),
-                    )
+                valueColor: new AlwaysStoppedAnimation<Color>(
+                    Decorations.accentColour),
+              )
                   : Container(
-                      child: Visibility(
-                        visible: _isSaveButtonVisible,
-                        child: FlatButton(
-                          onPressed: () => _saveProfile(),
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(30)),
-                          splashColor: Colors.deepOrangeAccent,
-                          color: Decorations.accentColour,
-                          child: Text(
-                            "Save",
-                            style: Decorations.subtitle,
-                          ),
-                        ),
-                      ),
-                      height: 55,
-                      width: 150,
+                child: Visibility(
+                  visible: _isSaveButtonVisible,
+                  child: FlatButton(
+                    onPressed: () => _saveProfile(),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30)
                     ),
+                    splashColor: Colors.deepOrangeAccent,
+                    color: Decorations.accentColour,
+                    child: Text(
+                      "Save",
+                      style: Decorations.subtitle,
+                    ),
+                  ),
+                ),
+                height: 55,
+                width: 150,
+              ),
             ),
           ],
         )

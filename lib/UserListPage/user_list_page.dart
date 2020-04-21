@@ -174,14 +174,15 @@ class _UserListPageState<T extends Profile> extends State<UserListPage<T>> {
           child: _buildClientContents(),
         ),
         floatingActionButton: new Visibility(
-          visible: true,
+          visible: false,
           //visible: widget.trainerView,
           child: FloatingActionButton(
             onPressed: () {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => AssignExercisePage()));
+                      builder: (context) => AssignExercisePage())
+              );
             },
             child: Icon(Icons.add),
             backgroundColor: Decorations.accentColour,
@@ -222,7 +223,9 @@ class _UserListPageState<T extends Profile> extends State<UserListPage<T>> {
               MaterialPageRoute(
                   builder: (context) => AddClientPage(
                         listOfClientsUnderTrainer: _list, user: widget.user,
-                      )));
+                      )
+              )
+          );
         },
         child: Icon(Icons.add),
         backgroundColor: Decorations.accentColour,

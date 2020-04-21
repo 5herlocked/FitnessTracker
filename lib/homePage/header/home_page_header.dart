@@ -81,19 +81,23 @@ class HomePageHeader<T extends Profile> extends StatelessWidget {
     // personalisation tricks
     // assumes that past clients from that day are removed
     if (trainerDay.isEmpty) {
-      return "Looks like you have no clients";
+      return "Looks like you have no ${trainerDay.length > 1 ? "client" : "clients"}";
     } else if (now.isBefore(noon)) {
       return "Good Morning ${user.firstName}, looks like you have, "
-          "${trainerDay.length} clients to go";
+          "${trainerDay.length} "
+          "${trainerDay.length > 1 ? "client" : "clients"} to go";
     } else if (now.isBefore(evening)) {
       return "Good Afternoon ${user.firstName}, looks like you have, "
-          "${trainerDay.length} clients to go";
+          "${trainerDay.length} "
+          "${trainerDay.length > 1 ? "client" : "clients"} to go";
     } else if (now.isBefore(night)) {
       return "Good Evening ${user.firstName}, looks like you have, "
-          "${trainerDay.length} clients to go";
+          "${trainerDay.length} "
+          "${trainerDay.length > 1 ? "client" : "clients"} to go";
     } else {
       return "Good Day ${user.firstName}, looks like you have, "
-          "${trainerDay.length} clients to go";
+          "${trainerDay.length} "
+          "${trainerDay.length > 1 ? "client" : "clients"} to go";
     }
   }
 
@@ -111,16 +115,20 @@ class HomePageHeader<T extends Profile> extends StatelessWidget {
       return "You've have no assigned exercies left";
     } else if (now.isBefore(noon)) {
       return "Good Morning ${user.firstName}, You've completed "
-          "$completedExercises of ${clientDay.length} exercises today";
+          "$completedExercises of ${clientDay.length} "
+          "${clientDay.length > 1 ? "exercise" : "exercises"} today";
     } else if (now.isBefore(evening)) {
       return "Good Afternoon ${user.firstName}, You've completed "
-          "$completedExercises of ${clientDay.length} exercises today";
+          "$completedExercises of ${clientDay.length} "
+          "${clientDay.length > 1 ? "exercise" : "exercises"} today";
     } else if (now.isBefore(night)) {
       return "Good Evening ${user.firstName}, You've completed "
-          "$completedExercises of ${clientDay.length} exercises today";
+          "$completedExercises of ${clientDay.length} "
+          "${clientDay.length > 1 ? "exercise" : "exercises"} today";
     } else {
       return "Good Day ${user.firstName}, You've completed "
-          "$completedExercises of ${clientDay.length} exercises today";
+          "$completedExercises of ${clientDay.length} "
+          "${clientDay.length > 1 ? "exercise" : "exercises"} today";
     }
   }
 
