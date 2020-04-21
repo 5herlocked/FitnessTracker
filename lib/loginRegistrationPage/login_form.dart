@@ -126,7 +126,6 @@ class _MyLoginFormState extends State<MyLoginForm> with SecureStoreMixin {
   }
 
   _buildForm(BuildContext context) {
-    FocusScope.of(context).requestFocus(emailNode);
     return Form(
         key: _formKey,
         child: Column(
