@@ -66,14 +66,14 @@ class HomePageHeader<T extends Profile> extends StatelessWidget {
     return Column(
       children: <Widget>[
         Padding(
-          padding: EdgeInsets.only(left: 30, right: 30,),
+          padding: EdgeInsets.only(left: 20, right: 20,),
           child: Text(
             "Hi ${user.firstName},",
             style: Decorations.headline,
           ),
         ),
         Padding(
-          padding: EdgeInsets.only(left: 30, right: 30),
+          padding: EdgeInsets.only(left: 20, right: 20),
           child: Text(
             _getSubtitle(),
             style: Decorations.subtitle,
