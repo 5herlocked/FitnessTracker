@@ -116,12 +116,17 @@ class _MyLoginFormState extends State<MyLoginForm> with SecureStoreMixin {
   var _userPassword;
   bool _loading = false;
 
+  FocusNode emailNode = FocusNode();
+  FocusNode passWordNode = FocusNode();
+  FocusNode buttonNode = FocusNode();
+
   @override
   Widget build(BuildContext context) {
     return _buildForm(context);
   }
 
   _buildForm(BuildContext context) {
+    FocusScope.of(context).requestFocus(emailNode);
     return Form(
         key: _formKey,
         child: Column(
@@ -131,6 +136,12 @@ class _MyLoginFormState extends State<MyLoginForm> with SecureStoreMixin {
               child: TextFormField(
                 validator: (value) => (value.isEmpty) ? "*Required" : null,
                 enabled: true,
+                focusNode: emailNode,
+                textInputAction: TextInputAction.next,
+                onFieldSubmitted: (term) {
+                  emailNode.unfocus();
+                  FocusScope.of(context).requestFocus(passWordNode);
+                },
                 cursorColor: Decorations.accentColour,
                 decoration:
                     Decorations.createInputDecoration(Icons.mail, "Email"),
@@ -143,6 +154,11 @@ class _MyLoginFormState extends State<MyLoginForm> with SecureStoreMixin {
                 obscureText: true,
                 validator: (value) => (value.isEmpty) ? "*Required" : null,
                 enabled: true,
+                focusNode: passWordNode,
+                textInputAction: TextInputAction.done,
+                onFieldSubmitted: (complete) {
+                  _initiateLogin();
+                },
                 cursorColor: Decorations.accentColour,
                 decoration:
                     Decorations.createInputDecoration(Icons.lock, "Password"),
@@ -179,7 +195,8 @@ class _MyLoginFormState extends State<MyLoginForm> with SecureStoreMixin {
                     ),
             ),
           ],
-        ));
+        )
+    );
   }
 
   void _initiateLogin() async {

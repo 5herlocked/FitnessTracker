@@ -1,4 +1,4 @@
-class Profile {
+class Profile with Attributes {
   String firstName;
   String lastName;
   String phoneNumber;
@@ -7,6 +7,18 @@ class Profile {
   String profilePicture;
   String password;
 
-  Profile({this.firstName, this.lastName, this.phoneNumber, this.emergencyPhone,
-  this.emailID, this.profilePicture, this.password});
+  Profile(
+      {
+        this.firstName, this.lastName,
+        this.phoneNumber, this.emergencyPhone,
+        this.emailID, this.profilePicture,
+        this.password, description,
+        birthday, weight,
+        height, fitnessGoal
+      }
+  );
+}
+
+class Attributes {
+  String description, birthday, weight, height, fitnessGoal;
 }

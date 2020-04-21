@@ -17,6 +17,30 @@ class HomePageHeader<T extends Profile> extends StatelessWidget {
 
   HomePageHeader(this.user, this.today);
 
+  Widget build(BuildContext context) {
+    return Container(
+      constraints: BoxConstraints(
+        maxHeight: 260,
+      ),
+      decoration: BoxDecoration(
+        gradient: Decorations.backgroundGradient,
+      ),
+      child: Stack(
+        children: <Widget>[
+          new Align(
+            alignment: FractionalOffset.bottomCenter,
+            child: new Column(
+              children: <Widget>[
+                _buildAvatar(context),
+                _buildWelcomeMessage(context),
+              ],
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
   Widget _buildAvatar(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
@@ -74,77 +98,55 @@ class HomePageHeader<T extends Profile> extends StatelessWidget {
   String _getTrainerDay() {
     List<Client> trainerDay = today;
 
-    if (trainerDay == null) {
-      return "";
-    }
-
     // personalisation tricks
     // assumes that past clients from that day are removed
-    if (trainerDay.isEmpty) {
-      return "Looks like you have no clients";
+    if (trainerDay == null || trainerDay.isEmpty) {
+      return "Looks like you have no ${trainerDay.length > 1 ? "client" : "clients"}";
     } else if (now.isBefore(noon)) {
       return "Good Morning ${user.firstName}, looks like you have, "
-          "${trainerDay.length} clients to go";
+          "${trainerDay.length} "
+          "${trainerDay.length > 1 ? "client" : "clients"} to go";
     } else if (now.isBefore(evening)) {
       return "Good Afternoon ${user.firstName}, looks like you have, "
-          "${trainerDay.length} clients to go";
+          "${trainerDay.length} "
+          "${trainerDay.length > 1 ? "client" : "clients"} to go";
     } else if (now.isBefore(night)) {
       return "Good Evening ${user.firstName}, looks like you have, "
-          "${trainerDay.length} clients to go";
+          "${trainerDay.length} "
+          "${trainerDay.length > 1 ? "client" : "clients"} to go";
     } else {
       return "Good Day ${user.firstName}, looks like you have, "
-          "${trainerDay.length} clients to go";
+          "${trainerDay.length} "
+          "${trainerDay.length > 1 ? "client" : "clients"} to go";
     }
   }
 
   String _getTodayExerciseStats() {
     List<Exercise> clientDay = today;
 
-    if (clientDay == null) {
-      return "";
-    }
-
     int completedExercises = 0;
     // compute completed exercises
-    clientDay.forEach((Exercise e) => completedExercises += (e.completed == 1) ? 1 : 0);
-    if (clientDay.isEmpty) {
+    if (clientDay != null) {
+      clientDay.forEach((Exercise e) => completedExercises += (e.completed == 1) ? 1 : 0);
+    }
+    if (clientDay == null || clientDay.isEmpty) {
       return "You've have no assigned exercies left";
     } else if (now.isBefore(noon)) {
       return "Good Morning ${user.firstName}, You've completed "
-          "$completedExercises of ${clientDay.length} exercises today";
+          "$completedExercises of ${clientDay.length} "
+          "${clientDay.length > 1 ? "exercises" : "exercise"} today";
     } else if (now.isBefore(evening)) {
       return "Good Afternoon ${user.firstName}, You've completed "
-          "$completedExercises of ${clientDay.length} exercises today";
+          "$completedExercises of ${clientDay.length} "
+          "${clientDay.length > 1 ? "exercises" : "exercise"} today";
     } else if (now.isBefore(night)) {
       return "Good Evening ${user.firstName}, You've completed "
-          "$completedExercises of ${clientDay.length} exercises today";
+          "$completedExercises of ${clientDay.length} "
+          "${clientDay.length > 1 ? "exercises" : "exercise"} today";
     } else {
       return "Good Day ${user.firstName}, You've completed "
-          "$completedExercises of ${clientDay.length} exercises today";
+          "$completedExercises of ${clientDay.length} "
+          "${clientDay.length > 1 ? "exercises" : "exercise"} today";
     }
-  }
-
-  Widget build(BuildContext context) {
-    return Container(
-      constraints: BoxConstraints(
-        maxHeight: 260,
-      ),
-      decoration: BoxDecoration(
-        gradient: Decorations.backgroundGradient,
-      ),
-      child: Stack(
-        children: <Widget>[
-          new Align(
-            alignment: FractionalOffset.bottomCenter,
-            child: new Column(
-              children: <Widget>[
-                _buildAvatar(context),
-                _buildWelcomeMessage(context),
-              ],
-            ),
-          )
-        ],
-      ),
-    );
   }
 }
