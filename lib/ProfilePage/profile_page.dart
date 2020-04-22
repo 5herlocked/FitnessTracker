@@ -105,9 +105,14 @@ class _ProfilePageState<T extends Profile> extends State<ProfilePage>
   // build app bar with logout icon for trainer and client
   _buildAppBar() {
     return AppBar(
-      leading: IconButton(
-          icon: Icon(Icons.exit_to_app), onPressed: () => _clearCredentials()
-      ),
+      actions: <Widget>[
+        Visibility(
+          visible: !widget.isAlternateView,
+            child: IconButton(
+                icon: Icon(Icons.exit_to_app), onPressed: () => _clearCredentials()
+            )
+        ),
+      ],
       elevation: 0.0,
       title: Text(
         "Profile",
@@ -122,15 +127,8 @@ class _ProfilePageState<T extends Profile> extends State<ProfilePage>
         resizeToAvoidBottomPadding: false,
         key: _scaffoldKey,
         backgroundColor: Colors.white,
-        appBar: !widget.isAlternateView ? _buildAppBar() : AppBar(
-          elevation: 0.0,
-          title: Text(
-            "Profile",
-            style: TextStyle(fontFamily: 'Raleway'),
-          ),
-        ),
+        appBar: _buildAppBar(),
         body: Container(
-            padding: EdgeInsets.only(top: 20),
             child: SingleChildScrollView(
               child: Column(
                 children: <Widget>[

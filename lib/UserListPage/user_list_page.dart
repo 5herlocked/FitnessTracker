@@ -226,8 +226,13 @@ class _UserListPageState<T extends Profile> extends State<UserListPage<T>> {
       appBar: AppBar(
         title: Text(pageTitle),
       ),
-      body: SafeArea(
-          child: _buildTrainerContent(),
+      body: RefreshIndicator(
+        onRefresh: () => _loadList().then((newList) {
+          setState(() => _list = newList);
+        }),
+        child: SafeArea(
+            child: _buildTrainerContent(),
+        ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
