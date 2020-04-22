@@ -11,7 +11,6 @@ class Client extends Profile {
   bool isTrainerAssigned = false;
   int clientID;
   int trainerID; // ID of the trainer assigned to the client
-
   List<Exercise> assignedExercises;
 
   Client(
@@ -21,49 +20,37 @@ class Client extends Profile {
         this.fullName,
         this.assignedExercises,
         email,
-        this.isTrainerAssigned,
         this.clientID,
         this.trainerID,
         phoneNumber,
         password,
-        description,
-        birthday,
-        weight,
-        height,
-        fitnessGoal,
+        profileAttributes,
         profilePicture
       }
-  ) : super(
-        firstName: firstName,
-        lastName: lastName,
-        emailID: email,
-        phoneNumber: phoneNumber,
-        password: password,
-        profilePicture: profilePicture,
-        description: description,
-        birthday: birthday,
-        weight: weight,
-        height: height,
-        fitnessGoal: fitnessGoal,
+      ) : super(
+    firstName: firstName,
+    lastName: lastName,
+    emailID: email,
+    phoneNumber: phoneNumber,
+    password: password,
+    profilePicture: profilePicture,
+    profileAttributes: profileAttributes,
   );
 
   factory Client.fromJson(Map<String, dynamic> json) {
     return Client(
-        firstName: json['first_name'],
-        lastName: json['last_name'],
-        email: json['email'],
-        phoneNumber: json['phone_number'],
-        clientID: json['client_id'],
-        trainerID: json['trainer_id'],
-        description: json['description'],
-        birthday: json['birthday'],
-        height: json['height'],
-        weight: json['weight'],
-        fitnessGoal: json['fitness_goal'],);
+      firstName: json['first_name'],
+      lastName: json['last_name'],
+      email: json['email'],
+      phoneNumber: json['phone_number'],
+      clientID: json['client_id'],
+      trainerID: json['trainer_id'],
+      profileAttributes: json['attributes'] != null ? Attributes.fromJson(json['attributes']) : null,
+    );
   }
 
   // Send a POST request to the API to create a new client
-  Future<int> createClientAccount() async {
+  Future<Client> createClientAccount() async {
     Map data = {
       'first_name': firstName,
       'last_name': lastName,
@@ -76,7 +63,7 @@ class Client extends Profile {
         'https://mad-fitnesstracker.herokuapp.com/api/client/register',
         body: data);
 
-    return response.statusCode;
+    return Client.fromJson(json.decode(response.body));
   }
 
   // Send a POST request to the API to log the client in
@@ -95,18 +82,18 @@ class Client extends Profile {
 
   // Send a POST request to the API to log the client in
   Future<int> updateClientProfile() async {
-    Map data = {
-      'client_id': clientID,
-      'description': description,
-      'birthday': birthday,
-      'weight': weight,
-      'height': height,
-      'fitnessGoal': fitnessGoal
-    };
+    String url = "";
+    if(this.profileAttributes.birthday == null) {
+      url = "https://mad-fitnesstracker.herokuapp.com/api/client/updateProfile?"
+          "client_id=$clientID&bio=${profileAttributes.description}&current_email=$emailID"
+          "&height=${profileAttributes.height}&weight=${profileAttributes.weight}&goal=${profileAttributes.fitnessGoal}";
+    }else {
+      url = "https://mad-fitnesstracker.herokuapp.com/api/client/updateProfile?"
+          "client_id=$clientID&bio=${profileAttributes.description}&current_email=$emailID"
+          "&height=${profileAttributes.height}&weight=${profileAttributes.weight}&goal=${profileAttributes.fitnessGoal}&dob=${profileAttributes.birthday}";
+    }
 
-    final http.Response response = await http.put(
-        'https://mad-fitnesstracker.herokuapp.com/api/client/updateProfile',
-        body: data);
+    final http.Response response = await http.post(url);
 
     return response.statusCode;
     //return Client.fromJson(json.decode(response.body));

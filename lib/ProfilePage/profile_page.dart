@@ -22,61 +22,83 @@ class _ProfilePageState<T extends Profile> extends State<ProfilePage>
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   bool _isEnabled = false;
+  bool isNewUser = false;
   bool _isSaveButtonVisible = false;
   bool _isEditButtonVisible = true;
-  String _birthday, _description, _weight, _height, _fitnessGoal;
+  String _birthday, _description, _weight, _height, _fitnessGoal, _credentials;
   bool _loading = false;
   bool _autoValidate = false;
   String errorMsg = "";
+  Client client;
+  Trainer trainer;
 
+  @override
   void initState() {
-    _getProfile();
+    switch(T) {
+      case Trainer:
+        Trainer trainer;
+        getTrainerProfile().then((value) {
+          setState(() {
+            trainer = value;
+            setTrainerFields(trainer);
+          });
+        });
+        break;
+      case Client:
+        Client client;
+        getClientProfile().then((value) {
+          setState(() {
+            client = value;
+            setClientFields(client);
+          });
+        });
+    }
     super.initState();
   }
 
-  // get profile info for the corresponding
-  void _getProfile() async {
-    Client client = new Client();
-    Trainer trainer = new Trainer();
-    switch (T) {
-      case Client:
-        client = widget.user;
-        if (widget.isAlternateView) {
-          // trainer is viewing client's profile
-          // disable editing permissions
-          _isEditButtonVisible = false;
-        }
+  Future<Client> getClientProfile() async {
+    Client client = widget.user as Client;
+    if (widget.isAlternateView) {
+      // trainer is viewing client's profile
+      // disable editing permissions
+      _isEditButtonVisible = false;
+    }
+    return await client.getClientProfile();
+  }
 
-        try {
-          client.getClientProfile();
-        } catch (Exception) {}
+  void setClientFields(Client client) {
+    if(client.profileAttributes != null && client.profileAttributes.description == null && client.profileAttributes.birthday == null
+        && client.profileAttributes.fitnessGoal == null && client.profileAttributes.height == 0 &&
+        client.profileAttributes.weight == 0) {
+      isNewUser = true;
+    }else {
+      _description =  client.profileAttributes.description;
+      _birthday =  client.profileAttributes.birthday;
+      _height =  client.profileAttributes.height.toString();
+      _weight =  client.profileAttributes.weight.toString();
+      _fitnessGoal = client.profileAttributes.fitnessGoal;
+    }
+  }
 
-        _description = client.description;
-        _birthday = client.birthday;
-        _height = client.height;
-        _weight = client.weight;
-        _fitnessGoal = client.fitnessGoal;
+  Future<Trainer> getTrainerProfile() async {
+    Trainer trainer = widget.user as Trainer;
+    if (widget.isAlternateView) {
+      // client is viewing trainer's profile
+      // disable editing permissions
+      _isEditButtonVisible = false;
+    }
+    return await trainer.getTrainerProfile();
+  }
 
-        break;
-      case Trainer:
-        trainer = widget.user;
-        if (widget.isAlternateView) {
-          // client is viewing trainer's profile
-          // disable editing permissions
-          _isEditButtonVisible = false;
-        }
-
-        try {
-          trainer.getTrainerProfile();
-        } catch (Exception) {}
-
-        trainer.getTrainerProfile();
-        _description = trainer.description;
-        _birthday = trainer.birthday;
-        _height = trainer.height;
-        _weight = trainer.weight;
-        _fitnessGoal = trainer.fitnessGoal;
-        break;
+  void setTrainerFields(Trainer trainer) {
+    if ((trainer.profileAttributes.description == null && trainer.profileAttributes.birthday == null
+        && trainer.profileAttributes.fitnessGoal == null && trainer.credentials == null)){
+      isNewUser = true;
+    }else {
+      _description = trainer.profileAttributes.description;
+      _birthday = trainer.profileAttributes.birthday;
+      _fitnessGoal = trainer.profileAttributes.fitnessGoal;
+      _credentials = trainer.credentials;
     }
   }
 
@@ -101,7 +123,6 @@ class _ProfilePageState<T extends Profile> extends State<ProfilePage>
 
   @override
   Widget build(BuildContext context) {
-    Color primaryColor = Theme.of(context).primaryColor;
     return Scaffold(
         resizeToAvoidBottomPadding: false,
         key: _scaffoldKey,
@@ -144,7 +165,7 @@ class _ProfilePageState<T extends Profile> extends State<ProfilePage>
                   SizedBox(
                     height: 20,
                   ),
-                  _buildForm()
+                  _description == null && !isNewUser? new Container() : _buildForm(),
                 ],
               ),
             )),
@@ -161,7 +182,7 @@ class _ProfilePageState<T extends Profile> extends State<ProfilePage>
                 });
               },
               child: Icon(Icons.edit),
-              backgroundColor: primaryColor,
+              backgroundColor: Decorations.accentColour,
             )));
   }
 
@@ -175,22 +196,46 @@ class _ProfilePageState<T extends Profile> extends State<ProfilePage>
     switch (T) {
       case Client:
         Client client = widget.user as Client;
-        client.description = _description;
-        client.birthday = _birthday;
-        client.height = _height;
-        client.weight = _weight;
-        client.fitnessGoal = _fitnessGoal;
+        Attributes profileAttributes = new Attributes();
+        profileAttributes.description = _description;
+        profileAttributes.fitnessGoal = _fitnessGoal;
+
+        if(_height != "") {
+          profileAttributes.height = int.parse(_height);
+        }else {
+          profileAttributes.height = 0;
+        }
+
+        if(_weight != "") {
+          profileAttributes.weight = int.parse(_weight);
+        }else {
+          profileAttributes.weight = 0;
+        }
+
+        if(_birthday != "") {
+          var parsedDate = DateTime.parse(_birthday);
+          profileAttributes.birthday =  parsedDate.toIso8601String();
+        }
+
+        client.profileAttributes = profileAttributes;
 
         // Call the API to update the client's profile in the database
         statusCode = await client.updateClientProfile();
         break;
       case Trainer:
         Trainer trainer = widget.user as Trainer;
-        trainer.description = _description;
-        trainer.birthday = _birthday;
-        trainer.height = _height;
-        trainer.weight = _weight;
-        trainer.fitnessGoal = _fitnessGoal;
+
+        Attributes profileAttributes = new Attributes();
+        profileAttributes.description = _description;
+        profileAttributes.fitnessGoal = _fitnessGoal;
+
+        if(_birthday != "") {
+          var parsedDate = DateTime.parse(_birthday);
+          profileAttributes.birthday =  parsedDate.toIso8601String();
+        }
+
+        trainer.credentials = _credentials;
+        trainer.profileAttributes = profileAttributes;
 
         // Call the API to update the client's profile in the database
         statusCode = await trainer.updateTrainerProfile();
@@ -240,7 +285,7 @@ class _ProfilePageState<T extends Profile> extends State<ProfilePage>
 
   // Build the Profile Form
 
-  _buildForm() {
+  Widget _buildForm() {
     return Form(
         key: _formKey,
         autovalidate: _autoValidate,
@@ -256,71 +301,91 @@ class _ProfilePageState<T extends Profile> extends State<ProfilePage>
                 validator: (input) => input.isEmpty ? "*Required" : null,
                 maxLines: 2,
                 decoration: Decorations.createInputDecoration(
-                    Icons.description, "Description"),
+                    Icons.perm_contact_calendar, "Description"),
                 enabled: _isEnabled ? true : false,
               ),
+            ),
+            Visibility(
+              visible: widget.user is Trainer? true : false,
+              child: Padding(
+                  padding: EdgeInsets.only(top: 10.0, left: 20, right: 20, bottom: 10),
+                  child: TextFormField(
+                    initialValue: _credentials,
+                    enabled: _isEnabled ? true : false,
+                    onSaved: (input) => _credentials = input,
+                    validator: (input) => input.isEmpty ? "*Required" : null,
+                    cursorColor: Decorations.accentColour,
+                    decoration: Decorations.createInputDecoration(
+                        Icons.star, "Credentials"),
+                  ))
             ),
             Padding(
                 padding:
                 EdgeInsets.only(top: 10.0, left: 20, right: 20, bottom: 10),
                 child: TextFormField(
+                  initialValue: _birthday,
                   onSaved: (input) => _birthday = input,
                   cursorColor: Decorations.accentColour,
                   validator: (input) => input.isEmpty ? "*Required" : null,
                   decoration: Decorations.createInputDecoration(
-                      Icons.calendar_today, "Birthday MM/DD/YYYY"),
+                      Icons.cake, "Birthday YYYY-MM-DD"),
                   enabled: _isEnabled ? true : false,
                 )),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: <Widget>[
-                new Flexible(
-                    child: Container(
-                      width: 300,
-                      child: Padding(
-                          padding: EdgeInsets.only(
-                              top: 10.0, left: 20, right: 20, bottom: 10),
-                          child: TextFormField(
-                            onSaved: (input) => _height = input,
-                            validator: (input) =>
-                            input.isEmpty ? "*Required" : null,
-                            cursorColor: Decorations.accentColour,
-                            decoration:
-                            Decorations.createInputDecoration(null, "Height"),
-                            enabled: _isEnabled ? true : false,
-                          )),
-                    )),
-                new Flexible(
-                    child: Container(
-                      width: 300,
-                      child: Padding(
-                          padding: EdgeInsets.only(
-                              top: 10.0, left: 20, right: 20, bottom: 10),
-                          child: TextFormField(
-                            onSaved: (input) => _weight = input,
-                            validator: (input) =>
-                            input.isEmpty ? "*Required" : null,
-                            cursorColor: Decorations.accentColour,
-                            decoration:
-                            Decorations.createInputDecoration(null, "Weight"),
-                            enabled: _isEnabled ? true : false,
-                          )),
-                    )),
-              ],
+            Visibility(
+              visible: widget.user is Trainer? false : true,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+                  new Flexible(
+                      child: Container(
+                        width: 300,
+                        child: Padding(
+                            padding: EdgeInsets.only(
+                                top: 10.0, left: 20, right: 20, bottom: 10),
+                            child: TextFormField(
+                              initialValue: _height,
+                              onSaved: (input) => _height = input,
+                              validator: (input) =>
+                              input.isEmpty ? "*Required" : null,
+                              cursorColor: Decorations.accentColour,
+                              decoration:
+                              Decorations.createInputDecoration(null, "Height"),
+                              enabled: _isEnabled ? true : false,
+                            )),
+                      )),
+                  new Flexible(
+                      child: Container(
+                        width: 300,
+                        child: Padding(
+                            padding: EdgeInsets.only(
+                                top: 10.0, left: 20, right: 20, bottom: 10),
+                            child: TextFormField(
+                              initialValue: _weight,
+                              onSaved: (input) => _weight = input,
+                              validator: (input) =>
+                              input.isEmpty ? "*Required" : null,
+                              cursorColor: Decorations.accentColour,
+                              decoration:
+                              Decorations.createInputDecoration(null, "Weight"),
+                              enabled: _isEnabled ? true : false,
+                            )),
+                      )),
+                ],
+              ),
             ),
             Padding(
-                padding: EdgeInsets.only(bottom: 20, left: 20, right: 20),
+                padding: EdgeInsets.only(
+                    top: 10.0, left: 20, right: 20, bottom: 20),
                 child: TextFormField(
+                  initialValue: _fitnessGoal,
                   enabled: _isEnabled ? true : false,
+                  maxLines: 2,
                   onSaved: (input) => _fitnessGoal = input,
                   validator: (input) => input.isEmpty ? "*Required" : null,
                   cursorColor: Decorations.accentColour,
                   decoration: Decorations.createInputDecoration(
                       Icons.fitness_center, "Fitness Goal"),
                 )),
-            SizedBox(
-              height: 20,
-            ),
             Padding(
               padding: EdgeInsets.only(
                   left: 20,
