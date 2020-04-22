@@ -176,14 +176,14 @@ class _HomePageState<T extends Profile> extends State<HomePage<T>> {
         // API call
         return Scaffold.of(context).showSnackBar(
           SnackBar(
-            content: Text("${exerciseList.elementAt(index)} completed"),
+            content: Text("${exerciseList.elementAt(index).name} completed"),
           )
         );
         break;
       case 0:
         return Scaffold.of(context).showSnackBar(
           SnackBar(
-            content: Text("${exerciseList.elementAt(index)} not complete"),
+            content: Text("${exerciseList.elementAt(index).name} not complete"),
           )
         );
         break;

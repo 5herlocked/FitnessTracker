@@ -12,7 +12,7 @@ class Destination {
 
   static const  List<Destination> clientDestinationsList = <Destination> [
     Destination('Home', Icons.home, ClientTabItem.today),
-    Destination('Assigned Exercises', Icons.directions_run, ClientTabItem.exercises),
+    Destination('Assigned Exercises', Icons.fitness_center, ClientTabItem.exercises),
     Destination('Previous Exercises', Icons.today, ClientTabItem.history),
     Destination('Profile', Icons.account_circle, ClientTabItem.profile)
   ];
@@ -25,7 +25,7 @@ class Destination {
 
   static const List<Destination> trainerClientViewDestinationList = <Destination> [
     Destination('Profile', Icons.account_circle, ClientViewTabItem.profile),
-    Destination('Assigned Exercies', Icons.directions_run, ClientViewTabItem.exercises),
+    Destination('Assigned Exercies', Icons.fitness_center, ClientViewTabItem.exercises),
     Destination('Previous Exercises', Icons.history, ClientViewTabItem.history),
   ];
 }
