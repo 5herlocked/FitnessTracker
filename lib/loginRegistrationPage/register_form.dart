@@ -241,8 +241,8 @@ class _MyRegisterFormState extends State<MyRegisterForm> with SecureStoreMixin {
         newClient.lastName = nameArray[1];
         newClient.fullName = _displayName;
         newClient.phoneNumber = _phoneNumber;
-        statusCode = await newClient.createClientAccount();
-        if (statusCode != 200)
+        newClient = await newClient.createClientAccount();
+        if (newClient.clientID == null)
           _buildError();
         else {
           Navigator.popUntil(context, (route) => route.isFirst);
@@ -264,8 +264,8 @@ class _MyRegisterFormState extends State<MyRegisterForm> with SecureStoreMixin {
         newTrainer.lastName = nameArray[1];
         newTrainer.fullName = _displayName;
         newTrainer.phoneNumber = _phoneNumber;
-        statusCode = await newTrainer.createTrainerAccount();
-        if (statusCode != 200)
+        newTrainer = await newTrainer.createTrainerAccount();
+        if (newTrainer.trainerID == null)
           _buildError();
         else {
           Navigator.popUntil(context, (route) => route.isFirst);
