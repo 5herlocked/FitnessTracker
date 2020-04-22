@@ -20,13 +20,10 @@ class Trainer extends Profile {
     this.fullName,
     email,
     this.trainerID,
+    this.credentials,
     phoneNumber,
     password,
-    description,
-    birthday,
-    weight,
-    height,
-    fitnessGoal,
+    profileAttributes,
     profilePicture,
   }) : super(
     firstName: firstName,
@@ -35,29 +32,23 @@ class Trainer extends Profile {
     phoneNumber: phoneNumber,
     password: password,
     profilePicture: profilePicture,
-    description: description,
-    birthday: birthday,
-    weight: weight,
-    height: height,
-    fitnessGoal: fitnessGoal,
+    profileAttributes: profileAttributes,
   );
 
   factory Trainer.fromJson(Map<String, dynamic> json) {
     return Trainer(
-        firstName: json['first_name'],
-        lastName: json['last_name'],
-        email: json['email'],
-        phoneNumber: json['phone_number'],
-        trainerID: json['trainer_id'],
-        description: json['description'],
-        birthday: json['birthday'],
-        height: json['height'],
-        weight: json['weight'],
-        fitnessGoal: json['fitness_goal']);
+      firstName: json['first_name'],
+      lastName: json['last_name'],
+      email: json['email'],
+      phoneNumber: json['phone_number'],
+      trainerID: json['trainer_id'],
+      credentials: json['credentials'],
+      profileAttributes: json['attributes'] != null ? Attributes.fromJson(json['attributes']) : null,
+    );
   }
 
   // Send a POST request to the API to create a new client
-  Future<int> createTrainerAccount() async {
+  Future<Trainer> createTrainerAccount() async {
     Map data = {
       'first_name': firstName,
       'last_name': lastName,
@@ -70,7 +61,7 @@ class Trainer extends Profile {
         'https://mad-fitnesstracker.herokuapp.com/api/trainer/register',
         body: data);
 
-    return response.statusCode;
+    return Trainer.fromJson(json.decode(response.body));
   }
 
   // Send a POST request to the API to log the client in
@@ -115,24 +106,26 @@ class Trainer extends Profile {
     return fetchedUserList;
   }
 
-  // Send a POST request to the API to log the client in
+  // Send a POST request to the API to update the trainer's profile
   Future<int> updateTrainerProfile() async {
-    Map data = {
-      'description': description,
-      'birthday': birthday,
-      'weight': weight,
-      'height': height,
-      'fitnessGoal': fitnessGoal
-    };
+    String url;
 
-    final http.Response response = await http.put(
-        'https://mad-fitnesstracker.herokuapp.com/api/trainer/updateprofile',
-        body: data);
+    if(this.profileAttributes.birthday == null) {
+      url = "https://mad-fitnesstracker.herokuapp.com/api/trainer/updateProfile?"
+          "trainer_id=$trainerID&bio=${profileAttributes.description}&current_email=$emailID"
+          "&credentials=$credentials&goal=${profileAttributes.fitnessGoal}";
+    } else {
+      url = "https://mad-fitnesstracker.herokuapp.com/api/trainer/updateProfile?"
+          "trainer_id=$trainerID&bio=${profileAttributes.description}&current_email=$emailID"
+          "&credentials=$credentials&goal=${profileAttributes.fitnessGoal}&dob=${profileAttributes.birthday}";
+    }
+
+    final http.Response response = await http.post(url);
 
     return response.statusCode;
   }
 
-  // Send a POST request to the API to log the client in
+  // Send a POST request to the API to get the trainer's profile
   Future<Trainer> getTrainerProfile() async {
     final http.Response response = await http.get(
         'https://mad-fitnesstracker.herokuapp.com/api/trainer/getProfile?'
