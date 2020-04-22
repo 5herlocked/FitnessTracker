@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:fitnesstracker/ProfilePage/profile_page.dart';
 import 'package:fitnesstracker/app.dart';
 import 'package:fitnesstracker/entities/cardio_exercise.dart';
 import 'package:fitnesstracker/entities/client.dart';
@@ -25,10 +28,10 @@ class _HomePageState<T extends Profile> extends State<HomePage<T>> {
 
   @override
   void initState() {
-    super.initState();
     _loadToday().then((value) {
       setState(() {_today = value;});
     });
+    super.initState();
   }
 
   @override
@@ -48,31 +51,47 @@ class _HomePageState<T extends Profile> extends State<HomePage<T>> {
       }
     } else {
       content = ListView.builder(
+        padding: EdgeInsets.all(0.0),
         itemCount: _today.length,
         itemBuilder: _buildToday,
       );
     }
 
-    return SafeArea(
-        child: Container(
-          decoration: BoxDecoration(
-            color: Colors.white,
-          ),
-          child: Stack(
-            children: <Widget>[
-              HomePageHeader(widget.user, _today),
-              RefreshIndicator(
-                onRefresh: () => _loadToday(),
-                backgroundColor: Decorations.accentColour,
-                color: Colors.white,
-                child: new Padding(
-                  padding: const EdgeInsets.only(top: 260),
-                  child: content,
-                ),
-              ),
-            ],
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0.0,
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.portrait, color: Colors.white,),
+            iconSize: 30.0,
+            onPressed: _getTrainerProfile,
           )
-      )
+        ],
+      ),
+      extendBodyBehindAppBar: true,
+      body: Container(
+        padding: EdgeInsets.only(top: 24),
+        decoration: BoxDecoration(
+          color: Colors.white,
+        ),
+        child: Stack(
+          children: <Widget>[
+            HomePageHeader(widget.user, _today),
+            RefreshIndicator(
+              onRefresh: () => _loadToday().then((value) {
+                setState(() =>_today = value);
+              }),
+              backgroundColor: Decorations.accentColour,
+              color: Colors.white,
+              child: new Padding(
+                padding: const EdgeInsets.only(top: 260),
+                child: content,
+              ),
+            ),
+          ],
+        )
+        ),
     );
   }
 
@@ -81,6 +100,8 @@ class _HomePageState<T extends Profile> extends State<HomePage<T>> {
     switch(T) {
       case Client:
         Client currentClient = widget.user as Client;
+        Trainer trainer = Trainer();
+        trainer.trainerID = currentClient.trainerID;
         return await currentClient.getAssignedExercises();
       case Trainer:
         Trainer currentTrainer = widget.user as Trainer;
@@ -142,28 +163,6 @@ class _HomePageState<T extends Profile> extends State<HomePage<T>> {
     }
   }
 
-  Widget _buildTrainerToday(BuildContext context, int index) {
-    List<Client> trainerDay = _today;
-    Client currentClient = trainerDay.elementAt(index);
-
-    return Card(
-      child: ListTile(
-        onTap: () => _navigateToClientProfile(currentClient),
-        title: Text("${currentClient.firstName} ${currentClient.lastName}"),
-      ),
-    );
-  }
-
-  _navigateToClientProfile(Client client) {
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (c) {
-          return App<Client>(user: client, trainerView: true,);
-        }
-      ),
-    );
-  }
-
   _exercisesToggled(List<Exercise> exerciseList, int index) {
     // TODO: Implement API to use the exercises classes so that whenever
     // the exercise is marked complete, it's actually marked complete
@@ -190,9 +189,47 @@ class _HomePageState<T extends Profile> extends State<HomePage<T>> {
     }
   }
 
+  Widget _buildTrainerToday(BuildContext context, int index) {
+    List<Client> trainerDay = _today;
+    Client currentClient = trainerDay.elementAt(index);
+
+    return Card(
+      child: ListTile(
+        onTap: () => _navigateToClientProfile(currentClient),
+        title: Text("${currentClient.firstName} ${currentClient.lastName}"),
+      ),
+    );
+  }
+
+  _getTrainerProfile() {
+    Trainer currentTrainer = Trainer();
+    currentTrainer.trainerID = (widget.user as Client).trainerID;
+    currentTrainer.getTrainerProfile().then((currentTrainer) => _navigateToTrainerProfile(currentTrainer));
+  }
+
+  _navigateToTrainerProfile(Trainer currentTrainer) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (c) {
+          return ProfilePage<Trainer>(user: currentTrainer, isAlternateView: true,);
+        }
+      )
+    );
+  }
+
+  _navigateToClientProfile(Client client) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (c) {
+          return App<Client>(user: client, trainerView: true,);
+        }
+      ),
+    );
+  }
+
   void _navigateToExerciseDetails(Exercise exercise) {
     Navigator.of(context).push(
-      new MaterialPageRoute(
+      MaterialPageRoute(
         builder: (c) {
           return new ExerciseDetailPage(exercise: exercise);
         },
