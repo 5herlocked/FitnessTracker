@@ -30,7 +30,7 @@ class Attributes {
         this.height,
         this.fitnessGoal
       }
-      );
+  );
 
   factory Attributes.fromJson(Map<String, dynamic> json) {
     return Attributes(

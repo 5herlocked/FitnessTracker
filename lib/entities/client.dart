@@ -33,7 +33,7 @@ class Client extends Profile {
     emailID: email,
     phoneNumber: phoneNumber,
     password: password,
-    profilePicture: profilePicture,
+    profilePicture: "https://www.getfeedback.com/static/ce27cad29ac6702ad0e32ecb0c49999a/c85f0/hero-happy.jpg",
     profileAttributes: profileAttributes,
   );
 

@@ -138,8 +138,7 @@ class _ProfilePageState<T extends Profile> extends State<ProfilePage>
                       bottom: 10,
                     ),
                     child: CircleAvatar(
-                      backgroundImage: new NetworkImage(
-                          "https://19yw4b240vb03ws8qm25h366-wpengine.netdna-ssl.com/wp-content/uploads/Profile-Pic-Circle-Grey-Large.png"),
+                      backgroundImage: NetworkImage(widget.user.profilePicture),
                       radius: 80.0,
                     ),
                   ),

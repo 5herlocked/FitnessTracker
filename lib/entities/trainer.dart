@@ -31,7 +31,7 @@ class Trainer extends Profile {
     emailID: email,
     phoneNumber: phoneNumber,
     password: password,
-    profilePicture: profilePicture,
+    profilePicture: "https://19yw4b240vb03ws8qm25h366-wpengine.netdna-ssl.com/wp-content/uploads/Profile-Pic-Circle-Grey-Large.png",
     profileAttributes: profileAttributes,
   );
 

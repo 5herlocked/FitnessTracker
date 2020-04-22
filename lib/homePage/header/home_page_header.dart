@@ -47,7 +47,7 @@ class HomePageHeader<T extends Profile> extends StatelessWidget {
       child: GestureDetector(
         onTap: () => _navigateToProfilePage(context),
         child: new CircleAvatar(
-          backgroundImage: new NetworkImage("https://19yw4b240vb03ws8qm25h366-wpengine.netdna-ssl.com/wp-content/uploads/Profile-Pic-Circle-Grey-Large.png"),
+          backgroundImage: NetworkImage(user.profilePicture),
           radius: 80.0,
         ),
       ),

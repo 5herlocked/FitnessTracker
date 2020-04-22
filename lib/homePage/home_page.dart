@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:fitnesstracker/ProfilePage/profile_page.dart';
 import 'package:fitnesstracker/app.dart';
 import 'package:fitnesstracker/entities/cardio_exercise.dart';
@@ -7,7 +5,6 @@ import 'package:fitnesstracker/entities/client.dart';
 import 'package:fitnesstracker/entities/exercise.dart';
 import 'package:fitnesstracker/entities/profile.dart';
 import 'package:fitnesstracker/entities/strength_training_exercise.dart';
-import 'package:fitnesstracker/entities/testEntities.dart';
 import 'package:fitnesstracker/entities/trainer.dart';
 import 'package:fitnesstracker/exerciseDetailPage/exercise_detail.dart';
 import 'package:fitnesstracker/homePage/header/home_page_header.dart';
@@ -204,6 +201,14 @@ class _HomePageState<T extends Profile> extends State<HomePage<T>> {
   _getTrainerProfile() {
     Trainer currentTrainer = Trainer();
     currentTrainer.trainerID = (widget.user as Client).trainerID;
+    if (currentTrainer.trainerID == 1) {
+      Scaffold.of(context).showSnackBar(
+          SnackBar(
+            content: Text("You have no trainer assigned"),
+          )
+      );
+      return;
+    }
     currentTrainer.getTrainerProfile().then((currentTrainer) => _navigateToTrainerProfile(currentTrainer));
   }
 
