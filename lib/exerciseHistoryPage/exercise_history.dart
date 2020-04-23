@@ -29,7 +29,7 @@ class ExerciseHistoryPage extends StatelessWidget {
   }
 
   Widget _buildContent() {
-    if (client.assignedExercises == null || client.assignedExercises.isEmpty) {
+    if (completedExercises == null || completedExercises.isEmpty) {
       return Center (
         child: Text("Looks like you have no exercises on file"),
       );

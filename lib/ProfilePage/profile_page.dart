@@ -283,7 +283,6 @@ class _ProfilePageState<T extends Profile> extends State<ProfilePage>
   }
 
   // Build the Profile Form
-
   Widget _buildForm() {
     return Form(
         key: _formKey,
@@ -348,7 +347,7 @@ class _ProfilePageState<T extends Profile> extends State<ProfilePage>
                               input.isEmpty ? "*Required" : null,
                               cursorColor: Decorations.accentColour,
                               decoration:
-                              Decorations.createInputDecoration(null, "Height"),
+                              Decorations.createInputDecoration(null, "Height (cm)"),
                               enabled: _isEnabled ? true : false,
                             )),
                       )),
@@ -365,7 +364,7 @@ class _ProfilePageState<T extends Profile> extends State<ProfilePage>
                               input.isEmpty ? "*Required" : null,
                               cursorColor: Decorations.accentColour,
                               decoration:
-                              Decorations.createInputDecoration(null, "Weight"),
+                              Decorations.createInputDecoration(null, "Weight (lbs)"),
                               enabled: _isEnabled ? true : false,
                             )),
                       )),
