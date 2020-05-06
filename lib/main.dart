@@ -1,11 +1,5 @@
-import 'package:fitnesstracker/app.dart';
-import 'package:fitnesstracker/loginRegistrationPage/login_register_page.dart';
-import 'package:fitnesstracker/secure_store_mixin.dart';
 import 'package:fitnesstracker/splash-screen.dart';
 import 'package:flutter/material.dart';
-import 'package:fitnesstracker/entities/client.dart';
-import 'package:fitnesstracker/entities/trainer.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 void main() => runApp(MyApp());
 

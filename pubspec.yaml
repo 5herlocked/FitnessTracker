@@ -28,6 +28,8 @@ dependencies:
   intl: ^0.15.7
   loading_animations: ^2.1.0
   flutter_secure_storage: ^3.3.3
+  flutter_bloc: ^3.2.0
+  equatable: ^1.1.0
 
 dev_dependencies:
   flutter_test:
