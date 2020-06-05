@@ -1,15 +1,11 @@
+import 'package:fitnesstracker/decorations.dart';
 import 'package:fitnesstracker/customWidgets/custom_filled_button.dart';
 import 'package:fitnesstracker/customWidgets/custom_outline_button.dart';
-import 'package:fitnesstracker/entities/client.dart';
-import 'package:fitnesstracker/entities/trainer.dart';
-import 'package:fitnesstracker/loginRegistrationPage/login_form.dart';
-import 'package:fitnesstracker/loginRegistrationPage/register_form.dart';
+import 'package:fitnesstracker/ui/loginRegistrationPage/login_form.dart';
+import 'package:fitnesstracker/ui/loginRegistrationPage/register_form.dart';
 import 'package:fitnesstracker/secure_store_mixin.dart';
-import 'package:flutter/material.dart';
 
-import '../app.dart';
-import '../decorations.dart';
-import '../main.dart';
+import 'package:flutter/material.dart';
 
 enum UserType {Client, Trainer}
 

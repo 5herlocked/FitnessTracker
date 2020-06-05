@@ -1,10 +1,10 @@
-import 'package:fitnesstracker/UserListPage/user_list_page.dart';
+import 'package:fitnesstracker/ui/UserListPage/user_list_page.dart';
 import 'package:fitnesstracker/entities/client.dart';
-import 'package:fitnesstracker/exerciseHistoryPage/exercise_history.dart';
-import 'package:fitnesstracker/homePage/home_page.dart';
+import 'package:fitnesstracker/ui/exerciseHistoryPage/exercise_history.dart';
+import 'package:fitnesstracker/ui/homePage/home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:fitnesstracker/entities/profile.dart';
-import 'ProfilePage/profile_page.dart';
+import 'package:fitnesstracker/ui/ProfilePage/profile_page.dart';
 import 'destinations.dart';
 import 'entities/trainer.dart';
 

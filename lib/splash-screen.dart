@@ -1,5 +1,5 @@
 import 'package:fitnesstracker/decorations.dart';
-import 'package:fitnesstracker/loginRegistrationPage/login_register_page.dart';
+import 'package:fitnesstracker/ui/loginRegistrationPage/login_register_page.dart';
 import 'package:fitnesstracker/secure_store_mixin.dart';
 import 'package:flutter/material.dart';
 

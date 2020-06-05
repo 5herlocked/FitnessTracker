@@ -1,10 +1,11 @@
-import 'package:fitnesstracker/ProfilePage/profile_page.dart';
+import 'package:fitnesstracker/ui/ProfilePage/profile_page.dart';
 import 'package:fitnesstracker/entities/client.dart';
 import 'package:fitnesstracker/entities/exercise.dart';
 import 'package:fitnesstracker/entities/profile.dart';
 import 'package:fitnesstracker/entities/trainer.dart';
+import 'package:fitnesstracker/decorations.dart';
+
 import 'package:flutter/material.dart';
-import '../../decorations.dart';
 
 class HomePageHeader<T extends Profile> extends StatelessWidget {
   final T user;

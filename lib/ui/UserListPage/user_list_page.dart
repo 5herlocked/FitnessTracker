@@ -1,17 +1,17 @@
-import 'package:fitnesstracker/addClientPage/add_client_page.dart';
-import 'package:fitnesstracker/assignExercisePage/assign_exercise_page.dart';
+import 'package:fitnesstracker/ui/addClientPage/add_client_page.dart';
+import 'package:fitnesstracker/ui/assignExercisePage/assign_exercise_page.dart';
 import 'package:fitnesstracker/entities/cardio_exercise.dart';
 import 'package:fitnesstracker/entities/client.dart';
 import 'package:fitnesstracker/entities/strength_training_exercise.dart';
 import 'package:fitnesstracker/entities/trainer.dart';
 import 'package:fitnesstracker/entities/exercise.dart';
 import 'package:fitnesstracker/entities/profile.dart';
-import 'package:fitnesstracker/exerciseDetailPage/exercise_detail.dart';
+import 'package:fitnesstracker/ui/exerciseDetailPage/exercise_detail.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:fitnesstracker/app.dart';
 
-import '../decorations.dart';
+import 'package:fitnesstracker/decorations.dart';
 
 class UserListPage<T extends Profile> extends StatefulWidget {
   final T user;

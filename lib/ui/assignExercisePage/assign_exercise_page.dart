@@ -2,8 +2,9 @@ import 'package:fitnesstracker/entities/cardio_exercise.dart';
 import 'package:fitnesstracker/entities/client.dart';
 import 'package:fitnesstracker/entities/profile.dart';
 import 'package:fitnesstracker/entities/strength_training_exercise.dart';
+import 'package:fitnesstracker/decorations.dart';
+
 import 'package:flutter/material.dart';
-import '../decorations.dart';
 
 enum ExerciseType {Cardio, StrengthTraining}
 

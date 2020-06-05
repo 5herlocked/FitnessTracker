@@ -1,9 +1,9 @@
 import 'package:fitnesstracker/entities/cardio_exercise.dart';
 import 'package:fitnesstracker/entities/exercise.dart';
 import 'package:fitnesstracker/entities/strength_training_exercise.dart';
-import 'package:flutter/material.dart';
+import 'package:fitnesstracker/decorations.dart';
 
-import '../decorations.dart';
+import 'package:flutter/material.dart';
 
 class ExerciseDetailPage<T extends Exercise> extends StatefulWidget {
   ExerciseDetailPage({Key key, this.exercise}) : super(key: key);

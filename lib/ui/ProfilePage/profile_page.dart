@@ -1,10 +1,10 @@
 import 'package:fitnesstracker/entities/client.dart';
 import 'package:fitnesstracker/entities/profile.dart';
 import 'package:fitnesstracker/entities/trainer.dart';
-import 'package:fitnesstracker/loginRegistrationPage/login_register_page.dart';
+import 'package:fitnesstracker/ui/loginRegistrationPage/login_register_page.dart';
 import 'package:fitnesstracker/secure_store_mixin.dart';
 import 'package:flutter/material.dart';
-import '../decorations.dart';
+import 'package:fitnesstracker/decorations.dart';
 
 class ProfilePage<T extends Profile> extends StatefulWidget {
   T user;

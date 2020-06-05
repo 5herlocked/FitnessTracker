@@ -4,7 +4,7 @@ import 'package:fitnesstracker/entities/trainer.dart';
 import 'package:fitnesstracker/secure_store_mixin.dart';
 import 'package:flutter/material.dart';
 import 'package:fitnesstracker/entities/client.dart';
-import '../decorations.dart';
+import 'package:fitnesstracker/decorations.dart';
 import 'login_register_page.dart';
 
 class RegisterForm extends StatefulWidget {
